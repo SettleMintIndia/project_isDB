@@ -1,13 +1,22 @@
-
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-   background: #eee;
-   font-size: 12px;
+  background: #eee;
+  font-family: "Gilroy" !important;
 }
+/* @font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/gilroy-regular-webfont.woff2");
+} */
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/gilroy-medium-webfont.woff2");
+}
+/* @font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/gilroy-light-webfont.woff2");
+} */
 
 a {
   color: inherit;
@@ -35,16 +44,46 @@ ul {
   list-style: none;
 }
 
-body{ font-size: 14px;}
-
-.form-container {
-  margin: 10% auto;
-  display: block;
-  width:500px;
-  text-align:center;
+.container-fluid nav {
+  padding: 30px 50px;
 }
-
-
-.form-container input{
-  margin-bottom:10px;
+.login-form {
+  height: 400px;
+  background: #dcdada;
+  border-radius: 10px;
+  opacity: 1;
+  width: 500px;
+  padding: 50px 30px;
+}
+.login-form form {
+  display: grid;
+}
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10%;
+}
+.login-form h1 {
+  font-size: 34px;
+}
+.login-form input {
+  background: transparent;
+  height: 45px;
+  border: 1px solid #222222;
+  border-radius: 7px;
+}
+.login-form .checkbox {
+  height: 14px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+.login-form label {
+  margin-top: 20px;
+}
+.login-form .signin-button {
+  margin-top: 30px;
+  color: white;
+  background: black;
+  font-size: 16px;
 }

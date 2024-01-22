@@ -1,29 +1,47 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const handleLogin = () => {
-        router.push("/listemplates")
-    }
+  const handleLogin = () => {
+    router.push("/listemplates");
+  };
 
-    return (
-        <>
-            <div className="form-container">
-                <h1>Login</h1>
-                <section>
-                    <input type="text" name="username" placeholder="Username" />
-                    <br />
-                    <input type="password" name="password" placeholder="Password" />
-                    <br />
-                    <button type="button" role="button" onClick={() => handleLogin()}>Login</button>
+  return (
+    <div className="container-fluid">
+      <nav>
+        <div className="logo">IsDB</div>
+      </nav>
+      <div className="form-container">
+        <div className="login-form">
+          <h1>Sign In</h1>
+          <form>
+            <label htmlFor="username">User Name</label>
+            <input type="text" id="username" name="username" required />
 
-                </section>
-            </div>
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            {/* <span
+              className="show-password-icon"
+              onClick={togglePasswordVisibility()}
+            >
+              &#128065;
+            </span> */}
+            <label className="checkbox">
+              <input
+                className="checkbox"
+                type="checkbox"
+                name="keep_signed_in"
+              />{" "}
+              Keep me signed in.
+            </label>
 
-        </>
-    )
+            <input className="signin-button" type="submit" value="SIGN IN" />
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
