@@ -6,14 +6,11 @@ export default function Home() {
   const router = useRouter();
 
   const handleLogin = () => {
-    router.push("/listemplates");
+    router.push("/createtemplate");
   };
 
   return (
     <div className="container-fluid">
-      <nav>
-        <div className="logo">IsDB</div>
-      </nav>
       <div className="form-container">
         <div className="login-form">
           <h1>Sign In</h1>

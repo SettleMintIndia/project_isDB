@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { useState } from "react";
 import localFont from "next/font/local";
+import AppLayout from "@/components/layout/AppLayout";
 const myFont = localFont({
   src: [
     {
@@ -29,7 +30,9 @@ const myFont = localFont({
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <Component {...pageProps} />
+      <AppLayout>
+        <Component {...pageProps} />
+      </AppLayout>
     </>
   );
 }
