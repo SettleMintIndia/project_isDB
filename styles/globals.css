@@ -53,6 +53,11 @@ ul {
 .login-form form {
   display: grid;
 }
+.login-form div {
+  display: grid;
+}
+
+
 .form-container {
   display: flex;
   align-items: center;
