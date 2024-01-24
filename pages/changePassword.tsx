@@ -1,14 +1,60 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
+  const [currentPassword,setCurrentPassword]=useState('');
+  const[currentPasswordErr,setcurrentPasswordErr]=useState('');
 
-  const handleLogin = () => {
-    router.push("/changePassword");
-  };
+  const [newPassword,setNewPassword]=useState('');
+  const[newPasswordErr,setNewPasswordErr]=useState('');
+
+  const [confirmPassword,setConfirmPassword]=useState('');
+  const[confirmPasswordErr,setConfirmPasswordErr]=useState('');
+  
+
+  const handleInput = (e: any) => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+
+    if (name === "currentPassword") {
+      setCurrentPassword(value);
+    }
+    if (name === "newPassword") {
+      setNewPassword(value);
+    }
+    if (name === "confirmPassword") {
+      setConfirmPassword(value);
+    }
+    
+  }
+  const handleUpdatePassword=()=>{
+    let error = 0;
+    if (currentPassword === "") {
+      setcurrentPasswordErr("Please Enter Current Password");
+      error = error + 1;
+    } else {
+      setcurrentPasswordErr("");
+    }
+    if (newPassword === "") {
+      setNewPasswordErr("Please Enter New Password");
+      error = error + 1;
+    } else {
+      setNewPasswordErr("");
+    }
+    if (confirmPassword === "") {
+      setConfirmPasswordErr("Please Enter Confirm Password");
+      error = error + 1;
+    } 
+    else if (newPassword != confirmPassword) {
+      error = error + 1;
+
+      setConfirmPasswordErr("Password Mismatch");
+    }else {
+      setConfirmPasswordErr("");
+    }
+  }
 
   return (
     <div className="container-fluid">
@@ -24,10 +70,15 @@ export default function Home() {
               <input
                 type="password"
                 id="password1"
-                name="current password"
+                name="currentPassword"
+                value={currentPassword}
                 required
+                onChange={handleInput}
               />
             </div>
+            {currentPasswordErr != "" && (
+                <p className="alert-message">{currentPasswordErr}</p>
+              )}
           </div>
           <div className="col-md-6 mb-3"></div>
 
@@ -37,10 +88,15 @@ export default function Home() {
               <input
                 type="password"
                 id="password2"
-                name="new password"
+                name="newPassword"
                 required
+                value={newPassword}
+                onChange={handleInput}
               />
             </div>
+            {newPasswordErr != "" && (
+                <p className="alert-message">{newPasswordErr}</p>
+              )}
           </div>
           <div className="col-md-6 mb-3">
             <div className="form-content">
@@ -48,14 +104,22 @@ export default function Home() {
               <input
                 type="password"
                 id="password3"
-                name="confirm new password"
+                name="confirmPassword"
                 required
+                value={confirmPassword}
+                onChange={handleInput}
               />
             </div>
+            {confirmPasswordErr != "" && (
+                <p className="alert-message">{confirmPasswordErr}</p>
+              )}
           </div>
 
-          <input className="submit" type="submit" value="SUBMIT" />
-        </div>
+{/*           <input className="submit" type="submit" value="SUBMIT" />
+ */}        
+           <button className="create-template" onClick={() => handleUpdatePassword()} >SUBMIT</button>
+
+ </div>
       </div>
     </div>
   );

@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 export default function Home() {
   const router = useRouter();
 
-  const handleLogin = () => {
-    router.push("/createtemplate");
+  const handleEdit = () => {
+    router.push("/changePassword");
   };
 
   return (
@@ -43,7 +43,7 @@ export default function Home() {
             <div className="password">
               <label htmlFor="password">Password</label>
               <span id="password">123456</span>
-              <button>Edit</button>
+              <button onClick={()=>handleEdit()}>Edit</button>
             </div>
           </div>
         </div>

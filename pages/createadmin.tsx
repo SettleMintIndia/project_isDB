@@ -5,10 +5,69 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
+  const [name, setName] = useState('');
+  const [nameErr, setNameErr] = useState('');
+  const [username, setusername] = useState('');
+  const [usernameErr, setusernameErr] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordErr, setPasswordErr] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [confirmPwdErr, setConfirmPwdErr] = useState('');
 
-  const handleLogin = () => {
-    router.push("/createtemplate");
-  };
+
+
+
+  const handleInput = (e: any) => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+
+    if (name === "name") {
+      setName(value);
+    }
+    if (name === "username") {
+      setusername(value);
+    }
+    if (name === "password") {
+      setPassword(value);
+    }
+    if (name === "confirmPwd") {
+      setConfirmPwd(value);
+    }
+  }
+
+  const handleCreateAdmin = () => {
+    let error = 0;
+    if (name === "") {
+      setNameErr("Please Enter Name");
+      error = error + 1;
+    } else {
+      setNameErr("");
+    }
+    if (username === "") {
+      setusernameErr("Please Enter User Name");
+      error = error + 1;
+    } else {
+      setusernameErr("");
+    }
+    if (password === "") {
+      setPasswordErr("Please Enter password");
+      error = error + 1;
+    } else {
+      setPasswordErr("");
+    }
+    if (confirmPwd === "") {
+      setConfirmPwdErr("Please Enter Confirm Password");
+      error = error + 1;
+    } else if (password != confirmPwd) {
+      error = error + 1;
+
+      setConfirmPwdErr("Password Mismatch");
+    }else{
+      setConfirmPwdErr("")
+    }
+
+    console.log(error)
+  }
 
   return (
     <div className="container-fluid">
@@ -18,13 +77,19 @@ export default function Home() {
           <div className="col-md-6 mb-3">
             <div className="form-content">
               <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" required />
+              <input type="text" id="name" name="name" required value={name} onChange={handleInput} />
+              {nameErr != "" && (
+                <p className="alert-message">{nameErr}</p>
+              )}
             </div>
           </div>
           <div className="col-md-6 mb-3">
             <div className="form-content">
               <label htmlFor="user-name">User Name</label>
-              <input type="text" id="user-name" name="User Name" required />
+              <input type="text" id="user-name" name="username" value={username} required onChange={handleInput} />
+              {usernameErr != "" && (
+                <p className="alert-message">{usernameErr}</p>
+              )}
             </div>
           </div>
 
@@ -34,9 +99,14 @@ export default function Home() {
               <input
                 type="password"
                 id="password"
-                name="Create Password"
+                name="password"
+                value={password}
+                onChange={handleInput}
                 required
               />
+              {passwordErr != "" && (
+                <p className="alert-message">{passwordErr}</p>
+              )}
             </div>
           </div>
           <div className="col-md-6 mb-3">
@@ -45,17 +115,25 @@ export default function Home() {
               <input
                 type="password"
                 id="password1"
-                name="Confirm Password"
+                name="confirmPwd"
+                value={confirmPwd}
                 required
+                onChange={handleInput}
+
               />
+              {confirmPwdErr != "" && (
+                <p className="alert-message">{confirmPwdErr}</p>
+              )}
             </div>
           </div>
 
-          <input
+          {/*   <input
             className="create-template"
             type="submit"
             value="CREATE ADMIN"
-          />
+          /> */}
+          <button className="create-template" onClick={() => handleCreateAdmin()} >CREATE ADMIN</button>
+
         </div>
       </div>
     </div>
