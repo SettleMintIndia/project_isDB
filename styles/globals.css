@@ -8,9 +8,18 @@ body {
 
 @font-face {
   font-family: Gilroy;
-  src: url("../public/fonts/gilroy-medium-webfont.woff2"),
-    url("../public/fonts/gilroy-regular-webfont.woff2"),
-    url("../public/fonts/gilroy-light-webfont.woff2");
+  src: url("../public/fonts/gilroy-medium-webfont.woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/gilroy-regular-webfont.woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/gilroy-light-webfont.woff2");
+  font-weight: 300;
 }
 
 a {
@@ -57,7 +66,6 @@ ul {
   display: grid;
 }
 
-
 .form-container {
   display: flex;
   align-items: center;
@@ -100,7 +108,8 @@ ul {
   flex-wrap: wrap;
 }
 .template .row input,
-select ,button{
+select,
+button {
   width: 450px;
   height: 50px;
   border-radius: 10px;
@@ -108,9 +117,9 @@ select ,button{
   border: 1px solid;
   padding: 0 10px;
 }
-.alert-message{
+.alert-message {
   color: red;
-  margin:3px 1px;
+  margin: 3px 1px;
 }
 
 .template .row .form-content {
@@ -125,18 +134,17 @@ select ,button{
   background: #222222 !important;
   border-radius: 7px;
   color: white;
-  width: 250px !important;
-  font-size: 18px;
-}
-
-.template .create-template
- {
-  background: #222222 !important;
-  border-radius: 7px;
-  color: white;
-  width: 250px !important;
-  font-size: 18px;
+  width: 280px !important;
+  font-size: 16px;
   cursor: pointer;
+}
+.template .cancel {
+  width: 160px;
+  font-size: 16px;
+  border-radius: 7px;
+}
+.col-md-6 {
+  width: 48% !important;
 }
 .template h1 {
   margin-bottom: 10px;
@@ -160,14 +168,23 @@ select ,button{
   display: none;
   background: black;
   padding: 20px;
-  position: relative;
-  top: 140px;
-  right: 10px;
+  position: absolute;
+  top: 115px;
+  right: 60px;
   border-radius: 10px;
+}
+
+.nav-user:hover + .menu-dropdown,
+.menu-dropdown:hover {
+  display: block;
 }
 .menu-dropdown li {
   opacity: 0.7;
   margin-bottom: 25px;
+}
+.menu-dropdown li a {
+  text-decoration: none;
+  color: white;
 }
 .menu-dropdown li:active,
 .menu-dropdown li:hover {
@@ -177,10 +194,15 @@ select ,button{
   display: flex;
   gap: 10px;
 }
-.nav-user {
+.nav-user,
+.nav-user .user {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+}
+.nav-user p {
+  margin-bottom: 0;
 }
 .nav-links {
   padding: 10px;
@@ -197,7 +219,7 @@ select ,button{
 .nav-links li:hover {
   opacity: 1;
 }
-.down-arrow .logout {
+.menu-dropdown .logout {
   text-align: center;
   border: 1px solid;
   border: 1px solid #4e4e4e;
@@ -267,4 +289,52 @@ label {
 .template .change-password {
   display: flex;
   align-items: baseline;
+}
+.modal-header {
+  border-bottom: none !important;
+}
+.modal-details {
+  padding: 0 20px;
+  display: grid;
+  gap: 20px;
+}
+.save,
+.comment {
+  display: grid;
+}
+.save input {
+  height: 50px;
+  border: 1px solid #222222;
+  border-radius: 7px;
+}
+.comment input {
+  height: 80px;
+  border: 1px solid #222222;
+  border-radius: 7px;
+}
+.modal-button {
+  display: flex;
+  padding: 20px 36px 40px;
+  gap: 20px;
+}
+.modal-button button {
+  width: 167px;
+  height: 47px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.modal.show .modal-dialog {
+  margin-top: 200px;
+}
+.modal-content {
+  border-radius: 10px;
+}
+.modal-button .btn-primary,
+.modal-button .btn-primary:hover {
+  background: #dcdada;
+  color: black;
+  border: 1px solid #222222;
+}
+.modal-button .btn-primary:hover {
+  opacity: 0.7;
 }

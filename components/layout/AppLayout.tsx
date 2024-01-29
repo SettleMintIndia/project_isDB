@@ -28,10 +28,10 @@ const AppLayout = ({ children }: LayoutProps) => {
             <div className="nav-links">
               <ul>
                 <li>
-                  <a href="#">Create Template</a>
+                  <a href="createtemplate">Create Template</a>
                 </li>
                 <li>
-                  <a href="#">Create Admin</a>
+                  <a href="createadmin">Create Admin</a>
                 </li>
               </ul>
             </div>
@@ -42,29 +42,29 @@ const AppLayout = ({ children }: LayoutProps) => {
           <div className="nav-user">
             <div className="user">
               <img src="/imgs/user.svg" alt="" />
+              <p>Super Admin</p>
             </div>
-            <div className="user-name">Super Admin</div>
             <div className="down-arrow">
               <img src="/imgs/down-arrow.svg" alt="" />
-              <ul className="menu-dropdown">
-                <li>
-                  <a href="#">My Profile</a>
-                </li>
-                <li>
-                  <a href="#">Template Details</a>
-                </li>
-                <li>
-                  <a href="#">Create Scenario Type</a>
-                </li>
-                <li>
-                  <a href="#">Admins Details</a>
-                </li>
-                <li className="logout">
-                  <a href="#">Logout</a>
-                </li>
-              </ul>
             </div>
           </div>
+          <ul className="menu-dropdown">
+            <li>
+              <Link href="myprofile">My Profile</Link>
+            </li>
+            <li>
+              <Link href="templateDetails">Template Details</Link>
+            </li>
+            <li>
+              <Link href="scenarioType">Create Scenario Type</Link>
+            </li>
+            <li>
+              <Link href="adminDetails">Admins Details</Link>
+            </li>
+            <li className="logout">
+              <Link href="/">Logout</Link>
+            </li>
+          </ul>
         </div>
       )}
 

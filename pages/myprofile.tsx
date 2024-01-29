@@ -2,6 +2,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -43,7 +44,10 @@ export default function Home() {
             <div className="password">
               <label htmlFor="password">Password</label>
               <span id="password">123456</span>
-              <button onClick={()=>handleEdit()}>Edit</button>
+              <button onClick={() => handleEdit()}>
+                {" "}
+                <Link href="changePassword">Edit</Link>{" "}
+              </button>
             </div>
           </div>
         </div>

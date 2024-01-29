@@ -2,6 +2,8 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { use, useState } from "react";
 import { useRouter } from "next/router";
+import { Button, Modal } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
   const router = useRouter();
@@ -29,7 +31,14 @@ export default function Home() {
   const [theta1Err, settheta1Err] = useState("");
   const [comment, setcomment] = useState("");
   const [commentErr, setcommentErr] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const editCreateTemplate = () => {
+    setShowModal(true);
+  };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
@@ -154,7 +163,7 @@ export default function Home() {
   return (
     <div className="container-fluid">
       <div className="template">
-        <h1>Create Template</h1>
+        <h1>Edit Template Details</h1>
         <div className="row">
           <div className="col-md-6 mb-3">
             <div className="form-content">
@@ -164,6 +173,7 @@ export default function Home() {
                 id="type"
                 value={scenarioType}
                 onChange={handleInput}
+                disabled
               >
                 <option value="volvo">Select Scenario Type</option>
                 <option value="Crash">Crash</option>
@@ -184,6 +194,7 @@ export default function Home() {
                 required
                 value={templatename}
                 onChange={handleInput}
+                disabled
               />
             </div>
             {templatenameErr != "" && (
@@ -344,9 +355,40 @@ export default function Home() {
 
           <button
             className="create-template"
-            onClick={() => handleCreateTemplate()}
+            onClick={() => editCreateTemplate()}
           >
-            CREATE TEMPLATE{" "}
+            SAVE AS NEW TEMPLATE{" "}
+          </button>
+
+          <Modal
+            show={showModal}
+            onHide={handleCloseModal}
+            className="energy-efficiency"
+          >
+            <Modal.Header closeButton closeVariant="dark"></Modal.Header>
+            <Modal.Body>
+              {" "}
+              <div className="modal-details">
+                <div className="save">
+                  <label htmlFor="">Save As</label>
+                  <input type="text" />
+                </div>
+                <div className="comment">
+                  <label htmlFor="">Comment</label>
+                  <input type="text" />
+                </div>
+              </div>
+            </Modal.Body>
+            <div className="modal-button">
+              <Button btn-close-black variant="dark">
+                SAVE CHANGES
+              </Button>
+              <Button classname="cancel">CANCEL</Button>
+            </div>
+          </Modal>
+
+          <button className="cancel" onClick={() => handleCreateTemplate()}>
+            CANCEL{" "}
           </button>
         </div>
       </div>
