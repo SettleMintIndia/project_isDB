@@ -270,7 +270,9 @@ export default function Home() {
                               </Modal.Body>
                             </Modal>
                             <button className="btn btn-dark simulation-btn">
-                              <Link href="simulationPage">Run Simulation</Link>
+                              <Link href="runSimulation_infoPage">
+                                Run Simulation
+                              </Link>
                             </button>
                           </td>
                         </tr>
@@ -339,7 +341,9 @@ export default function Home() {
                               View Details
                             </button>
                             <button className="btn btn-dark simulation-btn">
-                              <Link href="simulationPage">Run Simulation</Link>
+                              <Link href="runSimulation_infoPage">
+                                Run Simulation
+                              </Link>
                             </button>
                           </td>
                         </tr>
@@ -535,7 +539,9 @@ export default function Home() {
                               </Modal.Body>
                             </Modal>
                             <button className="btn btn-dark simulation-btn">
-                              <Link href="simulationPage">Run Simulation</Link>
+                              <Link href="runSimulation_infoPage">
+                                Run Simulation
+                              </Link>
                             </button>
                           </td>
                         </tr>
@@ -571,7 +577,9 @@ export default function Home() {
                               View Details
                             </button>
                             <button className="btn btn-dark simulation-btn">
-                              <Link href="simulationPage">Run Simulation</Link>
+                              <Link href="runSimulation_infoPage">
+                                Run Simulation
+                              </Link>
                             </button>
                           </td>
                         </tr>
