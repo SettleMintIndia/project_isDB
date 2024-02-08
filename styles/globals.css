@@ -2,14 +2,14 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: #eee;
+  background: none;
   font-family: "Gilroy" !important;
 }
 
 @font-face {
   font-family: Gilroy;
   src: url("../public/fonts/gilroy-medium-webfont.woff2");
-  font-weight: 400;
+  font-weight: 600;
 }
 @font-face {
   font-family: Gilroy;
@@ -23,8 +23,8 @@ body {
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
 * {
@@ -47,7 +47,9 @@ ul {
   padding: 0;
   list-style: none;
 }
-
+button {
+  cursor: pointer;
+}
 .container-fluid nav {
   padding: 30px 50px;
 }
@@ -95,8 +97,13 @@ ul {
   background: black;
   font-size: 16px;
 }
+.template.admin,
+.template.run-simulation,
+.template.details {
+  margin: 3% 10%;
+}
 .template {
-  margin: 3% 20%;
+  margin: 3% 16%;
   overflow: hidden;
 }
 .template .row {
@@ -148,7 +155,8 @@ button {
 }
 .template h1 {
   margin-bottom: 10px;
-  margin-left: 10px;
+  font-weight: bold;
+  font-size: 32px;
 }
 .isDB-logo {
   padding: 40px;
@@ -164,35 +172,69 @@ button {
   color: white;
   height: 100px;
 }
-.menu-dropdown {
+.nav-container .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.menu,
+.notification {
+  cursor: pointer;
+}
+.menu:hover,
+.notification:hover {
+  background: gray;
+  border-radius: 50%;
+  padding: 15px;
+}
+.menu-dropdown,
+.menu-list,
+.notification-list {
   display: none;
   background: black;
   padding: 20px;
   position: absolute;
-  top: 115px;
-  right: 60px;
+  z-index: 1;
   border-radius: 10px;
 }
-
+.menu-dropdown {
+  top: 115px;
+  right: 60px;
+}
+.menu-list,
+.notification-list {
+  top: 100px;
+  right: 15%;
+}
 .nav-user:hover + .menu-dropdown,
-.menu-dropdown:hover {
+.menu-dropdown:hover,
+.menu:hover + .menu-list,
+.menu-list:hover,
+.notification:hover + .notification-list,
+.notification-list:hover {
   display: block;
 }
-.menu-dropdown li {
+.menu-dropdown li,
+.menu-list li {
   opacity: 0.7;
   margin-bottom: 25px;
 }
-.menu-dropdown li a {
+.menu-dropdown li a,
+.menu-list li a {
   text-decoration: none;
   color: white;
 }
 .menu-dropdown li:active,
-.menu-dropdown li:hover {
+.menu-dropdown li:hover,
+.menu-list li:hover,
+.menu-list li:active {
   opacity: 1;
 }
 .nav-links ul {
   display: flex;
   gap: 10px;
+  margin-bottom: 0;
+  padding-left: 0;
 }
 .nav-user,
 .nav-user .user {
@@ -200,6 +242,14 @@ button {
   align-items: center;
   gap: 10px;
   cursor: pointer;
+}
+.nav-user .username h4 {
+  font-size: 16px;
+  margin: 5px 0;
+}
+.nav-user .username p {
+  font-size: 14px;
+  color: #d3d3d3;
 }
 .nav-user p {
   margin-bottom: 0;
@@ -226,6 +276,35 @@ button {
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 0;
+}
+.notification-list {
+  width: 350px;
+  overflow-y: scroll;
+  height: 400px;
+}
+
+.notification-list .notification-heading h4 {
+  font-size: 18px;
+}
+.notification-list .notification-details {
+  border-bottom: 1px solid #adadad;
+  padding-bottom: 15px;
+}
+.notification-list .notification-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: -10px;
+}
+.notification-list .notification-info h5 {
+  margin: 10px;
+  font-weight: bold;
+}
+.notification-list .notification-info p {
+  color: #adadad;
+}
+.notification-list .notification-para {
+  font-size: 14px;
 }
 label {
   margin-bottom: 5px;
@@ -289,12 +368,13 @@ label {
 .template .change-password {
   display: flex;
   align-items: baseline;
+  gap: 10px;
 }
 .modal-header {
   border-bottom: none !important;
 }
 .modal-details {
-  padding: 0 20px;
+  padding: 0 20px 20px;
   display: grid;
   gap: 20px;
 }
@@ -314,7 +394,7 @@ label {
 }
 .modal-button {
   display: flex;
-  padding: 20px 36px 40px;
+  padding: 0 36px 40px;
   gap: 20px;
 }
 .modal-button button {
@@ -323,6 +403,7 @@ label {
   border-radius: 5px;
   font-size: 14px;
 }
+
 .modal.show .modal-dialog {
   margin-top: 200px;
 }
@@ -337,4 +418,353 @@ label {
 }
 .modal-button .btn-primary:hover {
   opacity: 0.7;
+}
+
+.template .head {
+  display: flex;
+  justify-content: space-between;
+}
+.template .head button {
+  width: 190px;
+  height: 47px;
+  color: white;
+  background: #222222;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template .head button a {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.template .total-template {
+  font-size: 14px;
+  font-weight: 600;
+}
+.template .filter {
+  font-size: 12px;
+  margin-top: 20px;
+  opacity: 0.5;
+}
+.template .react-tabs__tab-list {
+  border-bottom: none !important;
+}
+.react-tabs__tab {
+  border: none !important;
+  color: #6f6d6d;
+}
+.react-tabs__tab--selected {
+  background: none !important;
+  border-bottom: 2px solid black !important;
+  font-weight: bold;
+}
+.template .filterArea {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.template .searchFilter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
+  border-radius: 21px;
+  width: 338px;
+  height: 42px;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.template .searchFilter input {
+  background: none;
+  border: none;
+  outline: none;
+}
+.template .searchArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#searchtype {
+  outline: none;
+  border: none;
+  background: black;
+  color: white;
+  border-radius: 21px;
+  height: 34px;
+  padding: 0 15px;
+  margin-left: -12px;
+}
+.searchFilter.options img {
+  margin-right: 20px;
+}
+.template .searchFilter.options input {
+  width: 180px;
+}
+.template .calendar {
+  display: flex;
+  background: #dcdada;
+  border: 1px solid #d3d3d3;
+  border-radius: 21px;
+  width: 130px;
+  height: 42px;
+  padding-left: 15px;
+  padding-right: 10px;
+  font-size: 14px;
+}
+.template .calendar select {
+  border: none;
+  height: 42px;
+}
+.template .template-content table {
+  border-radius: 10px;
+  margin-bottom: 0;
+}
+.template-content table thead th {
+  position: sticky;
+  background: #4e4e4e;
+  padding: 40px 20px 15px;
+  color: white;
+}
+.template-content table tbody tr td {
+  padding: 20px;
+  background: #dcdada;
+  position: relative;
+}
+
+.template-content table tbody tr:hover {
+  background: white;
+}
+.template-content table thead tr {
+  text-align: left;
+  white-space: nowrap;
+}
+.template .row.template-details {
+  padding: 0;
+}
+.template .actions {
+  width: 300px;
+}
+.template .actions button {
+  width: 50px;
+  height: 35px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+.template .actions .details-button {
+  width: 130px;
+}
+.template .pagging-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+.template .pagging-area .toolbar {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: #6f6d6d;
+  font-size: 14px;
+  margin-top: -15px;
+}
+.template .pagging-area .toolbar select {
+  width: 70px;
+  height: 35px;
+  border-radius: 4px;
+}
+.template .paging-list {
+  display: flex;
+  gap: 5px;
+}
+.template .paging-list .paging-count {
+  display: flex;
+  gap: 5px;
+  padding: 0;
+}
+.template .paging-list li,
+.leftaction,
+.rightaction,
+.leftaction-single,
+.rightaction-single {
+  width: 35px;
+  height: 35px;
+
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template .paging-list li:hover {
+  border: 1px solid #222222;
+  border-radius: 50%;
+  background: black;
+  color: white;
+}
+.template .delete-icon .tooltip {
+  width: 200px;
+  display: block;
+  height: 110px;
+  padding: 15px;
+  background: #ffffff;
+  box-shadow: 0px 0px 12px #00000029;
+  border: 1px solid #222222;
+  border-radius: 5px;
+  position: absolute;
+  top: 62px;
+  right: 20px;
+  z-index: 999;
+  opacity: 1;
+}
+.template .delete-icon .tooltip p {
+  font-weight: bold;
+}
+.template .delete-icon .tooltip .tool-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.template .delete-icon .tooltip .tool-buttons button {
+  width: 70px;
+  height: 30px;
+  border-radius: 5px;
+}
+.template .delete-icon .tooltip .delete-button {
+  background: black;
+  color: white;
+}
+.template .delete-icon .tooltip .cancel-button {
+  background: #dcdada;
+}
+
+.template.admin .filterArea {
+  justify-content: end;
+  margin-bottom: 10px;
+}
+.template.admin .template-content table {
+  width: 100%;
+}
+.template.admin .template-content {
+  width: 100%;
+}
+
+.template-content {
+  overflow: visible;
+}
+.template-content table tbody tr:hover {
+  background: transparent;
+  cursor: pointer;
+}
+
+.template-modal .modal-content {
+  background-color: #4e4e4e;
+}
+
+.template-modal .modal-details .head,
+.bottom-head {
+  display: flex;
+  justify-content: space-between;
+  color: #adadad;
+  font-size: 22px;
+  align-items: center;
+}
+.template-modal .modal-details .right-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.template-modal .modal-details .right-head img {
+  height: 22px;
+}
+.template-modal .modal-details .right-head a {
+  width: 85px;
+  font-size: 12px;
+  text-align: end;
+  color: white;
+}
+.template-modal .modal-details .bottom-head .title {
+  font-size: 28px;
+  color: white;
+  font-weight: 700;
+}
+.template-modal .modal-details .bottom-head .date {
+  font-size: 12px;
+  display: grid;
+}
+.template-modal .modal-details .bottom-head .date label {
+  float: left;
+  margin-bottom: 0;
+  text-align: end;
+}
+.template-modal .modal-details .bottom-head .date span {
+  color: white;
+}
+.template-modal .modal-details .details-section {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+}
+.template-modal .modal-details .template-details {
+  font-size: 14px;
+}
+
+.template-modal .modal-details .modal-comment {
+  padding: 0 20px;
+  padding-bottom: 0;
+  font-size: 14px;
+}
+.template-modal .modal-details .modal-comment p {
+  font-weight: 700;
+}
+.template-modal .modal-details .template-details th,
+.template-modal .modal-details .template-details td {
+  border-bottom: none;
+}
+.template-modal .modal-details .template-details td {
+  background: #f3f3f3;
+  padding: 10px 20px;
+}
+.template-modal .modal-details .template-details tbody {
+  border-radius: 6px;
+}
+.template-modal .modal-details .template-details tr td:last-child {
+  font-weight: bold;
+  width: 150px;
+}
+.custom-header {
+  display: flex;
+  justify-content: end !important;
+  cursor: pointer;
+}
+.template-modal.modal.show .modal-dialog {
+  margin-top: 80px;
+}
+.modal-ask {
+  text-align: center;
+}
+.modal-button.ask {
+  justify-content: center;
+}
+.modal-button.ask button {
+  width: 140px;
+}
+.template .template-type {
+  font-size: 18px;
+}
+.template.run-simulation .actions {
+  width: 470px;
+}
+.template.run-simulation .actions .btn-dark {
+  width: 150px !important;
+  margin-top: -5px;
+}
+.template.run-simulation .actions .btn-dark a {
+  text-decoration: none;
+  color: white;
 }

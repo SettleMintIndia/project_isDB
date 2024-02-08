@@ -159,16 +159,19 @@ export default function Home() {
           <div className="col-md-6 mb-3">
             <div className="form-content">
               <label htmlFor="type">Scenario Type*</label>
-              <select
-                name="scenarioType"
-                id="type"
-                value={scenarioType}
-                onChange={handleInput}
-              >
-                <option value="volvo">Select Scenario Type</option>
-                <option value="Crash">Crash</option>
-                <option value="Bubble">Bubble</option>
-              </select>
+              <div className="select-wrapper">
+                <select
+                  name="scenarioType"
+                  id="type"
+                  value={scenarioType}
+                  onChange={handleInput}
+                >
+                  <option value="volvo">Select Scenario Type</option>
+                  <option value="Crash">Crash</option>
+                  <option value="Bubble">Bubble</option>
+                </select>
+              </div>
+
               {scenarioTypeErr != "" && (
                 <p className="alert-message">{scenarioTypeErr}</p>
               )}
@@ -194,7 +197,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="price">Initial Market Price*</label>
               <input
-                type="number"
+                type="text"
                 id="price"
                 name="inititalmarketprice"
                 required
@@ -210,7 +213,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="pricelimit">Price Variance Limit*</label>
               <input
-                type="number"
+                type="text"
                 id="pricelimit"
                 name="pricelimit"
                 required
@@ -226,7 +229,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="quantity">Base Quantity*</label>
               <input
-                type="number"
+                type="text"
                 id="quantity"
                 name="basequantity"
                 required
@@ -242,7 +245,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
               <input
-                type="number"
+                type="text"
                 id="quantitylimit"
                 name="quantitylimit"
                 required
@@ -313,14 +316,19 @@ export default function Home() {
           <div className="col-md-6 mb-3">
             <div className="form-content">
               <label htmlFor="distribution">Distribution*</label>
-              <input
-                type="text"
-                id="distribution"
+              <select
                 name="distribution"
-                required
+                id="distribution"
                 value={distribution}
                 onChange={handleInput}
-              />
+                required
+              >
+                <option value="volvo">Select Distribution Type</option>
+
+                <option value="volvo">poisonous</option>
+                <option value="Crash">Uniform</option>
+                <option value="Bubble">Gaussian</option>
+              </select>
             </div>
             {distributionErr != "" && (
               <p className="alert-message">{distributionErr}</p>

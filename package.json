@@ -14,9 +14,11 @@
     "react": "^18",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18",
-    "react-modal": "^3.16.1"
+    "react-modal": "^3.16.1",
+    "react-tabs": "^6.0.2"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.29",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

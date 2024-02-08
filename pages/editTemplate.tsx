@@ -39,6 +39,20 @@ export default function Home() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
@@ -205,7 +219,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="price">Initial Market Price*</label>
               <input
-                type="number"
+                type="text"
                 id="price"
                 name="inititalmarketprice"
                 required
@@ -221,7 +235,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="pricelimit">Price Variance Limit*</label>
               <input
-                type="number"
+                type="text"
                 id="pricelimit"
                 name="pricelimit"
                 required
@@ -237,7 +251,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="quantity">Base Quantity*</label>
               <input
-                type="number"
+                type="text"
                 id="quantity"
                 name="basequantity"
                 required
@@ -253,7 +267,7 @@ export default function Home() {
             <div className="form-content">
               <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
               <input
-                type="number"
+                type="text"
                 id="quantitylimit"
                 name="quantitylimit"
                 required
@@ -324,14 +338,19 @@ export default function Home() {
           <div className="col-md-6 mb-3">
             <div className="form-content">
               <label htmlFor="distribution">Distribution*</label>
-              <input
-                type="text"
-                id="distribution"
+              <select
                 name="distribution"
-                required
+                id="distribution"
                 value={distribution}
                 onChange={handleInput}
-              />
+                required
+              >
+                <option value="volvo">Select Distribution Type</option>
+
+                <option value="volvo">poisonous</option>
+                <option value="Crash">Uniform</option>
+                <option value="Bubble">Gaussian</option>
+              </select>
             </div>
             {distributionErr != "" && (
               <p className="alert-message">{distributionErr}</p>
@@ -365,7 +384,9 @@ export default function Home() {
             onHide={handleCloseModal}
             className="energy-efficiency"
           >
-            <Modal.Header closeButton closeVariant="dark"></Modal.Header>
+            <Modal.Header className="custom-header">
+              <img src="imgs/close-black.svg" alt="" onClick={handleClose} />
+            </Modal.Header>
             <Modal.Body>
               {" "}
               <div className="modal-details">
@@ -387,9 +408,26 @@ export default function Home() {
             </div>
           </Modal>
 
-          <button className="cancel" onClick={() => handleCreateTemplate()}>
-            CANCEL{" "}
+          <button className="cancel" onClick={() => openModal()}>
+            CANCEL
           </button>
+          <Modal show={modalIsOpen} onHide={closeModal}>
+            <Modal.Header className="custom-header">
+              <img src="imgs/close-black.svg" alt="" onClick={closeModal} />
+            </Modal.Header>
+            <Modal.Body className="modal-ask">
+              <div>
+                <p>Are you sure you want to cancel the changes?</p>
+              </div>
+            </Modal.Body>
+
+            <div className="modal-button ask">
+              <Button btn-close-black variant="dark">
+                YES
+              </Button>
+              <Button classname="cancel">NO</Button>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>
