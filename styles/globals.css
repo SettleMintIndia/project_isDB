@@ -145,6 +145,10 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+.edit-template .create-template,
+.edit-template .cancel {
+  margin-left: 10px;
+}
 .template .cancel {
   width: 160px;
   font-size: 16px;
@@ -769,7 +773,6 @@ label {
   color: white;
 }
 
-
-.iteratioview{
+.iteratioview {
   margin: 20px;
 }

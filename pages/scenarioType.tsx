@@ -58,7 +58,7 @@ export default function Home() {
             onClick={() => handleCreateScenario()}
           >
             {" "}
-            <Link href="createtemplate">SUBMIT</Link>{" "}
+            <Link href="createtemplate">CREATE</Link>{" "}
           </button>
         </div>
       </div>

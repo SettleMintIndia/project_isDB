@@ -10,9 +10,8 @@ const AppLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
- // const[key,setKey]=useState('superadmin') //superadmin
-  const[key,setKey]=useState('admin') //admin
-
+  const [key, setKey] = useState("superadmin"); //superadmin
+  // const [key, setKey] = useState("admin"); //admin
 
   return (
     <div className="base">
@@ -105,48 +104,52 @@ const AppLayout = ({ children }: LayoutProps) => {
                 <img src="/imgs/user.svg" alt="" />
                 <div className="username">
                   <h4>Name1</h4>
-                  <p>{key=='superadmin ' ? 'Super Admin' :'Admin'} </p>
+                  <p>{key == "superadmin" ? "Super Admin" : "Admin"} </p>
                 </div>
               </div>
               <div className="down-arrow">
                 <img src="/imgs/down-arrow.svg" alt="" />
               </div>
             </div>
-            {key=='superadmin' && <ul className="menu-dropdown">
-              <li>
-                <Link href="myprofile">My Profile</Link>
-              </li>
-              <li>
-                <Link href="templateDetails">Template Details</Link>
-              </li>
-              <li>
-                <Link href="scenarioType">Create Scenario Type</Link>
-              </li>
-              <li>
-                <Link href="adminDetails">Admins Details</Link>
-              </li>
-              <li className="logout">
-                <Link href="/">Logout</Link>
-              </li>
-            </ul> }
+            {key == "superadmin" && (
+              <ul className="menu-dropdown">
+                <li>
+                  <Link href="myprofile">My Profile</Link>
+                </li>
+                <li>
+                  <Link href="templateDetails">Template Details</Link>
+                </li>
+                <li>
+                  <Link href="scenarioType">Create Scenario Type</Link>
+                </li>
+                <li>
+                  <Link href="adminDetails">Admins Details</Link>
+                </li>
+                <li className="logout">
+                  <Link href="/">Logout</Link>
+                </li>
+              </ul>
+            )}
 
-            {key=='admin' && <ul className="menu-dropdown">
-              <li>
-                <Link href="myprofile">My Profile</Link>
-              </li>
-              <li>
-                <Link href="templateDetails">My Templates</Link>
-              </li>
-              <li>
-                <Link href="scenarioType">Simulation History</Link>
-              </li>
-              <li>
-              <Link href="scenarioType">Create Scenario Type</Link>
-              </li>
-              <li className="logout">
-                <Link href="/">Logout</Link>
-              </li>
-            </ul> }
+            {key == "admin" && (
+              <ul className="menu-dropdown">
+                <li>
+                  <Link href="myprofile">My Profile</Link>
+                </li>
+                <li>
+                  <Link href="templateDetails">My Templates</Link>
+                </li>
+                <li>
+                  <Link href="scenarioType">Simulation History</Link>
+                </li>
+                <li>
+                  <Link href="scenarioType">Create Scenario Type</Link>
+                </li>
+                <li className="logout">
+                  <Link href="/">Logout</Link>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       )}

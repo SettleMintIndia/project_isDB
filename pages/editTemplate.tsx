@@ -176,7 +176,7 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      <div className="template">
+      <div className="template edit-template">
         <h1>Edit Template Details</h1>
         <div className="row">
           <div className="col-md-6 mb-3">
