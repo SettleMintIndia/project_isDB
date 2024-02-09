@@ -776,3 +776,19 @@ label {
 .iteratioview {
   margin: 20px;
 }
+
+.iterationbutton{
+  position: absolute;
+  right: 50px;
+  top:200px;
+  width: 100px;
+  height: 30px;
+
+}
+
+.scrollbutton{
+  width: 100px;
+  height: 30px;
+  margin:20px
+
+}
