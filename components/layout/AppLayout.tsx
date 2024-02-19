@@ -137,13 +137,15 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <Link href="myprofile">My Profile</Link>
                 </li>
                 <li>
-                  <Link href="templateDetails">My Templates</Link>
+                  <Link href="runSimulation">My Templates</Link>
                 </li>
                 <li>
-                  <Link href="scenarioType">Simulation History</Link>
+                  <Link href="simulationhistory">Simulation History</Link>
                 </li>
                 <li>
-                  <Link href="scenarioType">Create Scenario Type</Link>
+                  <Link href="request_scenarioType">
+                    Request SuperAdmin To Create Scenario Type
+                  </Link>
                 </li>
                 <li className="logout">
                   <Link href="/">Logout</Link>

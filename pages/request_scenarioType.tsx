@@ -8,17 +8,22 @@ export default function Home() {
   const router = useRouter();
   const [scenariotype, setscenariotype] = useState("");
   const [scenariotypeErr, setscenariotypeErr] = useState("");
-
+  const [comment, setcomment] = useState("");
+  const [commentErr, setcommentErr] = useState("");
   const handleLogin = () => {
     router.push("/scenarioType");
   };
 
   const handleInput = (e: any) => {
+    let error = 0;
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
 
-    if (name === "scenariotype") {
+    if (name === "request_scenarioType") {
       setscenariotype(value);
+    }
+    if (name == "comment") {
+      setcomment(value);
     }
   };
 
@@ -30,11 +35,22 @@ export default function Home() {
     } else {
       setscenariotypeErr("");
     }
+    if (comment === "") {
+      setcommentErr("Please Enter Comment");
+      error = error + 1;
+    } else {
+      setcommentErr("");
+    }
+    console.log(error);
+    if (error == 0) {
+    }
   };
   return (
     <div className="container-fluid">
-      <div className="template">
-        <h1>Create A New Scenario Type</h1>
+      <div className="template request-scenario">
+        <h1>
+          <span>Request SuperAdmin To</span> Create A New Scenario Type{" "}
+        </h1>
         <div className="table-responsive">
           <div className="row scenario">
             <div className="col-md-6 mb-3">
@@ -51,6 +67,22 @@ export default function Home() {
               </div>
               {scenariotypeErr != "" && (
                 <p className="alert-message">{scenariotypeErr}</p>
+              )}
+            </div>
+            <div className="col-md-6 mb-3">
+              <div className="form-content">
+                <label htmlFor="comment">Comment</label>
+                <input
+                  type="text"
+                  id="comment"
+                  name="comment"
+                  required
+                  value={comment}
+                  onChange={handleInput}
+                />
+              </div>
+              {commentErr != "" && (
+                <p className="alert-message">{commentErr}</p>
               )}
             </div>
 

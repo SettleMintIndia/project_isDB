@@ -5,17 +5,14 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [nameErr, setNameErr] = useState('');
-  const [username, setusername] = useState('');
-  const [usernameErr, setusernameErr] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordErr, setPasswordErr] = useState('');
-  const [confirmPwd, setConfirmPwd] = useState('');
-  const [confirmPwdErr, setConfirmPwdErr] = useState('');
-
-
-
+  const [name, setName] = useState("");
+  const [nameErr, setNameErr] = useState("");
+  const [username, setusername] = useState("");
+  const [usernameErr, setusernameErr] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [confirmPwdErr, setConfirmPwdErr] = useState("");
 
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
@@ -33,7 +30,7 @@ export default function Home() {
     if (name === "confirmPwd") {
       setConfirmPwd(value);
     }
-  }
+  };
 
   const handleCreateAdmin = () => {
     let error = 0;
@@ -62,78 +59,95 @@ export default function Home() {
       error = error + 1;
 
       setConfirmPwdErr("Password Mismatch");
-    }else{
-      setConfirmPwdErr("")
+    } else {
+      setConfirmPwdErr("");
     }
 
-    console.log(error)
-  }
+    console.log(error);
+  };
 
   return (
     <div className="container-fluid">
       <div className="template">
         <h1>Create Admin</h1>
-        <div className="row">
-          <div className="col-md-6 mb-3">
-            <div className="form-content">
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" required value={name} onChange={handleInput} />
-              {nameErr != "" && (
-                <p className="alert-message">{nameErr}</p>
-              )}
+        <div className="table-responsive">
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <div className="form-content">
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={name}
+                  onChange={handleInput}
+                />
+                {nameErr != "" && <p className="alert-message">{nameErr}</p>}
+              </div>
             </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-content">
-              <label htmlFor="user-name">User Name</label>
-              <input type="text" id="user-name" name="username" value={username} required onChange={handleInput} />
-              {usernameErr != "" && (
-                <p className="alert-message">{usernameErr}</p>
-              )}
+            <div className="col-md-6 mb-3">
+              <div className="form-content">
+                <label htmlFor="user-name">Email Address</label>
+                <input
+                  type="text"
+                  id="user-name"
+                  name="username"
+                  value={username}
+                  required
+                  onChange={handleInput}
+                />
+                {usernameErr != "" && (
+                  <p className="alert-message">{usernameErr}</p>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="col-md-6 mb-3">
-            <div className="form-content">
-              <label htmlFor="password">Create Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={handleInput}
-                required
-              />
-              {passwordErr != "" && (
-                <p className="alert-message">{passwordErr}</p>
-              )}
+            <div className="col-md-6 mb-3">
+              <div className="form-content">
+                <label htmlFor="password">Create Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={handleInput}
+                  required
+                />
+                {passwordErr != "" && (
+                  <p className="alert-message">{passwordErr}</p>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-content">
-              <label htmlFor="password1">Confirm Password</label>
-              <input
-                type="password"
-                id="password1"
-                name="confirmPwd"
-                value={confirmPwd}
-                required
-                onChange={handleInput}
-
-              />
-              {confirmPwdErr != "" && (
-                <p className="alert-message">{confirmPwdErr}</p>
-              )}
+            <div className="col-md-6 mb-3">
+              <div className="form-content">
+                <label htmlFor="password1">Confirm Password</label>
+                <input
+                  type="password"
+                  id="password1"
+                  name="confirmPwd"
+                  value={confirmPwd}
+                  required
+                  onChange={handleInput}
+                />
+                {confirmPwdErr != "" && (
+                  <p className="alert-message">{confirmPwdErr}</p>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/*   <input
+            {/*   <input
             className="create-template"
             type="submit"
             value="CREATE ADMIN"
           /> */}
-          <button className="create-template" onClick={() => handleCreateAdmin()} >CREATE ADMIN</button>
-
+            <button
+              className="create-template"
+              onClick={() => handleCreateAdmin()}
+            >
+              CREATE ADMIN
+            </button>
+          </div>
         </div>
       </div>
     </div>

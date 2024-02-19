@@ -12,7 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default function Home() {
   const router = useRouter();
   const handleEdit = () => {
-    router.push("/runSimulation_infoPage");
+    router.push("/simulation_history_info");
   };
   const [tabIndex, setTabIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -202,7 +202,7 @@ export default function Home() {
   };
   return (
     <div className="container-fluid">
-      <div className="simulation-info">
+      <div className="simulation-info history">
         <div className="head">
           <img src="imgs/left-arrow.svg" alt="" />
           <h3>Back</h3>
@@ -228,6 +228,16 @@ export default function Home() {
                   </div>
                   <div className="bottom-head">
                     <div className="title">Template1</div>
+                    <div className="simulation-time">
+                      <div className="type">
+                        <label htmlFor="simulationtype">Simulation Type</label>{" "}
+                        <span>Static</span>
+                      </div>
+                      <div className="time">
+                        <label htmlFor="simulationtime">Simulation Time</label>
+                        <span>2024-01-05 15:31:40</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="details-section">
                     <div className="template-details">
@@ -353,7 +363,6 @@ export default function Home() {
                           </table>
                         </div>
                       </div>
-
                       <div className="table-responsive">
                         <div className="template-content">
                           <table className="table">
@@ -485,50 +494,6 @@ export default function Home() {
                         elit. Aenean commodo ligula eget dolor.
                       </p>
                     </div>
-                    <div className="modal-buttons">
-                      <Button classname="run-simulation" variant="dark">
-                        RUN SIMULATION
-                      </Button>
-                      <button
-                        className="create-template"
-                        onClick={() => editCreateTemplate()}
-                      >
-                        SAVE AS NEW TEMPLATE{" "}
-                      </button>
-
-                      <Modal
-                        show={showModal}
-                        onHide={handleCloseModal}
-                        className="energy-efficiency"
-                      >
-                        <Modal.Header className="custom-header">
-                          <img
-                            src="imgs/close-black.svg"
-                            alt=""
-                            onClick={handleClose}
-                          />
-                        </Modal.Header>
-                        <Modal.Body>
-                          {" "}
-                          <div className="modal-details">
-                            <div className="save">
-                              <label htmlFor="">Save As</label>
-                              <input type="text" />
-                            </div>
-                            <div className="comment">
-                              <label htmlFor="">Comment</label>
-                              <input type="text" />
-                            </div>
-                          </div>
-                        </Modal.Body>
-                        <div className="modal-button">
-                          <Button btn-close-black variant="dark">
-                            SAVE CHANGES
-                          </Button>
-                          <Button classname="cancel">CANCEL</Button>
-                        </div>
-                      </Modal>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -541,22 +506,6 @@ export default function Home() {
               }}
             >
               <div className="details-section">
-                <div className="btn-group">
-                  <button
-                    className={activeButton === "Static" ? "btn active" : "btn"}
-                    onClick={() => handleButtonClick("Static")}
-                  >
-                    Static
-                  </button>
-                  <button
-                    className={
-                      activeButton === "Dynamic" ? "btn active" : "btn"
-                    }
-                    onClick={() => handleButtonClick("Dynamic")}
-                  >
-                    Dynamic
-                  </button>
-                </div>
                 <div className="tab-section">
                   <Tabs
                     selectedIndex={tabIndex}

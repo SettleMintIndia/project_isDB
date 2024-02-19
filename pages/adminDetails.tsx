@@ -7,27 +7,28 @@ import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
-
-const data = [{
-  "id": 0,
-  "name": "Tawfiq Al Rabiah",
-  "username": "TawfiqRabiah",
-  "created_on": "Tue 02 jan 2024"
-}, {
-  "id": 1,
-  "name": "Tawfiq Al Rabiah1",
-  "username": "TawfiqRabiah1",
-  "created_on": "Tue 03 jan 2024"
-}]
+const data = [
+  {
+    id: 0,
+    name: "Name1",
+    username: "name",
+    created_on: "Tue 02 jan 2024",
+  },
+  {
+    id: 1,
+    name: "Name1",
+    username: "name",
+    created_on: "Tue 03 jan 2024",
+  },
+];
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [adminData, setAdminData] = useState(data);
-  const [key,setKey]=useState()
-  const handleDeleteClick = (id:any) => {
-
-    setKey(id)
+  const [key, setKey] = useState();
+  const handleDeleteClick = (id: any) => {
+    setKey(id);
     setTooltipVisible(!tooltipVisible);
   };
 
@@ -62,12 +63,12 @@ export default function Home() {
           <div className="searchArea">
             <div className="searchFilter">
               <img src="imgs/search-icon.svg" alt="" />
-              <input type="text" placeholder="Search by template name" />
+              <input type="text" placeholder="Search by name" />
             </div>
           </div>
         </div>
-        <div className="row template-details">
-          <div className="template-content table-responsive">
+        <div className="table-responsive">
+          <div className="template-content">
             <table className="table" style={{ borderSpacing: 0 }}>
               <thead>
                 <tr>
@@ -88,9 +89,12 @@ export default function Home() {
                       className="actions
                   "
                     >
-                      <button className="delete-icon" onClick={()=>handleDeleteClick(data.id)}>
+                      <button
+                        className="delete-icon"
+                        onClick={() => handleDeleteClick(data.id)}
+                      >
                         <img src="imgs/recycle-bin.svg" alt="" title="Delete" />
-                        {(tooltipVisible && key==data.id) && (
+                        {tooltipVisible && key == data.id && (
                           <span className="tooltip">
                             <div className="tool-info">
                               <p>
@@ -116,89 +120,9 @@ export default function Home() {
                         )}
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-              {/*   <tbody>
-                <tr>
-                  <td>Tawfiq Al Rabiah</td>
-                  <td>TawfiqRabiah</td>
-                  <td>Tue, 9 Jan 2024</td>
-
-                  <td
-                    className="actions
-                  "
-                  >
-                    <button className="delete-icon" onClick={handleDeleteClick}>
-                      <img src="imgs/recycle-bin.svg" alt="" title="Delete" />
-                      {tooltipVisible && (
-                        <span className="tooltip">
-                          <div className="tool-info">
-                            <p>
-                              Are you sure you want to delete this template?
-                            </p>
-                            <div className="tool-buttons">
-                              <button
-                                className="delete-button"
-                                type="button"
-                                onClick={handleDeleteConfirm}
-                              >
-                                Delete
-                              </button>
-                              <button
-                                className="cancel-button"
-                                onClick={handleCancelClick}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </span>
-                      )}
-                    </button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Tawfiq Al Rabiah</td>
-                  <td>TawfiqRabiah</td>
-                  <td>Tue, 9 Jan 2024</td>
-
-                  <td
-                    className="actions
-                  "
-                  >
-                    <button className="delete-icon" onClick={handleDeleteClick}>
-                      <img src="imgs/recycle-bin.svg" alt="" title="Delete" />
-                      {tooltipVisible && (
-                        <span className="tooltip">
-                          <div className="tool-info">
-                            <p>
-                              Are you sure you want to delete this template?
-                            </p>
-                            <div className="tool-buttons">
-                              <button
-                                className="delete-button"
-                                type="button"
-                                onClick={handleDeleteConfirm}
-                              >
-                                Delete
-                              </button>
-                              <button
-                                className="cancel-button"
-                                onClick={handleCancelClick}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </span>
-                      )}
-                    </button>
-                  </td>
-                </tr>
-              </tbody> */}
             </table>
           </div>
         </div>
