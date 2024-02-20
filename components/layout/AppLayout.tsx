@@ -17,9 +17,16 @@ const AppLayout = ({ children }: LayoutProps) => {
     <div className="base">
       {/* Navbar */}
       {router.route === "/" ? (
-        <Link href="/">
-          <img src="/imgs/isdb-logo-signin.svg" className="isDB-logo" alt="" />
-        </Link>
+        <div className="login-nav">
+          <Link href="/">
+            <img
+              src="/imgs/isdb-logo-signin.svg"
+              className="isDB-logo"
+              alt=""
+            />
+          </Link>
+          <img className="close" src="/imgs/close.svg" alt="" />
+        </div>
       ) : (
         <div className="nav-container">
           <div className="nav-logo">

@@ -3,23 +3,7 @@ body {
   padding: 0;
   margin: 0;
   background: none;
-  font-family: "Gilroy" !important;
-}
-
-@font-face {
-  font-family: Gilroy;
-  src: url("../public/fonts/gilroy-medium-webfont.woff2");
-  font-weight: 600;
-}
-@font-face {
-  font-family: Gilroy;
-  src: url("../public/fonts/gilroy-regular-webfont.woff2");
-  font-weight: 500;
-}
-@font-face {
-  font-family: Gilroy;
-  src: url("../public/fonts/gilroy-light-webfont.woff2");
-  font-weight: 300;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 a {
@@ -42,7 +26,11 @@ p,
 ul {
   margin: 0;
 }
-
+h1 {
+  font-family: bressay, serif;
+  font-style: normal;
+  font-weight: 700;
+}
 ul {
   padding: 0;
   list-style: none;
@@ -50,15 +38,37 @@ ul {
 button {
   cursor: pointer;
 }
+.login-nav {
+  display: flex;
+  justify-content: space-between;
+}
+.login-nav .close {
+  margin: 0 50px;
+}
+.container-fluid.login {
+  margin-top: -130px;
+}
+.container-fluid.login .row {
+  display: flex;
+  align-items: center;
+}
+
+.container-fluid.login .row .col-md-6 img {
+  height: 100vh;
+  width: 100%;
+}
+
+.container-fluid.login .row .form-container {
+  display: flex;
+  justify-content: center;
+}
 .container-fluid nav {
   padding: 30px 50px;
 }
 .login-form {
   height: 400px;
-  background: #dcdada;
   border-radius: 10px;
   opacity: 1;
-  width: 500px;
   padding: 50px 30px;
 }
 .login-form form {
@@ -68,12 +78,6 @@ button {
   display: grid;
 }
 
-.form-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 6%;
-}
 .login-form h1 {
   font-size: 34px;
 }
@@ -87,6 +91,7 @@ button {
   height: 14px;
   margin-top: 5px;
   font-size: 14px;
+  width: auto;
 }
 .login-form label {
   margin-top: 20px;
@@ -315,6 +320,7 @@ button {
 }
 label {
   margin-bottom: 5px;
+  font-weight: bold;
 }
 .template .user-profile {
   background: #dcdada;
