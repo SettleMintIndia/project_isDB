@@ -1,31 +1,58 @@
-import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import API_Auth from './api/API_Auth'
 
 export default function Home() {
-  const [username, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userErr, setUserErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const router = useRouter();
+  const [err, setErr] = useState('')
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     let error = 0;
-    if (username === "") {
-      setUserErr("Please enter User Name");
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (userEmail === "") {
+      setUserErr("Please Enter  Email");
+      error = error + 1;
+    } else if (!emailRegex.test(userEmail)) {
+      setUserErr("Please Enter Valid Email");
       error = error + 1;
     } else {
-      setUserErr("");
+      setUserErr("")
+
     }
     if (password === "") {
-      setPasswordErr("Please enter password");
+      setPasswordErr("Please Enter Password");
       error = error + 1;
     } else {
       setPasswordErr("");
     }
     console.log(error);
+    /*  if (error == 0) {
+       router.push("/listemplates");
+     } */
     if (error == 0) {
-      router.push("/listemplates");
+
+      let body = {
+        "email": userEmail,
+        "password": password
+      }
+      console.log(body);
+      router.push('/createtemplate')
+/* 
+      const result = await API_Auth.getLogin(body);
+      console.log("result", result);
+      if (result.status == 400) {
+        setErr(result.error)
+      } else {
+        localStorage.setItem("useremail", result.email)
+        localStorage.setItem("superadmin", result.isSuper);
+        localStorage.setItem("displayname", result.display_name)
+        router.push('/createtemplate')
+      } */
+
     }
   };
 
@@ -33,8 +60,8 @@ export default function Home() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
 
-    if (name === "username") {
-      setUserName(value);
+    if (name === "userEmail") {
+      setUserEmail(value);
     }
 
     if (name === "password") {
@@ -52,14 +79,14 @@ export default function Home() {
             <div className="login-form">
               <h1>Sign In</h1>
               <div>
-                <label htmlFor="username">User Name</label>
+                <label htmlFor="username">Email</label>
                 <input
                   type="text"
-                  id="username"
-                  name="username"
+                  id="userEmail"
+                  name="userEmail"
                   required
                   onChange={handleInput}
-                  value={username}
+                  value={userEmail}
                 />
                 {userErr != "" && <p className="alert-message">{userErr}</p>}
 

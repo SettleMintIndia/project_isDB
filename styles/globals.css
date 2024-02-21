@@ -1245,3 +1245,164 @@ label {
 .compare .table .emptycell {
   background: white !important;
 }
+
+.iteratioview {
+  margin: 20px;
+}
+
+.iterationbutton{
+  position: absolute;
+  right: 50px;
+  top:200px;
+  width: 100px;
+  height: 30px;
+
+}
+
+.scrollbutton{
+  width: 100px;
+  height: 30px;
+  margin:20px
+
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+.buttongrid {
+  width: 50px;
+  height: 30px;
+  margin:10px;
+  background: none;
+}
+.imggrid{
+  width: 20px;
+  height: 10px;
+}
+.userImage{
+  width: 40px;
+  height: 40px;
+}
+
+.template .dateFilter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
+  border-radius: 21px;
+  width: 338px;
+  height: 42px;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.template .dateFilter input {
+  background: none;
+  border: none;
+  outline: none;
+  margin-left: 10px;
+}
+.template .searchArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pagination {
+  display: flex;
+  float: right;
+  margin: 24px 0px;
+  list-style: none;
+  outline: none;
+    }
+.pagination > .active > a{
+  background-color: #000044 ;
+  border-color:#00001F24 ;
+  color: #fff;
+}
+.pagination > li > a{
+  border: 1px solid #00001F24 ;
+  padding: 0px 6px;
+  outline: none;
+  margin: 0px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
+  background-color: #000044 ;
+  border-color: #00001F24;
+  outline: none ;
+  color: #ffff;
+
+}
+.pagination > li > a, .pagination > li > span{
+  color: #2438a7;
+  text-decoration:none;
+}
+.pagination_prev_btn{
+  margin-bottom: 4px;
+  width: 18px;
+  height: 18px;
+  margin-right: -8px;
+}
+.pagination_next_btn  {
+margin-bottom: 4px;
+width: 18px;
+height: 18px;
+/* margin: -4px; */
+margin-right: -4px;
+margin-left: -4px;
+}
+.pagination_row_div{
+display: flex;
+flex-direction: row;
+margin: 24px 0px;
+float: left;
+}
+.pagination_row_right_div{
+  display: flex;
+  flex-direction: row;
+  margin: 0px 0px;
+  float: right;
+  }
+.pagination_input_div{
+color: var(--black);
+font-family: 'ARIAL';
+margin-left: 4px;
+background: white;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+}
+.pagination_select{
+  border: 1px solid #707070;
+  border-radius: 4px;
+  opacity: 1;  
+  margin: 15px;
+width: 100%;
+padding: 0px 10px;
+height: 28px;
+}
+.pagination_title{
+  font-family: Roboto;
+  font-size: 12px;
+  margin: 0;
+  align-self: center;
+  letter-spacing: 0px;
+  color: #A09E9E;
+  opacity: 1;
+  }
+.pagination_total{
+font-family: Roboto;
+font-size: 15px;
+margin: 0;
+margin-right:4;
+align-self: center;
+letter-spacing: 0px;
+color: #000;
+opacity: 1;
+}
+.buttercenter{
+  margin-left: 40px;
+  margin-bottom: 20px;
+}

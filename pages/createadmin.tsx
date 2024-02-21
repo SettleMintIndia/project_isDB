@@ -3,6 +3,10 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
+import API_Auth from './api/API_Auth'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -32,13 +36,23 @@ export default function Home() {
     }
   };
 
-  const handleCreateAdmin = () => {
+  const handleCreateAdmin = async() => {
     let error = 0;
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    console.log(emailRegex.test(name))
+
     if (name === "") {
-      setNameErr("Please Enter Name");
+      setNameErr("Please Enter Email");
       error = error + 1;
+    } else if (!emailRegex.test(name)) {
+      setNameErr("Please Enter Valid Email");
+      error = error + 1;
+
     } else {
       setNameErr("");
+      console.log("Incorrect mail")
+
     }
     if (username === "") {
       setusernameErr("Please Enter User Name");
@@ -64,6 +78,26 @@ export default function Home() {
     }
 
     console.log(error);
+    if (error == 0) {
+      let body = {
+        "email": name,
+        "password": password,
+        "display_name": username
+      }
+      console.log(body);
+
+      const result = await API_Auth.createAdmin(body);
+      console.log("result", result, result.msg);
+      if (result.status == 200) {
+        toast.success('Admin Created Successfully')
+
+        setTimeout(() => {
+          router.push("/adminDetails")
+        }, 2000);
+      } else {
+        toast.error(result.msg)
+      }
+    }
   };
 
   return (
@@ -74,9 +108,9 @@ export default function Home() {
           <div className="row">
             <div className="col-md-6 mb-3">
               <div className="form-content">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Email</label>
                 <input
-                  type="text"
+                  type="email"
                   id="name"
                   name="name"
                   required
@@ -88,7 +122,7 @@ export default function Home() {
             </div>
             <div className="col-md-6 mb-3">
               <div className="form-content">
-                <label htmlFor="user-name">Email Address</label>
+                <label htmlFor="user-name">User Name</label>
                 <input
                   type="text"
                   id="user-name"
@@ -150,6 +184,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

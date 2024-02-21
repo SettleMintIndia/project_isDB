@@ -3,6 +3,10 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import API_Auth from './api/API_Auth'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Home() {
   const router = useRouter();
@@ -22,13 +26,39 @@ export default function Home() {
     }
   };
 
-  const handleCreateScenario = () => {
+  const handleCreateScenario = async () => {
     let error = 0;
     if (scenariotype == "") {
       error = error + 1;
       setscenariotypeErr("Please Enter Scenario Type");
     } else {
       setscenariotypeErr("");
+      let body = {
+        "sname": scenariotype
+      }
+
+      const result_exist = await API_Auth.getScenarioExists(scenariotype);
+      console.log(result_exist.exists)
+      if (result_exist.exists == true) {
+        toast.error("Scenario already Exists")
+      } else {
+        const result = await API_Auth.createScenario(body);
+        console.log("scenarioresult", result)
+        if(result.error ==undefined){
+          console.log("Hello");
+          toast.success("Scenario successfully created")
+
+          setTimeout(() => {
+            router.push('/createtemplate')
+    
+          }, 2000);
+
+        }
+       
+      }
+
+     
+
     }
   };
   return (
@@ -59,11 +89,12 @@ export default function Home() {
               onClick={() => handleCreateScenario()}
             >
               {" "}
-              <Link href="createtemplate">CREATE</Link>{" "}
+            CREATE
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 }
