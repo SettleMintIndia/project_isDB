@@ -10,9 +10,25 @@ const AppLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  const [key, setKey] = useState("superadmin"); //superadmin
-  // const [key, setKey] = useState("admin"); //admin
+  // const [key, setKey] = useState("superadmin"); //superadmin
+  const [key, setKey] = useState("admin"); //admin
+  const [isNavFixed, setIsNavFixed] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsNavFixed(true);
+      } else {
+        setIsNavFixed(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <div className="base">
       {/* Navbar */}
@@ -28,10 +44,12 @@ const AppLayout = ({ children }: LayoutProps) => {
           <img className="close" src="/imgs/close.svg" alt="" />
         </div>
       ) : (
-        <div className="nav-container">
+        // <div className="nav">
+        <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
+          {/* <div className="nav-container"> */}
           <div className="nav-logo">
             <Link href="/">
-              <img src="/imgs/isdb-logo-layout.svg" alt="" />
+              <img src="/imgs/isdb-logo-layout.png" alt="" />
             </Link>
           </div>
           {router.route === "/createtemplate" ||
@@ -39,16 +57,37 @@ const AppLayout = ({ children }: LayoutProps) => {
           router.route === "/runSimulation" ? (
             <div className="nav-links">
               <ul>
-                <li>
-                  <a href="createtemplate">Create Template</a>
+                <li
+                  className={
+                    router.pathname === "/createtemplate" ||
+                    router.pathname === "/createadmin" ||
+                    router.pathname === "/runSimulation"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <a href="createtemplate">
+                    <img src="imgs/template.svg" alt="" />
+                    Create Template
+                  </a>
                 </li>
                 {router.route === "/runSimulation" ? (
-                  <li>
-                    <a href="runSimulation">Run Simulation</a>
+                  <li
+                    className={
+                      router.pathname === "/runSimulation" ? "active" : ""
+                    }
+                  >
+                    <a href="runSimulation">
+                      <img src="imgs/run.svg" alt="" />
+                      Run Simulation
+                    </a>
                   </li>
                 ) : (
-                  <li>
-                    <a href="createadmin">Create Admin</a>
+                  <li className="active">
+                    <a href="createadmin">
+                      <img src="imgs/admin.svg" alt="" />
+                      Create Admin
+                    </a>
                   </li>
                 )}
               </ul>
@@ -67,6 +106,9 @@ const AppLayout = ({ children }: LayoutProps) => {
             <ul className="menu-list">
               <li>
                 <Link href="#">Home</Link>
+              </li>
+              <li>
+                <Link href="#">About Product</Link>
               </li>
               <li>
                 <Link href="#">How It Works </Link>
@@ -151,7 +193,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                 </li>
                 <li>
                   <Link href="request_scenarioType">
-                    Request SuperAdmin To Create Scenario Type
+                    Scenario Type Creation Request
                   </Link>
                 </li>
                 <li className="logout">
@@ -161,26 +203,11 @@ const AppLayout = ({ children }: LayoutProps) => {
             )}
           </div>
         </div>
+        // </div>
       )}
 
       {/* render page */}
       <main className="render-page">{children}</main>
-      {/* <div className="nav-bottom">
-        <ul className="nav nav-tabs nav-tabs-bottom">
-          <li>
-            <a href="homePage">Home Page</a>{" "}
-          </li>
-          <li>
-            <a href="works">How it works</a>{" "}
-          </li>
-          <li>
-            <a href="support">Support</a>{" "}
-          </li>
-          <li>
-            <a href="faqs">Faqs</a>{" "}
-          </li>
-        </ul>
-      </div> */}
     </div>
   );
 };

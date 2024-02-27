@@ -2,9 +2,9 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import API_Auth from './api/API_Auth'
+import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const router = useRouter();
@@ -37,36 +37,36 @@ export default function Home() {
   const [upperbound, setupperbound] = useState("");
   const [upperboundErr, setupperboundErr] = useState("");
   const [publickey, setPublicKey] = useState(1);
-  const [publickeyErr, setPublicKeyErr] = useState('')
-  const [devpricebuy, setDevPricebuy] = useState('')
-  const [devpricebuyErr, setDevPricebuyErr] = useState('');
-  const [devpricesell, setDevPricesell] = useState('')
-  const [devpricesellErr, setDevPricesellErr] = useState('')
-  const [devqty, setDevqty] = useState('')
-  const [devqtyErr, setDevqtyErr] = useState('')
-  const [meanpricebuy, setMeanPricebuy] = useState('')
-  const [meanpricebuyErr, setMeanPricebuyErr] = useState('');
-  const [meanpricesell, setMeanPricesell] = useState('')
-  const [meanpricesellErr, setMeanPricesellErr] = useState('')
-  const [meanqty, setMeanqty] = useState('')
-  const [meanqtyErr, setMeanqtyErr] = useState('');
-  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: '' }]);
-  const [finalDistributions, setFinalDistributions] = useState([{ name: '' }]);
+  const [publickeyErr, setPublicKeyErr] = useState("");
+  const [devpricebuy, setDevPricebuy] = useState("");
+  const [devpricebuyErr, setDevPricebuyErr] = useState("");
+  const [devpricesell, setDevPricesell] = useState("");
+  const [devpricesellErr, setDevPricesellErr] = useState("");
+  const [devqty, setDevqty] = useState("");
+  const [devqtyErr, setDevqtyErr] = useState("");
+  const [meanpricebuy, setMeanPricebuy] = useState("");
+  const [meanpricebuyErr, setMeanPricebuyErr] = useState("");
+  const [meanpricesell, setMeanPricesell] = useState("");
+  const [meanpricesellErr, setMeanPricesellErr] = useState("");
+  const [meanqty, setMeanqty] = useState("");
+  const [meanqtyErr, setMeanqtyErr] = useState("");
+  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
+  const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
 
   useEffect(() => {
     getScenarios();
-    getDistributions()
-  }, [])
+    getDistributions();
+  }, []);
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
     setFinalScenarios(result.scenarios);
-  }
+  };
 
   const getDistributions = async () => {
     const result = await API_Auth.getDistributions();
     setFinalDistributions(result.distributions);
-  }
+  };
 
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
@@ -105,23 +105,23 @@ export default function Home() {
       setlowerbound(value);
     }
     if (name == "devpricebuy") {
-      setDevPricebuy(value)
+      setDevPricebuy(value);
     }
     if (name == "devpricesell") {
-      setDevPricesell(value)
+      setDevPricesell(value);
     }
     if (name == "meanpricebuy") {
-      setMeanPricebuy(value)
+      setMeanPricebuy(value);
     }
 
     if (name == "meanpricesell") {
-      setMeanPricesell(value)
+      setMeanPricesell(value);
     }
     if (name == "devqty") {
-      setDevqty(value)
+      setDevqty(value);
     }
     if (name == "meanqty") {
-      setMeanqty(value)
+      setMeanqty(value);
     }
     if (name == "alpha1") {
       setalpha1(value);
@@ -136,8 +136,6 @@ export default function Home() {
       setPublicKey(value);
     }
   };
-
-
 
   const handleCreateTemplate = async () => {
     let error = 0;
@@ -195,18 +193,18 @@ export default function Home() {
     } else {
       setquantitylimitErr("");
     }
-    /*  if (upperbound === "") {
-       setupperboundErr("Please Enter Upper Bound");
-       error = error + 1;
-     } else {
-       setupperboundErr("");
-     }
-     if (lowerbound === "") {
-       setlowerboundErr("Please Enter Lower Bound");
-       error = error + 1;
-     } else {
-       setlowerboundErr("");
-     } */
+    if (upperbound === "") {
+      setupperboundErr("Please Enter Upper Bound");
+      error = error + 1;
+    } else {
+      setupperboundErr("");
+    }
+    if (lowerbound === "") {
+      setlowerboundErr("Please Enter Lower Bound");
+      error = error + 1;
+    } else {
+      setlowerboundErr("");
+    }
     if (alpha1 === "") {
       setalpha1Err("Please Enter Alpha 1");
       error = error + 1;
@@ -219,52 +217,52 @@ export default function Home() {
     } else {
       settheta1Err("");
     }
-    if (devpricebuy === "") {
-      setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
-      error = error + 1;
-    } else {
-      setDevPricebuyErr("");
-    }
-    if (devpricesell === "") {
-      setDevPricesellErr("Please Enter Standard Deviation Price Sell");
-      error = error + 1;
-    } else {
-      setDevPricesellErr("");
-    }
+    // if (devpricebuy === "") {
+    //   setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
+    //   error = error + 1;
+    // } else {
+    //   setDevPricebuyErr("");
+    // }
+    // if (devpricesell === "") {
+    //   setDevPricesellErr("Please Enter Standard Deviation Price Sell");
+    //   error = error + 1;
+    // } else {
+    //   setDevPricesellErr("");
+    // }
 
-    if (meanpricebuy === "") {
-      setMeanPricebuyErr("Please Enter Mean Price Buy");
-      error = error + 1;
-    } else {
-      setMeanPricebuyErr("");
-    }
+    // if (meanpricebuy === "") {
+    //   setMeanPricebuyErr("Please Enter Mean Price Buy");
+    //   error = error + 1;
+    // } else {
+    //   setMeanPricebuyErr("");
+    // }
 
-    if (meanpricesell === "") {
-      setMeanPricesellErr("Please Enter Mean Price Sell");
-      error = error + 1;
-    } else {
-      setMeanPricesellErr("");
-    }
+    // if (meanpricesell === "") {
+    //   setMeanPricesellErr("Please Enter Mean Price Sell");
+    //   error = error + 1;
+    // } else {
+    //   setMeanPricesellErr("");
+    // }
 
-    if (devqty === "") {
-      setDevqtyErr("Please Enter Standard Deviation Qunatity");
-      error = error + 1;
-    } else {
-      setDevqtyErr("");
-    }
-    if (meanqty === "") {
-      setMeanqtyErr("Please Enter Mean Qunatity");
-      error = error + 1;
-    } else {
-      setMeanqtyErr("");
-    }
+    // if (devqty === "") {
+    //   setDevqtyErr("Please Enter Standard Deviation Qunatity");
+    //   error = error + 1;
+    // } else {
+    //   setDevqtyErr("");
+    // }
+    // if (meanqty === "") {
+    //   setMeanqtyErr("Please Enter Mean Qunatity");
+    //   error = error + 1;
+    // } else {
+    //   setMeanqtyErr("");
+    // }
 
-    if (comment === "") {
-      setcommentErr("Please Enter Comment");
-      error = error + 1;
-    } else {
-      setcommentErr("");
-    }
+    // if (comment === "") {
+    //   setcommentErr("Please Enter Comment");
+    //   error = error + 1;
+    // } else {
+    //   setcommentErr("");
+    // }
     if (publickey == 2) {
       setPublicKeyErr("Please Select Public value");
       error = error + 1;
@@ -272,61 +270,55 @@ export default function Home() {
       setPublicKeyErr("");
     }
 
-
     console.log(error);
     if (error == 0) {
-
       let body = {
-        "temp_name": templatename,
-        "scenario_name": scenarioType,
-        "initial_mkt_price": Number(inititalmarketprice),
-        "price_var": Number(pricelimit),
-        "base_quant": Number(basequantity),
-        "quant_var": Number(quantitylimit),
-        "alpha0": Number(alpha0),
-        "alpha1": Number(alpha1),
-        "theta0": Number(theta0),
-        "theta1": Number(theta1),
-        "distribution": distribution,
-        "comments": comment,
-        "is_public": publickey,
-        "std_dev_price_buy": Number(devpricebuy),
-        "std_dev_price_sell": Number(devpricesell),
-        "mean_price_buy": Number(meanpricebuy),
-        "mean_price_sell": Number(meanpricesell),
-        "std_dev_quant": Number(devqty),
-        "mean_quant": Number(meanqty),
-        "admin_id": 1
-      }
+        temp_name: templatename,
+        scenario_name: scenarioType,
+        initial_mkt_price: Number(inititalmarketprice),
+        price_var: Number(pricelimit),
+        base_quant: Number(basequantity),
+        quant_var: Number(quantitylimit),
+        alpha0: Number(alpha0),
+        alpha1: Number(alpha1),
+        theta0: Number(theta0),
+        theta1: Number(theta1),
+        distribution: distribution,
+        comments: comment,
+        is_public: publickey,
+        std_dev_price_buy: Number(devpricebuy),
+        std_dev_price_sell: Number(devpricesell),
+        mean_price_buy: Number(meanpricebuy),
+        mean_price_sell: Number(meanpricesell),
+        std_dev_quant: Number(devqty),
+        mean_quant: Number(meanqty),
+        admin_id: 1,
+        limit_order_upper_bound: upperbound,
+        limit_order_lower_bound: lowerbound,
+      };
       console.log(body);
 
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        toast.error("price or quant variance should be less than 1")
-        const data = await API_Auth.createTemplate(body)
-
-
+        toast.error("price or quant variance should be less than 1");
+        const data = await API_Auth.createTemplate(body);
       } else {
-
-        const template_exist = await API_Auth.getTemplateExists(templatename)
-        console.log("template_exist", template_exist)
+        const template_exist = await API_Auth.getTemplateExists(templatename);
+        console.log("template_exist", template_exist);
 
         if (template_exist.name_available == false) {
-          toast.error("Template Name Already Exists")
+          toast.error("Template Name Already Exists");
         } else {
-
-          const data = await API_Auth.createTemplate(body)
+          const data = await API_Auth.createTemplate(body);
           console.log(data);
-          if (data.error! = '' || data.error == undefined) {
-            console.log("hello")
-            toast.success("Template Created Successfully")
+          if ((data.error! = "" || data.error == undefined)) {
+            console.log("hello");
+            toast.success("Template Created Successfully");
             setTimeout(() => {
-              router.push("/templateDetails")
+              router.push("/templateDetails");
             }, 2000);
-
           } else {
-            console.log("Hi", data.error.error)
+            console.log("Hi", data.error.error);
             toast.error("Duplicate Entries ");
-
           }
         }
       }
@@ -335,8 +327,15 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      <div className="template">
-        <h1>Create Template</h1>
+      <div className="template create">
+        <div className="template-header">
+          <div className="back-option"></div>
+          <div className="main-header">
+            <h1>Create Template</h1>
+          </div>
+          <div></div>
+        </div>
+
         <div className="table-responsive">
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -350,8 +349,13 @@ export default function Home() {
                     onChange={handleInput}
                   >
                     <option value="">Select Scenario Type</option>
-                    {finalScenarios.map(item => (
-                      <option key={item?.scenario_name} value={item?.scenario_name}>{item?.scenario_name}</option>
+                    {finalScenarios.map((item) => (
+                      <option
+                        key={item?.scenario_name}
+                        value={item?.scenario_name}
+                      >
+                        {item?.scenario_name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -381,7 +385,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="price">Initial Market Price*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="price"
                   name="inititalmarketprice"
                   required
@@ -397,7 +401,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="pricelimit">Price Variance Limit*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="pricelimit"
                   name="pricelimit"
                   required
@@ -413,7 +417,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="quantity">Base Quantity*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="quantity"
                   name="basequantity"
                   required
@@ -429,7 +433,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="quantitylimit"
                   name="quantitylimit"
                   required
@@ -441,7 +445,7 @@ export default function Home() {
                 <p className="alert-message">{quantitylimitErr}</p>
               )}
             </div>
-            {/*   <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-3">
               <div className="form-content">
                 <label htmlFor="upperbonds">Limit Order Upper Bound*</label>
                 <input
@@ -472,12 +476,12 @@ export default function Home() {
               {lowerboundErr != "" && (
                 <p className="alert-message">{lowerboundErr}</p>
               )}
-            </div> */}
+            </div>
             <div className="col-md-6 mb-3">
               <div className="form-content">
                 <label htmlFor="alpha0">Alpha 0*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="alpha0"
                   name="alpha0"
                   required
@@ -491,7 +495,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="alpha1">Alpha 1*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="alpha1"
                   name="alpha1"
                   required
@@ -505,7 +509,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="theta0">Theta 0*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="theta0"
                   name="theta0"
                   required
@@ -519,7 +523,7 @@ export default function Home() {
               <div className="form-content">
                 <label htmlFor="theta1">Theta 1*</label>
                 <input
-                  type="number"
+                  type="text"
                   id="theta1"
                   name="theta1"
                   required
@@ -528,114 +532,6 @@ export default function Home() {
                 />
               </div>
               {theta1Err != "" && <p className="alert-message">{theta1Err}</p>}
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="publickey">Public</label>
-                <select
-                  name="publickey"
-                  id="publickey"
-                  value={publickey}
-                  onChange={handleInput}
-                  required
-                >
-                  <option value="">Select  Type</option>
-                  <option value="1">True</option>
-                  <option value="0">False</option>
-                </select>
-              </div>
-              {publickeyErr != "" && <p className="alert-message">{publickeyErr}</p>}
-
-
-
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Price Buy</label>
-                <input
-                  type="number"
-                  id="devpricebuy"
-                  name="devpricebuy"
-                  required
-                  value={devpricebuy}
-                  onChange={handleInput}
-                />
-              </div>
-              {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Price Sell</label>
-                <input
-                  type="number"
-                  id="devpricesell"
-                  name="devpricesell"
-                  required
-                  value={devpricesell}
-                  onChange={handleInput}
-                />
-              </div>
-              {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Buy</label>
-                <input
-                  type="number"
-                  id="meanpricebuy"
-                  name="meanpricebuy"
-                  required
-                  value={meanpricebuy}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Sell</label>
-                <input
-                  type="number"
-                  id="meanpricesell"
-                  name="meanpricesell"
-                  required
-                  value={meanpricesell}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Quantity</label>
-                <input
-                  type="number"
-                  id="devqty"
-                  name="devqty"
-                  required
-                  value={devqty}
-                  onChange={handleInput}
-                />
-              </div>
-              {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Quantity</label>
-                <input
-                  type="number"
-                  id="meanqty"
-                  name="meanqty"
-                  required
-                  value={meanqty}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
             </div>
 
             <div className="col-md-6 mb-3">
@@ -649,8 +545,10 @@ export default function Home() {
                   required
                 >
                   <option value="">Select Distribution Type</option>
-                  {finalDistributions.map(item => (
-                    <option key={item?.name} value={item?.name}>{item?.name}</option>
+                  {finalDistributions.map((item) => (
+                    <option key={item?.name} value={item?.name}>
+                      {item?.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -660,31 +558,70 @@ export default function Home() {
             </div>
 
             <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="comment">Comment</label>
-                <input
+              <div className="form-control">
+                <label htmlFor="accessible">Visibility*</label>
+                <div className="radio-button">
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      value="option1"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio1">
+                      Public
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      value="option2"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio2">
+                      Private
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-3">
+              <div className="form-content comment">
+                <label htmlFor="comment">
+                  Comment <span>(Optional)</span>
+                </label>
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  rows="3"
+                  value={comment}
+                  onChange={handleInput}
+                ></textarea>
+                {/* <input
                   type="text"
                   id="comment"
                   name="comment"
                   required
                   value={comment}
                   onChange={handleInput}
-                />
+                /> */}
               </div>
               {commentErr != "" && (
                 <p className="alert-message">{commentErr}</p>
               )}
             </div>
-
           </div>
-          <div className="buttercenter">
-
+          <div className="buttoncenter">
             <button
               className="create-template"
               onClick={() => handleCreateTemplate()}
             >
-              CREATE TEMPLATE{" "}
+              Create Template{" "}
             </button>
+            <button className="reset">Reset</button>
           </div>
         </div>
       </div>

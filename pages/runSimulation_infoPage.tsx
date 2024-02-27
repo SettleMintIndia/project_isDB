@@ -203,10 +203,15 @@ export default function Home() {
   return (
     <div className="container-fluid">
       <div className="simulation-info">
-        <div className="head">
-          <img src="imgs/left-arrow.svg" alt="" />
-          <h3>Back</h3>
+        <div className="template-header">
+          <div className="back-option">
+            <img src="imgs/left-arrow.svg" alt="" />
+            <p className="mb-0">Back</p>
+          </div>
+          <div className="main-header"></div>
+          <div></div>
         </div>
+
         <div className="simulation-section">
           <div className="row">
             <div
@@ -236,13 +241,13 @@ export default function Home() {
                           <table className="table">
                             <thead>
                               <tr>
-                                <th>Scenario Type</th>
+                                <th>Scenario Type*</th>
                                 <th>Crash</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td>Initial Market Price</td>
+                                <td>Initial Market Price*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -260,7 +265,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Price Variance Limit</td>
+                                <td>Price Variance Limit*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -278,7 +283,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Base Quantity</td>
+                                <td>Base Quantity*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -296,7 +301,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Quantity Variance Limit</td>
+                                <td>Quantity Variance Limit*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -314,7 +319,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Limit Order Upper Bound</td>
+                                <td>Limit Order Upper Bound*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -332,7 +337,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Limit Order Lower Bound</td>
+                                <td>Limit Order Lower Bound*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -359,7 +364,7 @@ export default function Home() {
                           <table className="table">
                             <tbody>
                               <tr>
-                                <td>Alpha 0</td>
+                                <td>Alpha 0*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -375,7 +380,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Alpha 1</td>
+                                <td>Alpha 1*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -391,7 +396,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Theta 0</td>
+                                <td>Theta 0*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -407,7 +412,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Theta 1</td>
+                                <td>Theta 1*</td>
                                 <td>
                                   <input
                                     type="text"
@@ -423,7 +428,7 @@ export default function Home() {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Distribution</td>
+                                <td>Distribution*</td>
                                 <td>
                                   <select
                                     name="distribution"
@@ -456,19 +461,19 @@ export default function Home() {
                           <table className="table">
                             <tbody>
                               <tr>
-                                <td>Number Of Iterations</td>
+                                <td>Number Of Iterations*</td>
                                 <td>
                                   <input type="text" />
                                 </td>
                               </tr>
                               <tr>
-                                <td>Number Of Rounds</td>
+                                <td>Number Of Rounds*</td>
                                 <td>
                                   <input type="text" />
                                 </td>
                               </tr>
                               <tr>
-                                <td>Number Of Orders In Each Round</td>
+                                <td>Number Of Orders In Each Round*</td>
                                 <td>
                                   <input type="text" />
                                 </td>
@@ -477,23 +482,67 @@ export default function Home() {
                           </table>
                         </div>
                       </div>
+                      <div className="table-responsive">
+                        <div className="template-content">
+                          <div className="form-control visibility">
+                            <label htmlFor="accessible">Visibility*</label>
+                            <div className="radio-button">
+                              <div className="form-check form-check-inline">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="inlineRadioOptions"
+                                  id="inlineRadio1"
+                                  value="option1"
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="inlineRadio1"
+                                >
+                                  Public
+                                </label>
+                              </div>
+                              <div className="form-check form-check-inline">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="inlineRadioOptions"
+                                  id="inlineRadio2"
+                                  value="option2"
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="inlineRadio2"
+                                >
+                                  Private
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="modal-comment">
-                      <label htmlFor="comment">Comment</label>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing
-                        elit. Aenean commodo ligula eget dolor.
-                      </p>
+                      <div className="form-content comment">
+                        <label htmlFor="comment">
+                          Comment <span>(Optional)</span>
+                        </label>
+                        <textarea
+                          class="form-control"
+                          id="comment"
+                          rows="2"
+                          value={comment}
+                          onChange={handleInput}
+                        ></textarea>
+                      </div>
                     </div>
                     <div className="modal-buttons">
-                      <Button classname="run-simulation" variant="dark">
-                        RUN SIMULATION
-                      </Button>
+                      <button className="run-simulation">Run Simulation</button>
                       <button
                         className="create-template"
                         onClick={() => editCreateTemplate()}
                       >
-                        SAVE AS NEW TEMPLATE{" "}
+                        Save As New Template{" "}
                       </button>
 
                       <Modal
@@ -538,10 +587,11 @@ export default function Home() {
               style={{
                 width: isExpanded ? "65%" : "94%",
                 marginLeft: "15px",
+                paddingTop: "10px",
               }}
             >
               <div className="details-section">
-                <div className="btn-group">
+                {/* <div className="btn-group">
                   <button
                     className={activeButton === "Static" ? "btn active" : "btn"}
                     onClick={() => handleButtonClick("Static")}
@@ -556,7 +606,7 @@ export default function Home() {
                   >
                     Dynamic
                   </button>
-                </div>
+                </div> */}
                 <div className="tab-section">
                   <Tabs
                     selectedIndex={tabIndex}

@@ -3,10 +3,9 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import API_Auth from './api/API_Auth'
+import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const router = useRouter();
@@ -34,42 +33,36 @@ export default function Home() {
     } else {
       setscenariotypeErr("");
       let body = {
-        "sname": scenariotype
-      }
+        sname: scenariotype,
+      };
 
       const result_exist = await API_Auth.getScenarioExists(scenariotype);
-      console.log(result_exist.exists)
+      console.log(result_exist.exists);
       if (result_exist.exists == true) {
-        toast.error("Scenario already Exists")
+        toast.error("Scenario already Exists");
       } else {
         const result = await API_Auth.createScenario(body);
-        console.log("scenarioresult", result)
-        if(result.error ==undefined){
+        console.log("scenarioresult", result);
+        if (result.error == undefined) {
           console.log("Hello");
-          toast.success("Scenario successfully created")
+          toast.success("Scenario successfully created");
 
           setTimeout(() => {
-            router.push('/createtemplate')
-    
+            router.push("/createtemplate");
           }, 2000);
-
         }
-       
       }
-
-     
-
     }
   };
   return (
     <div className="container-fluid">
-      <div className="template">
-        <h1>Create A New Scenario Type</h1>
+      <div className="template scenariotype">
+        <h1>Create Scenario Type</h1>
         <div className="table-responsive">
           <div className="row scenario">
             <div className="col-md-6 mb-3">
               <div className="form-content">
-                <label htmlFor="scenario">Add A New Scenario Type</label>
+                <label htmlFor="scenario"> Scenario Type</label>
                 <input
                   type="text"
                   id="scenario"
@@ -89,12 +82,12 @@ export default function Home() {
               onClick={() => handleCreateScenario()}
             >
               {" "}
-            CREATE
+              Create
             </button>
           </div>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
