@@ -1993,3 +1993,442 @@ label {
   color: white;
   border-radius: inherit;
 }
+
+
+
+/* Md css Media queries*/
+
+
+@media screen and (max-width: 1279px) and (min-width: 769px) {
+  .template .row {
+    width: 100%;
+    display: flex;
+    background: #dcdada;
+    border-radius: 20px;
+    padding: 15px;
+    gap: 19px;
+    flex-wrap: wrap;
+
+  }
+  select, button {
+    width: 236px;
+    height: 50px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid;
+    padding: 0 10px;
+  }
+  .template .row input, select, button {
+    width: 237px;
+    height: 50px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid;
+    padding: 0 10px;
+}
+.nav-links {
+  padding: 20px;
+  background: #3e3e3e;
+  border-radius: 12px;
+}
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px;
+  padding: 20px;
+  background: #4e4e4e;
+  border-radius: 10px;
+  color: white;
+  height: 100px;
+  gap: 10px;
+}
+}
+
+@media screen and (max-width: 768px) and (min-width: 481px){
+
+  .template-content table thead th {
+    position: -webkit-sticky;
+    position: sticky;
+    background: #4e4e4e;
+    padding: 30px 12px 15px;
+    color: white;
+}
+.template.admin, .template.run-simulation, .template.details {
+  margin: 3% 4%;
+}
+
+.template-content table tbody tr td {
+  padding: 10px;
+  background: #dcdada;
+  position: relative;
+}
+.template .pagging-area .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6f6d6d;
+  font-size: 14px;
+  margin-top: -6px;
+}
+  select, button {
+    width: 260px;
+    height: 50px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid;
+    padding: 0 10px;
+}
+.template .row input, select, button {
+  width: 260px;
+  height: 50px ;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid;
+  padding: 0px 10px;
+}
+.nav-user, .nav-user .user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  justify-content: flex-end;
+}
+.nav-container{
+  width: 100%;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px;
+  background: #4e4e4e;
+  border-radius: 10px;
+  color: white;
+  height: 100px;
+  
+}
+.nav-links li {
+    padding: 0px 16px;
+    border: 1px solid;
+    border-radius: 4px;
+    opacity: 0.66;
+}
+.nav-logo{
+  padding: 10px;
+}
+.nav-container .nav-right {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+}
+
+@media screen and (max-width: 480px) and (min-width: 400px){
+
+  .template .calendar select {
+    padding: 0px;
+    border: none;
+    height: 35px;
+}
+.template .calendar {
+  display: flex;
+  background: #dcdada;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  width: 90px;
+  height: 32px;
+  padding-left: 4px;
+  padding-right: 10px;
+  font-size: 12px;
+  align-items: center;
+}
+  
+  .template {
+    margin: 3% 7%;
+    overflow: hidden;
+}
+.template .user-profile {
+  background: #dcdada;
+  border-radius: 10px;
+  padding: 24px;
+}
+  .nav-links ul {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+    padding-left: 0;
+    font-size: 13px;
+}
+
+.nav-links li {
+    padding: 2px 12px;
+    border: 1px solid;
+    border-radius: 4px;
+    opacity: 0.66;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px;
+    padding: 8px;
+    background: #4e4e4e;
+    border-radius: 10px;
+    color: white;
+    height: 100px;
+    gap: 12px;
+}
+.nav-container .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+
+
+.template .row {
+    display: flex;
+    background: #dcdada;
+    border-radius: 10px;
+    padding: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.template .row input, select, button {
+    width: 220px;
+    height: 50px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid;
+    padding: 0 10px;
+}
+.user img{
+  width: 30px;
+}
+ .nav-user .username h4 {
+    font-size: 12px;
+    margin: 5px 0;
+}
+  .nav-user .username p {
+    font-size: 10px;
+    margin: 5px 0;
+}
+
+.template .searchFilter {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
+  border-radius: 21px;
+  width: 165px;
+  height: 35px;
+  padding-left: 5px;
+  font-size: 11px;
+  justify-content: flex-start;
+}
+.template-content table thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  background: #4e4e4e;
+  padding: 12px 6px 15px;
+  color: white;
+}
+.template-content table thead tr {
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.template .pagging-area .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6f6d6d;
+  font-size: 12px;
+  margin-top: -6px;
+}
+.leftaction-single, .rightaction-single {
+  width: 31px;
+  height: 35px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template .head button {
+  width: 122px;
+  height: 47px;
+  color: white;
+  background: #222222;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template h1 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 26px;
+}
+.leftaction, .rightaction, .leftaction-single, .rightaction-single {
+  width: 12px;
+  height: 35px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template .pagging-area .toolbar select {
+  width: 50px;
+  height: 35px;
+  border-radius: 4px;
+}
+.template .paging-list .paging-count {
+  display: flex;
+  gap: 0px;
+  padding: 0;
+}
+.template .choose-file button {
+  border: 1px solid #222222;
+  border-radius: 5px;
+  width: 100px;
+  height: 50px;
+}
+
+
+.template.admin, .template.run-simulation, .template.details {
+  margin: 2% 2%;
+}
+.template-content table tbody tr td {
+  padding: 8px;
+  background: #dcdada;
+  position: relative;
+}
+
+}
+
+@media screen and (max-width: 399px) and (min-width: 320px){
+  .template .user-profile {
+    background: #dcdada;
+    border-radius: 10px;
+    padding: 8px;
+} 
+.template {
+  margin: 3% 2%;
+  overflow: hidden;
+}
+.template .choose-file button {
+  border: 1px solid #222222;
+  border-radius: 5px;
+  width: 110px;
+  height: 55px;
+}
+.template.admin, .template.run-simulation, .template.details {
+  margin: 3% 2%;
+}
+
+.searchFilter img{
+  width: 15px;
+}
+
+.template .calendar {
+  display: flex;
+  background: #dcdada;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 14px;
+}
+.template .searchFilter {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
+  border-radius: 18px;
+  width: 190px;
+  height: 30px;
+  padding-left: 12px;
+  font-size: 10px;
+}
+
+.template .pagging-area .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6f6d6d;
+  font-size: 14px;
+  margin-top: -15px;
+}
+.template.details {
+  margin: 3% 3%;
+}
+  .template .head {
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+  .nav-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 5px;
+    padding: 20px;
+    background: #4e4e4e;
+    border-radius: 10px;
+    color: white;
+    height: 100px;
+}
+.template h1 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 26px;
+}
+.template.admin .filterArea {
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.template .head button a {
+  font-size: 12px;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+  .user img{
+    width: 30px;
+  }
+
+  .nav-links li {
+    padding: 0px 8px;
+    border: 1px solid;
+    border-radius: 4px;
+    opacity: 0.66;
+}
+.template .row input, select, button {
+    width: 246px;
+    height: 50px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid;
+    padding: 0 10px;
+}
+.template .row {
+    display: flex;
+    background: #dcdada;
+    border-radius: 10px;
+    padding: 12px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+}
