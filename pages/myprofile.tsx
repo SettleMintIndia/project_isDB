@@ -25,8 +25,8 @@ export default function Home() {
     getAdminInfo(email);
   }, []);
   const getAdminInfo = async (email: any) => {
-    let dummyemail = "demo4@gmail.com";
-    const result = await API_Auth.getAdminInformation(dummyemail);
+    let dummyemail = 'demo@isdb.com'
+    const result = await API_Auth.getAdminInformation(dummyemail)
     console.log(result);
     setUserData(result);
   };
@@ -35,9 +35,9 @@ export default function Home() {
     const selectedFile = e.target.files[0];
     const fieldname = e.target.name;
     console.log(selectedFile, fieldname);
-    const email = localStorage.getItem("useremail");
-    console.log("email", email);
-    let dummyemail = "demo4@gmail.com";
+    const email = localStorage.getItem('useremail')
+    console.log("email", email)
+    let dummyemail = 'demo@isdb.com'
 
     let body = {
       email: dummyemail,
@@ -89,6 +89,7 @@ export default function Home() {
                     type="file"
                     name="file"
                     placeholder="Item Name"
+                    onChange={(e) => handleFileUpload(e)}
                   />
                 </label>
                 <div className="file-format">

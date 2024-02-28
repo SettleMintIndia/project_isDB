@@ -11,7 +11,17 @@ import {
     CREATE_ADMIN,
     DELETE_ADMIN,
     UPLOAD_IMAGE,
-    UPLOAD_PASSWORD
+    UPLOAD_PASSWORD,
+    REQUEST_GET_SCENARIO,
+    RUN_SIMULATION,
+    GET_ORDERDETAILS,
+    GET_TRADEHISTORYWS,
+    GET_TRADEHISTORYNS,
+    GET_STABLIZATION_FUND,
+    GET_SIMULATIONRESULT,
+    GET_NOTIFICATIONS,
+    GET_SIMULATION_HISTORY,
+    GET_CHANGE_VISIBILITY_TEMPLATE
 } from './config'
 
 const apiSettings = {
@@ -196,7 +206,7 @@ const apiSettings = {
         ).json();
         return result;
     },
-    getDeleteTemplate:async (body) => {
+    getDeleteTemplate: async (body) => {
         const result = await (
             await fetch(
                 DELETE_TEMPLATE,
@@ -212,7 +222,7 @@ const apiSettings = {
         return result;
     },
 
-    getTemplateExists:async(name)=>{
+    getTemplateExists: async (name) => {
         const result = await (
             await fetch(
                 GET_TEMPLATE_EXISTS + "?template_name=" + name,
@@ -227,7 +237,7 @@ const apiSettings = {
         return result;
 
     },
-    getTemplateDetails:async(name)=>{
+    getTemplateDetails: async (name) => {
         const result = await (
             await fetch(
                 GET_TEMPLATE_DETAILS + "?template_name=" + name,
@@ -274,8 +284,159 @@ const apiSettings = {
         ).json();
         return result;
 
-    }
+    },
+    getRequestScenario: async (body) => {
+        const result = await (
+            await fetch(
+                REQUEST_GET_SCENARIO,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                }
+            )
+        ).json();
+        return result;
 
+    },
+    runSimulation: async (body) => {
+        const result = await (
+            await fetch(
+                RUN_SIMULATION,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                }
+            )
+        ).json();
+        return result;
+    },
+    getOrderDetails: async (ex_id, iteration, round) => {
+        const result = await (
+            await fetch(
+                GET_ORDERDETAILS + "?execution_id=" + ex_id + "&iteration=" + iteration + "&round=" + round,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+
+    },
+    getTradeHistoryWithStablization: async (ex_id, iteration, round) => {
+        const result = await (
+            await fetch(
+                GET_TRADEHISTORYWS + "?execution_id=" + ex_id + "&iteration=" + iteration + "&round=" + round,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+
+    },
+    getTradeHistoryWithoutStablization: async (ex_id, iteration, round) => {
+        const result = await (
+            await fetch(
+                GET_TRADEHISTORYNS + "?execution_id=" + ex_id + "&iteration=" + iteration + "&round=" + round,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+
+    },
+    getStablizationFundDetails: async (ex_id) => {
+        const result = await (
+            await fetch(
+                GET_STABLIZATION_FUND + "?execution_id=" + ex_id,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+    },
+
+    getSimulationResult: async (ex_id, type) => {
+        const result = await (
+            await fetch(
+                GET_SIMULATIONRESULT + "?execution_id=" + ex_id + "&type=" + type,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+
+    },
+    getNotifications: async (id) => {
+        const result = await (
+            await fetch(
+                GET_NOTIFICATIONS + "?admin_id=" + id,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+        ).json();
+        return result;
+    },
+    getSimulationHistory: async (body) => {
+
+        const result = await (
+            await fetch(
+                GET_SIMULATION_HISTORY,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                }
+            )
+        ).json();
+        return result;
+    },
+    getChangeVisiblityTemplate: async (body) => {
+
+        const result = await (
+            await fetch(
+                GET_CHANGE_VISIBILITY_TEMPLATE,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                }
+            )
+        ).json();
+        return result;
+    }
 }
 
 

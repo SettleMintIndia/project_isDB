@@ -20,8 +20,9 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [marginTop, setMarginTop] = useState("-30px");
+  const [totalErrors, setTotalErrors] = useState([])
 
-  const handleInput1 = (event) => {
+  const handleInput1 = (event:any) => {
     const { name, value } = event.target;
     if (name === "password") {
       setPassword(value);
@@ -30,7 +31,7 @@ export default function Home() {
     }
   };
 
-  const togglePasswordVisibility = (field) => {
+  const togglePasswordVisibility = (field:any) => {
     if (field === "password") {
       setShowPassword(!showPassword);
     } else if (field === "confirmPwd") {
@@ -54,6 +55,37 @@ export default function Home() {
       setConfirmPwd(value);
     }
   };
+
+  const validatePassword = (password: any) => {
+    var p = password
+    var errors: any = [];
+    if (p.length < 8) {
+      errors.push("Your password must be at least 8 characters");
+    }
+    if (p.search(/[a-z]/i) < 0) {
+      errors.push("Your password must contain at least one letter.");
+    }
+    if (p.search(/[0-9]/) < 0) {
+      errors.push("Your password must contain at least one digit.");
+    }
+    console.log(errors);
+    if (errors.length > 0) {
+      //alert(errors.join("\n"));
+      setTotalErrors(errors)
+      return false;
+    } else {
+      setTotalErrors([])
+    }
+    return true;
+  }
+
+  const handleReset=()=>{
+    setName("");
+    setusername("");
+    setPassword("");
+    setConfirmPwd("");
+
+  }
 
   const handleCreateAdmin = async () => {
     let error = 0;
@@ -82,11 +114,21 @@ export default function Home() {
       error = error + 1;
     } else {
       setPasswordErr("");
+      const data = validatePassword(password)
+      console.log(data)
+      if (data == true) {
+        setPasswordErr("")
+      } else {
+        error = error + 1;
+
+      }
+
     }
     if (confirmPwd === "") {
       setConfirmPwdErr("Please Enter Confirm Password");
       error = error + 1;
     } else if (password != confirmPwd) {
+      console.log(password,confirmPwd)
       error = error + 1;
 
       setConfirmPwdErr("Password Mismatch");
@@ -191,6 +233,13 @@ export default function Home() {
                 {passwordErr != "" && (
                   <p className="alert-message">{passwordErr}</p>
                 )}
+                <div className="passwordvalidation">
+                  <ul>
+                    {totalErrors.map((item: any) => (
+                      <li key={item} className="alert-message">* {item}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
             <div className="col-md-6 mb-3">
@@ -233,7 +282,7 @@ export default function Home() {
               >
                 Create Admin
               </button>
-              <button className="reset">Reset</button>
+              <button className="reset" onClick={()=>handleReset()}>Reset</button>
             </div>
           </div>
         </div>

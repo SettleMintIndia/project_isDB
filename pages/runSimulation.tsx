@@ -1,7 +1,7 @@
 "use client";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -9,56 +9,129 @@ import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import moment from "moment";
+import API_Auth from './api/API_Auth'
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+import Loader from "@/components/layout/Loader";
+import ReactPaginate from 'react-paginate';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-const data = [
-  {
-    id: 0,
-    scenario_type: "Crash",
-    template_name: "Template1",
-    created_on: "Tue, 9 Jan 2024",
-    template_description:
-      "   Lorem ipsum dolor sit amet, consectetuer adipiscingelit. Aenean commodo ligula eget dolor.",
-  },
-  {
-    id: 1,
-    scenario_type: "Bubble",
-    template_name: "Template1",
-    created_on: "Tue, 9 Jan 2024",
-    template_description:
-      "   Lorem ipsum dolor sit amet, consectetuer adipiscingelit. Aenean commodo ligula eget dolor.",
-  },
-];
+
 // @ts-ignore
-const [viewData, setViewData] = useState<any>({
-  temp_name: "",
-  created_timestamp: "",
-  scenario_name: "",
-  initial_mkt_price: "",
-  price_var: "",
-  base_quant: "",
-  quant_var: "",
-  alpha0: "",
-  alpha1: "",
-  theta0: "",
-  theta1: "",
-  std_dev_price_buy: "",
-  std_dev_price_sell: "",
-  std_dev_quant: "",
-  mean_quant: "",
-  distribution: "",
-  comments: "",
-  mean_price_buy: "",
-  mean_price_sell: "",
-});
+
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const handleDeleteClick = (id: any) => {
+
+  const [showModal, setShowModal] = useState(false);
+  const [key, setKey] = useState();
+  const [activeButton, setActiveButton] = useState("Static");
+
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const [templateData, setTemplateData] = useState([{ is_public: 1, scenario_name: '', temp_name: '', created_timestamp: '', comments: '' }])
+  const [globalTemplates, setGlobalTemplates] = useState([{display_name:'', scenario_name: '', temp_name: '', created_timestamp: '', comments: '' }])
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [s_type, setSType] = useState('');
+  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: '' }]);
+  const [tempname, setTempName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [perPage, setPerPage] = useState(5);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
+  const [offset, setOffSet] = useState(0);
+  const [totalCount, setTotalCount] = useState(0)
+  const [viewData, setViewData] = useState({
+    temp_name: '', created_timestamp: '', scenario_name: '',
+    initial_mkt_price: '', price_var: '', base_quant: '',
+    quant_var: '', alpha0: '', alpha1: '',
+    theta0: '', theta1: '', std_dev_price_buy: '',
+    std_dev_price_sell: '', std_dev_quant: '', mean_quant: '',
+    distribution: '', comments: '', mean_price_buy: '',
+    mean_price_sell: '',is_public:1
+  })
+
+  useEffect(() => {
+    console.log("tabIndex", tabIndex)
+    if (tabIndex == 0) {
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+    } else {
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+    }
+
+  }, [tabIndex])
+
+  const getUserTemplates = async (tempname: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+    setLoading(true);
+    let body = {
+      "temp_name": tempname,
+      "admin_id": "15",
+      "scenario": s_type,
+      "datefrom": fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      "dateto": toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      "resultPerPage": perPage,
+      "pgNo": pageNo,
+      "showPrivate": true
+    }
+    console.log(body);
+    const result = await API_Auth.getAllTemplates(body);
+    console.log(result);
+    setLoading(false);
+    if (result.status == 200) {
+      setTemplateData(result.templates)
+      setTotalCount(result.count)
+      setPageCount(Math.ceil(result.count / perPage))
+    }
+  }
+  const getglobalTemplates = async (tempname: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+    setLoading(true);
+    let body = {
+      "temp_name": tempname,
+      "admin_id": "",
+      "scenario": s_type,
+      "datefrom": fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      "dateto": toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      "resultPerPage": perPage,
+      "pgNo": pageNo,
+      "showPrivate": false
+    }
+
+    console.log("global", body);
+
+    const result = await API_Auth.getAllTemplates(body);
+    console.log(result);
+    setLoading(false);
+    if (result.status == 200) {
+      setGlobalTemplates(result.templates)
+      setTotalCount(result.count)
+      setPageCount(Math.ceil(result.count / perPage))
+
+    }
+  }
+
+  const handleDeleteClick = (data: any) => {
     setTooltipVisible(!tooltipVisible);
-    setKey(id);
+    setKey(data.temp_name);
+    setViewData(data);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
+
+    let body = {
+      template_name: viewData.temp_name,
+    };
+    const result = await API_Auth.getDeleteTemplate(body);
+    console.log(result);
+    if (result.status == 200) {
+      toast.success("Template Deleted Successfully");
+
+      setTimeout(() => {
+        getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+      }, 2000);
+    }
     setTooltipVisible(false);
   };
 
@@ -68,12 +141,18 @@ export default function Home() {
   const handleEdit = () => {
     router.push("/runSimulation");
   };
-  const [showModal, setShowModal] = useState(false);
-  const [key, setKey] = useState();
+  const handleEditTemplate = (data: any) => {
+    console.log(data.temp_name);
+    router.push({
+      pathname: "/editTemplate",
+      query: { temp_name: data.temp_name },
+    });
+  };
 
-  const [templateData, setTemplateData] = useState(data);
-  const viewDetails = () => {
+  const viewDetails = (data: any) => {
     setShowModal(true);
+    setViewData(data);
+
   };
 
   const handleCloseModal = () => {
@@ -82,12 +161,107 @@ export default function Home() {
   const handleClose = () => {
     setShowModal(false);
   };
-  const [activeButton, setActiveButton] = useState("Static");
 
-  const handleButtonClick = (buttonName: SetStateAction<string>) => {
-    setActiveButton(buttonName);
+  const handleSimulation = (data: any) => {
+    console.log(data.temp_name)
+    router.push({
+      pathname: '/runSimulation_infoPage',
+      query: { temp_name: data.temp_name },
+    });
+  }
+  const handleButtonClick = async (data: any) => {
+    //setActiveButton(buttonName);
+
+    console.log(data);
+    let body = {
+      "template_name": data.temp_name,
+      "make_public": data.is_public == 1 ? false : true
+    }
+    const result = await API_Auth.getChangeVisiblityTemplate(body);
+    console.log("visibilityresult", result)
+    if (result.status == 400) {
+      toast.error(result.error)
+    } else {
+      toast.success(result.message)
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+      } else {
+        getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+      }
+
+    }
   };
-  const [tabIndex, setTabIndex] = useState(0);
+
+  const handleInput = async (e: any) => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+    if (name === "scenarioType") {
+      setSType(value);
+
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, value, fromDate, toDate, perPage, 1);
+      } else {
+        getglobalTemplates(tempname, value, fromDate, toDate, perPage, 1);
+      }
+    }
+    if (name == "tempname") {
+      console.log(tabIndex);
+      if (tabIndex == 0) {
+        getUserTemplates(value, s_type, fromDate, toDate, perPage, 1);
+      } else {
+        getglobalTemplates(value, s_type, fromDate, toDate, perPage, 1);
+      }
+      setTempName(value)
+    }
+    if (name == "fromDate") {
+      setFromDate(value)
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, value, toDate, perPage, 1);
+      } else {
+        getglobalTemplates(tempname, s_type, value, toDate, perPage, 1);
+      }
+    }
+    if (name == "toDate") {
+      setToDate(value);
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, fromDate, value, perPage, 1);
+      } else {
+        getglobalTemplates(tempname, s_type, fromDate, value, perPage, 1);
+      }
+    }
+
+    if (name == "perPage") {
+      setPerPage(Number(value))
+      setPageNo(1);
+      setCurrentPage(1);
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, fromDate, toDate, value, 1);
+      } else {
+        getglobalTemplates(tempname, s_type, fromDate, toDate, value, 1);
+      }
+
+    }
+  }
+
+  const handleDownloadExel = () => {
+    console.log(viewData)
+    let finalData = [];
+    let finaldata = finalData.push(viewData)
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+    const fileName = viewData.temp_name
+
+    const ws = XLSX.utils.json_to_sheet(finalData);
+
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+    const data = new Blob([excelBuffer], { type: fileType });
+
+    FileSaver.saveAs(data, fileName + fileExtension);
+  }
+
   return (
     <div className="container-fluid">
       <div className="template run-simulation">
@@ -135,8 +309,8 @@ export default function Home() {
                       <input
                         type="text"
                         placeholder="Search by template name"
-                        // onChange={handleInput}
-                        // value={tempname}
+                        onChange={handleInput}
+                        value={tempname}
                         name="tempname"
                       />
                       <div className="search-icon">
@@ -164,17 +338,25 @@ export default function Home() {
                           <th>Actions</th>
                         </tr>
                       </thead>
+                      {templateData.length == 0 && <tbody>
+                        <tr >
+                          <td colSpan={12}>
+                            <p className="no_Data_table">No Data Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                      }
 
                       <tbody>
                         {templateData.map((data) => (
-                          <tr key={data.id}>
-                            <td>{data.scenario_type}</td>
-                            <td>{data.template_name}</td>
+                          <tr key={data.temp_name}>
+                            <td>{data.scenario_name}</td>
+                            <td>{data.temp_name}</td>
                             <td>
                               <div className="btn-group">
                                 <button
                                   className={
-                                    activeButton === "Static"
+                                    data.is_public === 1
                                       ? "btn active"
                                       : "btn"
                                   }
@@ -184,7 +366,7 @@ export default function Home() {
                                 </button>
                                 <button
                                   className={
-                                    activeButton === "Dynamic"
+                                    data.is_public === 0
                                       ? "btn active"
                                       : "btn"
                                   }
@@ -194,31 +376,34 @@ export default function Home() {
                                 </button>
                               </div>
                             </td>
-                            <td>{data.created_on}</td>
-                            <td>{data.template_description}</td>
+                            <td>{moment(data.created_timestamp).format(
+                              "MM/DD/YYYY h:mm:ss A"
+
+                            )}   
+                            </td>                       
+                              <td>{data.comments}</td>
                             <td
                               className="actions
                   "
                             >
-                              <button className="edit-icon">
-                                <Link href="editTemplate">
-                                  <img
-                                    src="imgs/pencil.svg"
-                                    alt=""
-                                    title="Edit"
-                                  />
-                                </Link>
+                              <button className="edit-icon" onClick={() => handleEditTemplate(data)}>
+                                <img
+                                  src="imgs/pencil.svg"
+                                  alt=""
+                                  title="Edit"
+                                />
+
                               </button>
                               <button
                                 className="delete-icon"
-                                onClick={() => handleDeleteClick(data.id)}
+                                onClick={() => handleDeleteClick(data)}
                               >
                                 <img
                                   src="imgs/recycle-bin.svg"
                                   alt=""
                                   title="Delete"
                                 />
-                                {tooltipVisible && key == data.id && (
+                                {tooltipVisible && key == data.temp_name && (
                                   <div className="delete-tooltip">
                                     <span className="tooltip">
                                       <div className="tool-info">
@@ -249,14 +434,12 @@ export default function Home() {
 
                               <button
                                 className="details-button"
-                                onClick={() => viewDetails()}
+                                onClick={() => viewDetails(data)}
                               >
                                 View Details
                               </button>
-                              <button className="btn simulation-btn">
-                                <Link href="runSimulation_infoPage">
-                                  Run Simulation
-                                </Link>
+                              <button className="btn simulation-btn" onClick={() => handleSimulation(data)}>
+                                Run Simulation
                               </button>
                             </td>
                           </tr>
@@ -264,6 +447,7 @@ export default function Home() {
                       </tbody>
                     </table>
                   </div>
+
                 </div>
               </TabPanel>
               <TabPanel>
@@ -319,220 +503,58 @@ export default function Home() {
                           <th>Actions</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <td>Crash</td>
-                          <td>Template1</td>
 
-                          <td>Name1</td>
-
-                          <td>Tue, 9 Jan 2024</td>
-                          <td>
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing
-                            elit. Aenean commodo ligula eget dolor.
+                      {globalTemplates.length == 0 && <tbody>
+                        <tr >
+                          <td colSpan={12}>
+                            <p className="no_Data_table">No Data Found</p>
                           </td>
-                          <td
-                            className="actions
+                        </tr>
+                      </tbody>
+                      }
+                      <tbody>
+                        {globalTemplates.map((data) => (
+
+                          <tr key={data.temp_name}>
+                            <td>{data.scenario_name}</td>
+                            <td>{data.temp_name}</td>
+
+                            <td>{data.display_name}</td>
+
+                            <td>{moment(data.created_timestamp).format(
+                              "MM/DD/YYYY h:mm:ss A"
+
+                            )}   
+                            </td>                                <td>{data.comments}</td>
+                            <td
+                              className="actions
                   "
-                          >
-                            <button className="edit-icon">
-                              <Link href="editTemplate">
+                            >
+                              <button className="edit-icon" onClick={() => handleEditTemplate(data)}>
                                 <img
                                   src="imgs/pencil.svg"
                                   alt=""
                                   title="edit"
                                 />
-                              </Link>
-                            </button>
+                              </button>
 
-                            <button
-                              className="details-button"
-                              onClick={() => viewDetails()}
-                            >
-                              View Details
-                            </button>
+                              <button
+                                className="details-button"
+                                onClick={() => viewDetails(data)}
+                              >
+                                View Details
+                              </button>
 
-                            <Modal
-                              show={showModal}
-                              onHide={handleCloseModal}
-                              className="template-modal"
-                            >
-                              <Modal.Header className="custom-header">
-                                <img
-                                  src="imgs/close-white.svg"
-                                  alt=""
-                                  onClick={handleClose}
-                                />
-                              </Modal.Header>
-                              <Modal.Body>
-                                {" "}
-                                <div className="modal-details">
-                                  <div className="head">
-                                    <div className="left-head">
-                                      Template Details
-                                    </div>
-                                    <div className="right-head">
-                                      <p>Download Template Details :</p>
-                                      <div className="file-type">
-                                        <Button>
-                                          <img
-                                            src="imgs/download-white.svg"
-                                            alt=""
-                                          />
-                                          PDF
-                                        </Button>
-                                        <Button>
-                                          <img
-                                            src="imgs/download-white.svg"
-                                            alt=""
-                                          />
-                                          EXCEL
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="bottom-head">
-                                    <div className="title">
-                                      {viewData.temp_name}
-                                    </div>
-                                    <div className="date">
-                                      <label htmlFor="create">
-                                        Created on:
-                                      </label>
-                                      <span>
-                                        {moment(
-                                          viewData.created_timestamp
-                                        ).format("MM/DD/YYYY h:mm:ss A")}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="details-section">
-                                    <div className="template-details">
-                                      <table className="table">
-                                        <thead>
-                                          <tr>
-                                            <th>Scenario Type</th>
-                                            <th className="scenario-name">
-                                              {viewData.scenario_name}
-                                            </th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            <td>Initial Market Price</td>
-                                            <td>
-                                              {viewData.initial_mkt_price}
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Price Variance Limit</td>
-                                            <td>{viewData.price_var}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Base Quantity</td>
-                                            <td>{viewData.base_quant}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Quantity Variance Limit</td>
-                                            <td>{viewData.quant_var}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Limit Order Upper Bound</td>
-                                            <td>0.95</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Limit Order Lower Bound</td>
-                                            <td>1.05</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                      <table className="table">
-                                        <tbody>
-                                          <tr>
-                                            <td>Alpha 0</td>
-                                            <td>{viewData.alpha0}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Alpha 1</td>
-                                            <td>{viewData.alpha1}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Theta 0</td>
-                                            <td>{viewData.theta0}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Theta 1</td>
-                                            <td>{viewData.theta1}</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
 
-                                      <table className="table">
-                                        <tbody>
-                                          <tr>
-                                            <td>Distribution</td>
-                                            <td>{viewData.distribution}</td>
-                                          </tr>
-                                          <tr>
-                                            <td>Visibility</td>
-                                            <td>Public</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                    <div className="modal-comment">
-                                      <label htmlFor="comment">Comment</label>
-                                      <p>{viewData.comments}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </Modal.Body>
-                            </Modal>
-                            <button className="btn btn-dark simulation-btn">
-                              <Link href="runSimulation_infoPage">
+                              <button className="btn btn-dark simulation-btn"
+                                onClick={() => handleSimulation(data)}>
                                 Run Simulation
-                              </Link>
-                            </button>
-                          </td>
-                        </tr>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
 
-                        <tr>
-                          <td>Crash</td>
-                          <td>Template1</td>
-                          <td>Name1</td>
 
-                          <td>Tue, 9 Jan 2024</td>
-                          <td>
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing
-                            elit. Aenean commodo ligula eget dolor.
-                          </td>
-                          <td
-                            className="actions
-                  "
-                          >
-                            <button className="edit-icon">
-                              <Link href="editTemplate">
-                                <img
-                                  src="imgs/pencil.svg"
-                                  alt=""
-                                  title="Edit"
-                                />
-                              </Link>
-                            </button>
-
-                            <button
-                              className="details-button"
-                              onClick={() => viewDetails()}
-                            >
-                              View Details
-                            </button>
-                            <button className="btn btn-dark simulation-btn">
-                              <Link href="runSimulation_infoPage">
-                                Run Simulation
-                              </Link>
-                            </button>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -542,119 +564,7 @@ export default function Home() {
           </div>
         </div>
 
-        <Modal
-          show={showModal}
-          onHide={handleCloseModal}
-          className="template-modal"
-        >
-          <Modal.Header className="custom-header">
-            <img src="imgs/close-white.svg" alt="" onClick={handleClose} />
-          </Modal.Header>
-          <Modal.Body>
-            {" "}
-            <div className="modal-details">
-              <div className="head">
-                <div className="left-head">Template Details</div>
-                <div className="right-head">
-                  <img src="imgs/file.svg" alt="" />
-                  <Link href="#">Download Excel Template</Link>
-                </div>
-              </div>
-              <div className="bottom-head">
-                <div className="title">Template1</div>
-                <div className="date">
-                  <label htmlFor="create">Created on</label>
-                  <span>Mon, 1 Jan 2024</span>
-                </div>
-              </div>
-              <div className="details-section">
-                <div className="template-details">
-                  <div className="table-responsive">
-                    <div className="template-content">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>Scenario Type</th>
-                            <th>Crash</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Initial Market Price</td>
-                            <td>100</td>
-                          </tr>
-                          <tr>
-                            <td>Price Variance Limit</td>
-                            <td>0.6</td>
-                          </tr>
-                          <tr>
-                            <td>Base Quantity</td>
-                            <td>2500</td>
-                          </tr>
-                          <tr>
-                            <td>Quantity Variance Limit</td>
-                            <td>0.6</td>
-                          </tr>
-                          <tr>
-                            <td>Limit Order Upper Bound</td>
-                            <td>0.95</td>
-                          </tr>
-                          <tr>
-                            <td>Limit Order Lower Bound</td>
-                            <td>1.05</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div className="table-responsive">
-                    <div className="template-content">
-                      <table className="table">
-                        <tbody>
-                          <tr>
-                            <td>Alpha 0</td>
-                            <td>0.05</td>
-                          </tr>
-                          <tr>
-                            <td>Alpha 1</td>
-                            <td>0.3</td>
-                          </tr>
-                          <tr>
-                            <td>Theta 0</td>
-                            <td>0.75</td>
-                          </tr>
-                          <tr>
-                            <td>Theta 1</td>
-                            <td>0.8</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div className="table-responsive">
-                    <div className="template-content">
-                      <table className="table">
-                        <tbody>
-                          <tr>
-                            <td>Distribution</td>
-                            <td>Uniform</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-comment">
-                  <label htmlFor="comment">Comment</label>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                    Aenean commodo ligula eget dolor.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
+
 
         <div className="pagging-area mt-2">
           <div className="toolbar">
@@ -690,6 +600,128 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        className="template-modal"
+      >
+        <Modal.Header className="custom-header">
+          <img src="imgs/close-white.svg" alt="" onClick={handleClose} />
+        </Modal.Header>
+        <Modal.Body>
+          {" "}
+          <div className="modal-details">
+            <div className="head">
+              <div className="left-head">Template Details</div>
+              <div className="right-head">
+                <p>Download Template Details :</p>
+                <div className="file-type">
+                  <Button>
+                    <img src="imgs/download-white.svg" alt="" />
+                    PDF
+                  </Button>
+                  <Button onClick={() => handleDownloadExel()}>
+                    <img src="imgs/download-white.svg" alt="" />
+                    EXCEL
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="bottom-head">
+              <div className="title">{viewData.temp_name}</div>
+              <div className="date">
+                <label htmlFor="create">Created on:</label>
+                <span>
+                  {moment(viewData.created_timestamp).format(
+                    "MM/DD/YYYY h:mm:ss A"
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="details-section">
+              <div className="template-details">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Scenario Type</th>
+                      <th className="scenario-name">
+                        {viewData.scenario_name}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Initial Market Price</td>
+                      <td>{viewData.initial_mkt_price}</td>
+                    </tr>
+                    <tr>
+                      <td>Price Variance Limit</td>
+                      <td>{viewData.price_var}</td>
+                    </tr>
+                    <tr>
+                      <td>Base Quantity</td>
+                      <td>{viewData.base_quant}</td>
+                    </tr>
+                    <tr>
+                      <td>Quantity Variance Limit</td>
+                      <td>{viewData.quant_var}</td>
+                    </tr>
+                    <tr>
+                      <td>Limit Order Upper Bound</td>
+                      <td>0.95</td>
+                    </tr>
+                    <tr>
+                      <td>Limit Order Lower Bound</td>
+                      <td>1.05</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td>Alpha 0</td>
+                      <td>{viewData.alpha0}</td>
+                    </tr>
+                    <tr>
+                      <td>Alpha 1</td>
+                      <td>{viewData.alpha1}</td>
+                    </tr>
+                    <tr>
+                      <td>Theta 0</td>
+                      <td>{viewData.theta0}</td>
+                    </tr>
+                    <tr>
+                      <td>Theta 1</td>
+                      <td>{viewData.theta1}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td>Distribution</td>
+                      <td>{viewData.distribution}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table className="independant-table">
+                  <tr>
+                    <td>Visibility</td>
+                    {viewData.is_public==1 &&<td>Public</td>}
+                    {viewData.is_public==0 &&<td>Private</td>}
+
+                  </tr>
+                </table>
+              </div>
+              <div className="modal-comment">
+                <label htmlFor="comment">Comment</label>
+                <p>{viewData.comments}</p>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

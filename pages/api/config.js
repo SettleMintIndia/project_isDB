@@ -19,6 +19,19 @@ const GET_TEMPLATE_DETAILS=base_url+"getTemplateByName"
 const DELETE_TEMPLATE=base_url+"deleteTemplate"
 const GET_TEMPLATE_EXISTS=base_url+"checkTempNameAvailable"
 
+const REQUEST_GET_SCENARIO=base_url+"requestNewScenario"
+const RUN_SIMULATION=base_url+"runSimulation"
+const GET_ORDERDETAILS=base_url+"getOrdersForExecution"
+const GET_TRADEHISTORYWS=base_url+"tradeHistoryWS"
+const GET_TRADEHISTORYNS=base_url+"tradeHistoryNS"
+const GET_STABLIZATION_FUND=base_url+"getStabilizationFund"
+const GET_SIMULATIONRESULT=base_url+"simulationResult"
+
+const GET_NOTIFICATIONS=base_url+"getNotifications"
+
+const GET_SIMULATION_HISTORY=base_url+"getSimulations"
+const GET_CHANGE_VISIBILITY_TEMPLATE=base_url+"changeTemplateVisibility"
+
 
 export {
     base_url,
@@ -37,6 +50,16 @@ export {
     UPLOAD_IMAGE,
     UPLOAD_PASSWORD,GET_TEMPLATE_DETAILS,
     DELETE_TEMPLATE,
-    GET_TEMPLATE_EXISTS
+    GET_TEMPLATE_EXISTS,
+    REQUEST_GET_SCENARIO,
+    RUN_SIMULATION,
+    GET_ORDERDETAILS,
+    GET_TRADEHISTORYWS,
+    GET_TRADEHISTORYNS,
+    GET_STABLIZATION_FUND,
+    GET_SIMULATIONRESULT,
+    GET_NOTIFICATIONS,
+    GET_SIMULATION_HISTORY,
+    GET_CHANGE_VISIBILITY_TEMPLATE
 
 }

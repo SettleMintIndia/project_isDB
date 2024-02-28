@@ -102,6 +102,9 @@ export default function Home() {
                   value={password}
                   onChange={handleInput}
                 />
+                 {passwordErr != "" && (
+                  <p className="alert-message">{passwordErr}</p>
+                )}
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
@@ -117,9 +120,7 @@ export default function Home() {
                   {showPassword ? "Hide" : "Show"}
                 </button>
 
-                {passwordErr != "" && (
-                  <p className="alert-message">{passwordErr}</p>
-                )}
+               
                 {/* <span
               className="show-password-icon"
               onClick={togglePasswordVisibility()}

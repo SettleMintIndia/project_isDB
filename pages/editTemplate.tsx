@@ -126,7 +126,10 @@ export default function Home() {
       setDevqty(data.std_dev_quant);
       setMeanqty(data.mean_quant);
       setDistribution(data.distribution);
-      setcomment(data.comments);
+      setcomment(data.comments)
+      setlowerbound(data.limit_order_lower_bound);
+      setupperbound(data.limit_order_upper_bound)
+      setPublicKey(data.is_public)
     }
   };
 
@@ -317,44 +320,50 @@ export default function Home() {
     } else {
       setcommentErr("");
     }
-    if (devpricebuy === "") {
-      setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
-      error = error + 1;
-    } else {
-      setDevPricebuyErr("");
-    }
-    if (devpricesell === "") {
-      setDevPricesellErr("Please Enter Standard Deviation Price Sell");
-      error = error + 1;
-    } else {
-      setDevPricesellErr("");
-    }
+    if (distribution == 'normal') {
 
-    if (meanpricebuy === "") {
-      setMeanPricebuyErr("Please Enter Mean Price Buy");
-      error = error + 1;
-    } else {
-      setMeanPricebuyErr("");
+      if (devpricebuy === "") {
+        setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
+        error = error + 1;
+      } else {
+        setDevPricebuyErr("");
+      }
+      if (devpricesell === "") {
+        setDevPricesellErr("Please Enter Standard Deviation Price Sell");
+        error = error + 1;
+      } else {
+        setDevPricesellErr("");
+      }
+      if (devqty === "") {
+        setDevqtyErr("Please Enter Standard Deviation Qunatity");
+        error = error + 1;
+      } else {
+        setDevqtyErr("");
+      }
     }
+    if (distribution == 'poisson' || distribution == 'normal') {
 
-    if (meanpricesell === "") {
-      setMeanPricesellErr("Please Enter Mean Price Sell");
-      error = error + 1;
-    } else {
-      setMeanPricesellErr("");
-    }
+      if (meanpricebuy === "") {
+        setMeanPricebuyErr("Please Enter Mean Price Buy");
+        error = error + 1;
+      } else {
+        setMeanPricebuyErr("");
+      }
 
-    if (devqty === "") {
-      setDevqtyErr("Please Enter Standard Deviation Qunatity");
-      error = error + 1;
-    } else {
-      setDevqtyErr("");
-    }
-    if (meanqty === "") {
-      setMeanqtyErr("Please Enter Mean Qunatity");
-      error = error + 1;
-    } else {
-      setMeanqtyErr("");
+      if (meanpricesell === "") {
+        setMeanPricesellErr("Please Enter Mean Price Sell");
+        error = error + 1;
+      } else {
+        setMeanPricesellErr("");
+      }
+
+
+      if (meanqty === "") {
+        setMeanqtyErr("Please Enter Mean Qunatity");
+        error = error + 1;
+      } else {
+        setMeanqtyErr("");
+      }
     }
 
     if (publickey == 2) {
@@ -386,54 +395,73 @@ export default function Home() {
     }
     if (error == 0) {
       let body = {
-        temp_name: newtemplateName,
-        scenario_name: scenarioType,
-        initial_mkt_price: Number(inititalmarketprice),
-        price_var: Number(pricelimit),
-        base_quant: Number(basequantity),
-        quant_var: Number(quantitylimit),
-        alpha0: Number(alpha0),
-        alpha1: Number(alpha1),
-        theta0: Number(theta0),
-        theta1: Number(theta1),
-        distribution: distribution,
-        comments: finalComments,
-        is_public: publickey,
-        std_dev_price_buy: Number(devpricebuy),
-        std_dev_price_sell: Number(devpricesell),
-        mean_price_buy: Number(meanpricebuy),
-        mean_price_sell: Number(meanpricesell),
-        std_dev_quant: Number(devqty),
-        mean_quant: Number(meanqty),
-        admin_id: 1,
-      };
-      console.log(body);
+        "temp_name": newtemplateName,
+        "scenario_name": scenarioType,
+        "initial_mkt_price": Number(inititalmarketprice),
+        "price_var": Number(pricelimit),
+        "base_quant": Number(basequantity),
+        "quant_var": Number(quantitylimit),
+        "alpha0": Number(alpha0),
+        "alpha1": Number(alpha1),
+        "theta0": Number(theta0),
+        "theta1": Number(theta1),
+        "distribution": distribution,
+        "comments": finalComments,
+        "is_public": publickey,
+        "std_dev_price_buy": distribution == 'normal' ? Number(devpricebuy) : 0,
+        "std_dev_price_sell": distribution == 'normal' ? Number(devpricesell) : 0,
+        "std_dev_quant": distribution == 'normal' ? Number(devqty) : 0,
+        "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
+        "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
+        "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
+        "admin_id": 15,
+        "limit_order_upper_bound": upperbound,
+        "limit_order_lower_bound": lowerbound
 
-      const template_exist = await API_Auth.getTemplateExists(newtemplateName);
-      console.log("template_exist", template_exist);
-      if (template_exist.name_available == false) {
-        setFinalErr("Template Name Already Exists");
+      }
+      console.log(body);
+      if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
+        setFinalErr("price or quant variance should be less than 1")
+      } else if (Number(upperbound) > 1) {
+        setFinalErr("upper lmt order price variance should be less than 1")
+      }
+      else if (Number(lowerbound) < 1) {
+        toast.error("lower lmt order price variance should be greater than 1")
+
+
       } else {
-        setFinalErr("");
-        const data = await API_Auth.createTemplate(body);
-        console.log(data);
-        if ((data.error! = "" || data.error == undefined)) {
-          console.log("hello");
-          toast.success("Template Created Successfully");
-          setTimeout(() => {
-            router.push("/templateDetails");
-          }, 2000);
-        } else {
-          setFinalErr("Duplicate Entries Exists");
+        const template_exist = await API_Auth.getTemplateExists(newtemplateName)
+        console.log("template_exist", template_exist)
+        if (template_exist.name_available == false) {
+          setFinalErr("Template Name Already Exists")
+        }
+        else {
+          setFinalErr("")
+          const data = await API_Auth.createTemplate(body)
+          console.log(data);
+          if (data.error! = '' || data.error == undefined) {
+            console.log("hello")
+            toast.success("Template Created Successfully")
+            setTimeout(() => {
+              router.push("/templateDetails")
+            }, 2000);
+
+          } else {
+            setFinalErr("Duplicate Entries Exists");
+
+          }
         }
       }
     }
   };
+  const handleBack = () => {
+    router.back();
+  }
   return (
     <div className="container-fluid">
       <div className="template edit-template">
         <div className="template-header">
-          <div className="back-option">
+          <div className="back-option" onClick={() => handleBack()}>
             <img src="imgs/left-arrow.svg" alt="" />
             <p className="mb-0">Back</p>
           </div>
@@ -660,6 +688,109 @@ export default function Home() {
                 <p className="alert-message">{distributionErr}</p>
               )}
             </div>
+            {distribution == 'normal' && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Standard Deviation Price Buy</label>
+                <input
+                  type="number"
+                  id="devpricebuy"
+                  name="devpricebuy"
+                  required
+                  value={devpricebuy}
+                  onChange={handleInput}
+                />
+              </div>
+              {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
+            </div>
+            }
+
+            {distribution == 'normal' && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Standard Deviation Price Sell</label>
+                <input
+                  type="number"
+                  id="devpricesell"
+                  name="devpricesell"
+                  required
+                  value={devpricesell}
+                  onChange={handleInput}
+                />
+              </div>
+              {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
+            </div>
+            }
+
+
+            {distribution == 'normal' && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Standard Deviation Quantity</label>
+                <input
+                  type="number"
+                  id="devqty"
+                  name="devqty"
+                  required
+                  value={devqty}
+                  onChange={handleInput}
+                />
+              </div>
+              {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
+            </div>
+            }
+            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Mean Price Buy</label>
+                <input
+                  type="number"
+                  id="meanpricebuy"
+                  name="meanpricebuy"
+                  required
+                  value={meanpricebuy}
+                  onChange={handleInput}
+                />
+              </div>
+              {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
+            </div>
+            }
+            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Mean Price Sell</label>
+                <input
+                  type="number"
+                  id="meanpricesell"
+                  name="meanpricesell"
+                  required
+                  value={meanpricesell}
+                  onChange={handleInput}
+                />
+              </div>
+              {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
+            </div>
+            }
+
+
+            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+              <div className="form-content">
+                <label htmlFor="theta1">Mean Price Quantity</label>
+                <input
+                  type="number"
+                  id="meanqty"
+                  name="meanqty"
+                  required
+                  value={meanqty}
+                  onChange={handleInput}
+                />
+              </div>
+              {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
+            </div>
+            }
+
+
             <div className="col-md-6 p-1">
               <div className="form-control p-1">
                 <label htmlFor="accessible">Accessible Data For*</label>
@@ -668,9 +799,12 @@ export default function Home() {
                     <input
                       className="form-check-input"
                       type="radio"
-                      name="inlineRadioOptions"
+                      name="publickey"
                       id="inlineRadio1"
-                      value="option1"
+                      value={1}
+                      checked={publickey === 1}
+                      onChange={handleInput}
+
                     />
                     <label className="form-check-label" htmlFor="inlineRadio1">
                       Public
@@ -680,9 +814,12 @@ export default function Home() {
                     <input
                       className="form-check-input"
                       type="radio"
-                      name="inlineRadioOptions"
+                      name="publickey"
                       id="inlineRadio2"
-                      value="option2"
+                      value={0}
+                      checked={publickey === 0}
+                      onChange={handleInput}
+
                     />
                     <label className="form-check-label" htmlFor="inlineRadio2">
                       Private

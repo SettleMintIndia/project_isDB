@@ -3,6 +3,9 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import API_Auth from './api/API_Auth'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const router = useRouter();
@@ -10,6 +13,7 @@ export default function Home() {
   const [scenariotypeErr, setscenariotypeErr] = useState("");
   const [comment, setcomment] = useState("");
   const [commentErr, setcommentErr] = useState("");
+  const [finalErr,setFinalErr]=useState("");
   const handleLogin = () => {
     router.push("/scenarioType");
   };
@@ -19,7 +23,7 @@ export default function Home() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
 
-    if (name === "request_scenarioType") {
+    if (name === "scenariotype") {
       setscenariotype(value);
     }
     if (name == "comment") {
@@ -27,7 +31,7 @@ export default function Home() {
     }
   };
 
-  const handleCreateScenario = () => {
+  const handleCreateScenario = async() => {
     let error = 0;
     if (scenariotype == "") {
       error = error + 1;
@@ -43,6 +47,26 @@ export default function Home() {
     }
     console.log(error);
     if (error == 0) {
+      let body = {
+        "scenario_name": scenariotype,
+        "admin_id": 15,
+        "comment":comment
+      }
+      const result_exist = await API_Auth.getScenarioExists(scenariotype);
+      console.log(result_exist.exists)
+      if (result_exist.exists == true) {
+        toast.error("Scenario already Exists")
+      } else {
+
+      const result = await API_Auth.getRequestScenario(body)
+      console.log("result",result)
+      if(result.status==400){
+        setFinalErr(result.msg)
+      }else{
+        router.push("/runSimulation")
+      }
+    }
+      
     }
   };
   return (
@@ -85,17 +109,20 @@ export default function Home() {
                 <p className="alert-message">{commentErr}</p>
               )}
             </div>
-
+            {finalErr != "" && (
+                <p className="alert-message">{finalErr}</p>
+              )}
             <button
               className="create-template"
               onClick={() => handleCreateScenario()}
             >
               {" "}
-              <Link href="createtemplate">SUBMIT</Link>{" "}
+             SUBMIT
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

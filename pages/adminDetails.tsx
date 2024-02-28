@@ -81,7 +81,7 @@ export default function Home() {
   const handleSearchChange = (event: any) => {
     setSearchKey(event.target.value);
 
-    setPerPage(1);
+    setPerPage(10);
     setPageNo(1);
     setCurrentPage(1);
 
@@ -146,7 +146,7 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search by template name"
-                onChange={handleInput}
+                onChange={handleSearchChange}
                 // value={tempname}
                 name="tempname"
               />
@@ -324,6 +324,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

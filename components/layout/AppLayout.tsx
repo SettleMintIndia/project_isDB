@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
+import API_Auth from '../../pages/api/API_Auth'
+import moment from "moment";
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,12 +11,15 @@ interface LayoutProps {
 const AppLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [totalNotifications, setTotalNotifications] = useState([])
 
-  // const [key, setKey] = useState("superadmin"); //superadmin
+   //const [key, setKey] = useState("superadmin"); //superadmin
   const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
 
   useEffect(() => {
+    let admin_id = 1;
+    getNotifications(admin_id)
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsNavFixed(true);
@@ -28,7 +33,18 @@ const AppLayout = ({ children }: LayoutProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+
   }, []);
+
+
+
+  const getNotifications = async (id: any) => {
+    const admin_notifications = await API_Auth.getNotifications(id);
+    console.log("admin_notifications", admin_notifications)
+
+    setTotalNotifications(admin_notifications.notifications)
+  }
+
   return (
     <div className="base">
       {/* Navbar */}
@@ -53,15 +69,15 @@ const AppLayout = ({ children }: LayoutProps) => {
             </Link>
           </div>
           {router.route === "/createtemplate" ||
-          router.route === "/createadmin" ||
-          router.route === "/runSimulation" ? (
+            router.route === "/createadmin" ||
+            router.route === "/runSimulation" ? (
             <div className="nav-links">
               <ul>
                 <li
                   className={
                     router.pathname === "/createtemplate" ||
-                    router.pathname === "/createadmin" ||
-                    router.pathname === "/runSimulation"
+                      router.pathname === "/createadmin" ||
+                      router.pathname === "/runSimulation"
                       ? "active"
                       : ""
                   }
@@ -127,11 +143,12 @@ const AppLayout = ({ children }: LayoutProps) => {
             >
               <img src="/imgs/notification.svg" alt="" />
             </div>
+
             <div className="notification-list">
               <div className="notification-heading">
                 <h4>New Message</h4>
               </div>
-              <div className="notification-details">
+              {/*   <div className="notification-details">
                 <div className="notification-info">
                   <h5>Name1</h5>
                   <p>13min ago</p>
@@ -142,7 +159,26 @@ const AppLayout = ({ children }: LayoutProps) => {
                     typesetting industry
                   </p>
                 </div>
-              </div>
+              </div> */}
+
+
+              {totalNotifications.map((item: any) => (
+                <div className="notification-details">
+                  <div className="notification-info">
+                    <h5>{item.source}</h5>
+                    <p> {moment(item.created_timestamp).format("MM/DD/YYYY")}</p>
+
+                  </div>
+                  <div className="notification-para">
+                    <p>
+                      {item.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+
+
             </div>
             <div
               className="nav-user"

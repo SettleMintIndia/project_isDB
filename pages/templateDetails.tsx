@@ -21,9 +21,9 @@ export default function Home() {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
   const [templateData, setTemplateData] = useState([
-    { scenario_name: "", temp_name: "", created_timestamp: "", comments: "" },
+    { scenario_name: "", temp_name: "", created_timestamp: "", comments: "", is_public: 0 },
   ]);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(10);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -54,6 +54,7 @@ export default function Home() {
     comments: "",
     mean_price_buy: "",
     mean_price_sell: "",
+    is_public:1
   });
 
   const [tempname, setTempName] = useState("");
@@ -77,7 +78,7 @@ export default function Home() {
       dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
-      showPrivate: false,
+      showPrivate: true,
     };
 
     console.log(body);
@@ -138,6 +139,8 @@ export default function Home() {
     setTooltipVisible(!tooltipVisible);
     setKey(data.temp_name);
     setViewData(data);
+    console.log("re",tooltipVisible && key == data.temp_name)
+
   };
 
   const handleDeleteConfirm = async () => {
@@ -204,8 +207,25 @@ export default function Home() {
   };
   const [activeButton, setActiveButton] = useState("Static");
 
-  const handleButtonClick = (buttonName: SetStateAction<string>) => {
-    setActiveButton(buttonName);
+  const handleButtonClick = async (data: any) => {
+    console.log(data);
+    let body = {
+      "template_name": data.temp_name,
+      "make_public": data.is_public == 1 ? false : true
+    }
+    const result = await API_Auth.getChangeVisiblityTemplate(body);
+    console.log("visibilityresult", result)
+    if (result.status == 400) {
+      toast.error(result.error)
+    } else {
+      toast.success(result.message)
+      handlegetAllTemplateDetails();
+
+    }
+
+
+
+    //setActiveButton(buttonName);
   };
   return (
     <div className="container-fluid">
@@ -340,21 +360,21 @@ export default function Home() {
                               <div className="btn-group">
                                 <button
                                   className={
-                                    activeButton === "Static"
+                                    data.is_public === 1
                                       ? "btn active"
                                       : "btn"
                                   }
-                                  onClick={() => handleButtonClick("Static")}
+                                  onClick={() => handleButtonClick(data)}
                                 >
                                   Public
                                 </button>
                                 <button
                                   className={
-                                    activeButton === "Dynamic"
+                                    data.is_public === 0
                                       ? "btn active"
                                       : "btn"
                                   }
-                                  onClick={() => handleButtonClick("Dynamic")}
+                                  onClick={() => handleButtonClick(data)}
                                 >
                                   Private
                                 </button>
@@ -490,7 +510,7 @@ export default function Home() {
                       <img src="imgs/download-white.svg" alt="" />
                       PDF
                     </Button>
-                    <Button>
+                    <Button onClick={()=>handleDownloadExel()}>
                       <img src="imgs/download-white.svg" alt="" />
                       EXCEL
                     </Button>
@@ -578,8 +598,8 @@ export default function Home() {
                   <table className="independant-table">
                     <tr>
                       <td>Visibility</td>
-                      <td>Public</td>
-                    </tr>
+                      {viewData.is_public==1 &&<td>Public</td>}
+                    {viewData.is_public==0 &&<td>Private</td>}                    </tr>
                   </table>
                 </div>
                 <div className="modal-comment">

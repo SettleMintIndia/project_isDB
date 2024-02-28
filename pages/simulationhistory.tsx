@@ -1,65 +1,70 @@
 "use client";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import API_Auth from './api/API_Auth';
+import moment from "moment";
 
-const data = [
-  {
-    id: 0,
-    scenario_type: "Crash",
-    template_name: "Template1",
-    created_on: "Tue, 9 Jan 2024",
-    template_description:
-      "   Lorem ipsum dolor sit amet, consectetuer adipiscingelit. Aenean commodo ligula eget dolor.",
-  },
-  {
-    id: 1,
-    scenario_type: "Bubble",
-    template_name: "Template1",
-    created_on: "Tue, 9 Jan 2024",
-    template_description:
-      "   Lorem ipsum dolor sit amet, consectetuer adipiscingelit. Aenean commodo ligula eget dolor.",
-  },
-];
+
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
-  const [templateData, setTemplateData] = useState(data);
-  const handleDeleteClick = (id: any) => {
-    setTooltipVisible(!tooltipVisible);
-    setKey(id);
-  };
+  const [templateData, setTemplateData] = useState([{scenario_name:'',temp_name:'',created_timestamp:'',exe_id:''}]);
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [s_type, setSType] = useState('');
 
-  const handleDeleteConfirm = () => {
-    setTooltipVisible(false);
-  };
+  const [tempname, setTempName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [creatorName, setCreatorName] = useState('');
+  const [perPage, setPerPage] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
+  const [offset, setOffSet] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const[viewData,setViewData]=useState({})
 
-  const handleCancelClick = () => {
-    setTooltipVisible(false);
-  };
-  const handleEdit = () => {
-    router.push("/templateDetails");
-  };
-  const [showModal, setShowModal] = useState(false);
-  const viewDetails = () => {
-    setShowModal(true);
-  };
+  useEffect(() => {
+    getSimulations(tempname, creatorName, s_type, fromDate, toDate, perPage, pageNo)
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  }, [])
+  const getSimulations = async (tempname: any, creatorName: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+    let body = {
+      "temp_name":tempname,
+      "creator":creatorName,
+      "scenario": s_type,
+      "datefrom": fromDate,
+      "dateto": toDate,
+      "resultPerPage": perPage,
+      "pgNo": pageNo
+    }
+    const result=await API_Auth.getSimulationHistory(body);
+    console.log(result);
+    if (result.status == 200) {
+      setTemplateData(result.simulations)
+      setTotalCount(result.count)
+      setPageCount(Math.ceil(result.count / perPage))
+
+    }
+  }
+  const viewDetails = (data: any) => {
+    console.log(data);
+    setViewData(data)
+
+    router.push({
+      pathname: '/simulation_history_info',
+      query: { temp_name: data.temp_name,exe_id:data.exe_id },
+    });
   };
-  const handleClose = () => {
-    setShowModal(false);
-  };
-  const [tabIndex, setTabIndex] = useState(0);
   return (
     <div className="container-fluid">
       <div className="template details">
@@ -123,24 +128,25 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {templateData.map((data) => (
-                      <tr key={data.id}>
+                      <tr key={data.exe_id}>
                         <td>
                           {" "}
                           <input type="checkbox" className="checkbox" />
                         </td>
-                        <td>{data.scenario_type}</td>
-                        <td>{data.template_name}</td>
-                        <td>2024-01-05 15:31:40</td>
-                        <td>Static</td>
+                        <td>{data.scenario_name}</td>
+                        <td>{data.temp_name}</td>
+                        <td>{moment(data.created_timestamp).format("MM/DD/YYYY h:mm:ss A")}</td>
+
+                        <td>Dynamic</td>
                         <td
                           className="actions execution
                   "
                         >
-                          <Link href="simulation_history_info">
-                            <button className="details-button">
+                          <a >
+                            <button className="details-button" onClick={()=>viewDetails(data)}>
                               View Details
                             </button>
-                          </Link>
+                          </a>
                         </td>
                         <td id="file">
                           <Link href="#">PDF</Link>
