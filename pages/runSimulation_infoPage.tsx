@@ -8,9 +8,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import API_Auth from './api/API_Auth'
+import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 
 export default function Home() {
@@ -50,141 +50,135 @@ export default function Home() {
   const [upperbound, setupperbound] = useState("");
   const [upperboundErr, setupperboundErr] = useState("");
 
-
-  const [singleTemplate, setSingleTemplate] = useState({
-
-  })
-  const [finalErr, setFinalErr] = useState('')
-
+  const [singleTemplate, setSingleTemplate] = useState({});
+  const [finalErr, setFinalErr] = useState("");
 
   const [totalTempName, setTotalTempName] = useState(router.query.temp_name);
   const [publickey, setPublicKey] = useState(1);
-  const [publickeyErr, setPublicKeyErr] = useState('')
-  const [devpricebuy, setDevPricebuy] = useState('')
-  const [devpricebuyErr, setDevPricebuyErr] = useState('');
-  const [devpricesell, setDevPricesell] = useState('')
-  const [devpricesellErr, setDevPricesellErr] = useState('')
-  const [devqty, setDevqty] = useState('')
-  const [devqtyErr, setDevqtyErr] = useState('')
+  const [publickeyErr, setPublicKeyErr] = useState("");
+  const [devpricebuy, setDevPricebuy] = useState("");
+  const [devpricebuyErr, setDevPricebuyErr] = useState("");
+  const [devpricesell, setDevPricesell] = useState("");
+  const [devpricesellErr, setDevPricesellErr] = useState("");
+  const [devqty, setDevqty] = useState("");
+  const [devqtyErr, setDevqtyErr] = useState("");
 
-  const [meanpricebuy, setMeanPricebuy] = useState('')
-  const [meanpricebuyErr, setMeanPricebuyErr] = useState('');
-  const [meanpricesell, setMeanPricesell] = useState('')
-  const [meanpricesellErr, setMeanPricesellErr] = useState('')
-  const [meanqty, setMeanqty] = useState('')
-  const [meanqtyErr, setMeanqtyErr] = useState('')
-  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: '' }]);
-  const [finalDistributions, setFinalDistributions] = useState([{ name: '' }]);
+  const [meanpricebuy, setMeanPricebuy] = useState("");
+  const [meanpricebuyErr, setMeanPricebuyErr] = useState("");
+  const [meanpricesell, setMeanPricesell] = useState("");
+  const [meanpricesellErr, setMeanPricesellErr] = useState("");
+  const [meanqty, setMeanqty] = useState("");
+  const [meanqtyErr, setMeanqtyErr] = useState("");
+  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
+  const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
 
-  const [newtemplateName, setnewtemplateName] = useState('')
-  const [newtemplateNameErr, setnewtemplateNameErr] = useState('');
+  const [newtemplateName, setnewtemplateName] = useState("");
+  const [newtemplateNameErr, setnewtemplateNameErr] = useState("");
 
-
-  const [finalComments, setfinalComments] = useState('')
-  const [finalCommentsErr, setfinalCommentsErr] = useState('');
-  const [iterations, setIterations] = useState('');
-  const [iterationsErr, setIterationsErr] = useState('')
-  const [rounds, setRounds] = useState('');
-  const [roundsErr, setRoundsErr] = useState('');
-  const [ordersRound, setordersRound] = useState('');
-  const [ordersRoundErr, setordersRoundErr] = useState('');
-  const [ordersVar, setordersVar] = useState('');
-  const [ordersVarErr, setordersVarErr] = useState('');
-  const [executionId, setExecutionId] = useState('');
+  const [finalComments, setfinalComments] = useState("");
+  const [finalCommentsErr, setfinalCommentsErr] = useState("");
+  const [iterations, setIterations] = useState("");
+  const [iterationsErr, setIterationsErr] = useState("");
+  const [rounds, setRounds] = useState("");
+  const [roundsErr, setRoundsErr] = useState("");
+  const [ordersRound, setordersRound] = useState("");
+  const [ordersRoundErr, setordersRoundErr] = useState("");
+  const [ordersVar, setordersVar] = useState("");
+  const [ordersVarErr, setordersVarErr] = useState("");
+  const [executionId, setExecutionId] = useState("");
   const [siteration, setSIteration] = useState(1);
-  const [siterationErr, setSIterationErr] = useState('');
-  const [sroundErr, setSRoundErr] = useState('')
+  const [siterationErr, setSIterationErr] = useState("");
+  const [sroundErr, setSRoundErr] = useState("");
 
-  const [sround, setSRound] = useState(1)
-  const [tradeHistoryWS, setTradeHistoryWS] = useState([{ price: '', quantity: '', timestamp: '' }])
-  const [tradeHistoryNS, setTradeHistoryNS] = useState([{ price: '', quantity: '', timestamp: '' }])
-  const[type,setType]=useState('price')
-
-
-
+  const [sround, setSRound] = useState(1);
+  const [tradeHistoryWS, setTradeHistoryWS] = useState([
+    { price: "", quantity: "", timestamp: "" },
+  ]);
+  const [tradeHistoryNS, setTradeHistoryNS] = useState([
+    { price: "", quantity: "", timestamp: "" },
+  ]);
+  const [type, setType] = useState("price");
 
   useEffect(() => {
-    console.log(totalTempName)
+    console.log(totalTempName);
 
     getTemplateDetails(totalTempName);
-    getDistributions()
+    getDistributions();
     console.log(tabIndex);
-    let executionId = 19
+    let executionId = 10;
     if (tabIndex == 1) {
       getOrderBook(executionId);
     }
     if (tabIndex == 2) {
       setSIteration(1);
-      setSRound(1)
-      getTradeHistoryWS(executionId, 1, 1)
+      setSRound(1);
+      getTradeHistoryWS(executionId, 1, 1);
     }
     if (tabIndex == 3) {
       setSIteration(1);
-      setSRound(1)
-      getTradeHistoryNS(executionId, 1, 1)
+      setSRound(1);
+      getTradeHistoryNS(executionId, 1, 1);
     }
-    if (tabIndex == 4) {
-      
-      getSimulationResultDetails(executionId)
-    }
-    
-    if(tabIndex==5){
+    // if (tabIndex == 4) {
+    //   getSimulationResultDetails(executionId);
+    // }
+
+    if (tabIndex == 5) {
       getStablizationFund(executionId);
     }
-    console.log("tabIndex", tabIndex)
-
-
-  }, [totalTempName, tabIndex, executionId])
+    console.log("tabIndex", tabIndex);
+  }, [totalTempName, tabIndex, executionId]);
 
   const getStablizationFund = async (id: any) => {
     const result = await API_Auth.getStablizationFundDetails(id);
-    console.log("StablizationFund", result)
-
-  }
+    console.log("StablizationFund", result);
+  };
   const getSimulationResultDetails = async (id: any) => {
-    const result = await API_Auth.getSimulationResult(id,type);
-    console.log("simulationresult", result)
-
-  }
+    const result = await API_Auth.getSimulationResult(id, type);
+    console.log("simulationresult", result);
+  };
 
   const getOrderBook = async (id: any) => {
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
-    console.log("orderresult", result)
-
-  }
+    console.log("orderresult", result);
+  };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
-    const result = await API_Auth.getTradeHistoryWithStablization(id, siteration, sround);
-    console.log("tadingws", result.trade)
-    setTradeHistoryWS(result.trades)
-
-  }
+    const result = await API_Auth.getTradeHistoryWithStablization(
+      id,
+      siteration,
+      sround
+    );
+    console.log("tadingws", result.trade);
+    setTradeHistoryWS(result.trades);
+  };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
-    const result = await API_Auth.getTradeHistoryWithoutStablization(id, siteration, sround);
-    console.log("tadingws", result.trade)
-    setTradeHistoryNS(result.trade)
-
-  }
+    const result = await API_Auth.getTradeHistoryWithoutStablization(
+      id,
+      siteration,
+      sround
+    );
+    console.log("tadingws", result.trade);
+    setTradeHistoryNS(result.trade);
+  };
   const getDistributions = async () => {
     const result = await API_Auth.getDistributions();
-    console.log("distributions", result)
+    console.log("distributions", result);
     setFinalDistributions(result.distributions);
-
-
-  }
+  };
 
   const getTemplateDetails = async (totalTempName: any) => {
     // const result=API_Auth.getTemplateDetails(totalTempName);
 
     let body = {
-      "temp_name": totalTempName,
-      "admin_id": "",
-      "scenario": "",
-      "datefrom": "",
-      "dateto": "",
-      "resultPerPage": 1,
-      "pgNo": 1,
-      "showPrivate": true
-    }
+      temp_name: totalTempName,
+      admin_id: "",
+      scenario: "",
+      datefrom: "",
+      dateto: "",
+      resultPerPage: 1,
+      pgNo: 1,
+      showPrivate: true,
+    };
 
     console.log(body);
 
@@ -192,12 +186,12 @@ export default function Home() {
 
     console.log("result", result);
     if (result.status == 200) {
-      console.log(result.templates[0])
+      console.log(result.templates[0]);
       var data = result.templates[0];
-      settemplatename(data.temp_name)
-      setSingleTemplate(result.templates[0])
+      settemplatename(data.temp_name);
+      setSingleTemplate(result.templates[0]);
       setScenarioType(data.scenario_name);
-      setinititalmarketprice(data.initial_mkt_price)
+      setinititalmarketprice(data.initial_mkt_price);
       setpricelimit(data.price_var);
       setbasequantity(data.base_quant);
       setquantitylimit(data.quant_var);
@@ -212,11 +206,11 @@ export default function Home() {
       setDevqty(data.std_dev_quant);
       setMeanqty(data.mean_quant);
       setDistribution(data.distribution);
-      setcomment(data.comments)
+      setcomment(data.comments);
       setlowerbound(data.limit_order_lower_bound);
-      setupperbound(data.limit_order_upper_bound)
+      setupperbound(data.limit_order_upper_bound);
     }
-  }
+  };
 
   const editCreateTemplate = () => {
     setShowModal(true);
@@ -235,7 +229,6 @@ export default function Home() {
   const toggleColumn = () => {
     setIsExpanded(!isExpanded);
   };
-
 
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
@@ -283,53 +276,52 @@ export default function Home() {
       setcomment(value);
     }
     if (name == "publickey") {
-      setPublicKey(value)
+      setPublicKey(value);
     }
 
     if (name == "devpricebuy") {
-      setDevPricebuy(value)
+      setDevPricebuy(value);
     }
     if (name == "devpricesell") {
-      setDevPricesell(value)
+      setDevPricesell(value);
     }
     if (name == "meanpricebuy") {
-      setMeanPricebuy(value)
+      setMeanPricebuy(value);
     }
 
     if (name == "meanpricesell") {
-      setMeanPricesell(value)
+      setMeanPricesell(value);
     }
     if (name == "devqty") {
-      setDevqty(value)
+      setDevqty(value);
     }
     if (name == "meanqty") {
-      setMeanqty(value)
+      setMeanqty(value);
     }
     if (name == "finalComments") {
-      setfinalComments(value)
+      setfinalComments(value);
     }
     if (name == "newtemplateName") {
-      setnewtemplateName(value)
+      setnewtemplateName(value);
     }
     if (name == "iterations") {
-      setIterations(value)
+      setIterations(value);
     }
     if (name == "rounds") {
-      setRounds(value)
+      setRounds(value);
     }
     if (name == "ordersRound") {
-      setordersRound(value)
+      setordersRound(value);
     }
     if (name == "ordersVar") {
-      setordersVar(value)
+      setordersVar(value);
     }
     if (name == "siteration") {
-      setSIteration(value)
+      setSIteration(value);
     }
     if (name == "sround") {
-      setSRound(value)
+      setSRound(value);
     }
-
   };
 
   const handleCreateTemplate = () => {
@@ -418,8 +410,7 @@ export default function Home() {
     } else {
       setcommentErr("");
     }
-    if (distribution == 'normal') {
-
+    if (distribution == "normal") {
       if (devpricebuy === "") {
         setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
         error = error + 1;
@@ -439,8 +430,7 @@ export default function Home() {
         setDevqtyErr("");
       }
     }
-    if (distribution == 'poisson' || distribution == 'normal') {
-
+    if (distribution == "poisson" || distribution == "normal") {
       if (meanpricebuy === "") {
         setMeanPricebuyErr("Please Enter Mean Price Buy");
         error = error + 1;
@@ -454,7 +444,6 @@ export default function Home() {
       } else {
         setMeanPricesellErr("");
       }
-
 
       if (meanqty === "") {
         setMeanqtyErr("Please Enter Mean Qunatity");
@@ -474,7 +463,6 @@ export default function Home() {
     console.log(error);
     if (error == 0) {
       setShowModal(true);
-
     }
   };
   const handleSaveTemplate = async () => {
@@ -492,159 +480,178 @@ export default function Home() {
       setfinalCommentsErr("");
     }
     if (error == 0) {
-
       let body = {
-        "temp_name": newtemplateName,
-        "scenario_name": scenarioType,
-        "initial_mkt_price": Number(inititalmarketprice),
-        "price_var": Number(pricelimit),
-        "base_quant": Number(basequantity),
-        "quant_var": Number(quantitylimit),
-        "alpha0": Number(alpha0),
-        "alpha1": Number(alpha1),
-        "theta0": Number(theta0),
-        "theta1": Number(theta1),
-        "distribution": distribution,
-        "comments": finalComments,
-        "is_public": publickey,
-        "std_dev_price_buy": distribution == 'normal' ? Number(devpricebuy) : 0,
-        "std_dev_price_sell": distribution == 'normal' ? Number(devpricesell) : 0,
-        "std_dev_quant": distribution == 'normal' ? Number(devqty) : 0,
-        "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
-        "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
-        "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
-        "admin_id": 7,
-        "limit_order_upper_bound": upperbound,
-        "limit_order_lower_bound": lowerbound
-
-      }
+        temp_name: newtemplateName,
+        scenario_name: scenarioType,
+        initial_mkt_price: Number(inititalmarketprice),
+        price_var: Number(pricelimit),
+        base_quant: Number(basequantity),
+        quant_var: Number(quantitylimit),
+        alpha0: Number(alpha0),
+        alpha1: Number(alpha1),
+        theta0: Number(theta0),
+        theta1: Number(theta1),
+        distribution: distribution,
+        comments: finalComments,
+        is_public: publickey,
+        std_dev_price_buy: distribution == "normal" ? Number(devpricebuy) : 0,
+        std_dev_price_sell: distribution == "normal" ? Number(devpricesell) : 0,
+        std_dev_quant: distribution == "normal" ? Number(devqty) : 0,
+        mean_price_buy:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanpricebuy)
+            : 0,
+        mean_price_sell:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanpricesell)
+            : 0,
+        mean_quant:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanqty)
+            : 0,
+        admin_id: 7,
+        limit_order_upper_bound: upperbound,
+        limit_order_lower_bound: lowerbound,
+      };
       console.log(body);
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        setFinalErr("price or quant variance should be less than 1")
+        setFinalErr("price or quant variance should be less than 1");
       } else if (Number(upperbound) > 1) {
-        setFinalErr("upper lmt order price variance should be less than 1")
+        setFinalErr("upper lmt order price variance should be less than 1");
       } else {
-        const template_exist = await API_Auth.getTemplateExists(newtemplateName)
-        console.log("template_exist", template_exist)
+        const template_exist = await API_Auth.getTemplateExists(
+          newtemplateName
+        );
+        console.log("template_exist", template_exist);
         if (template_exist.name_available == false) {
-          setFinalErr("Template Name Already Exists")
-        }
-        else {
-          setFinalErr("")
-          const data = await API_Auth.createTemplate(body)
+          setFinalErr("Template Name Already Exists");
+        } else {
+          setFinalErr("");
+          const data = await API_Auth.createTemplate(body);
           console.log(data);
-          if (data.error! = '' || data.error == undefined) {
-            console.log("hello")
-            toast.success("Template Created Successfully")
+          if ((data.error! = "" || data.error == undefined)) {
+            console.log("hello");
+            toast.success("Template Created Successfully");
             setTimeout(() => {
-              router.push("/templateDetails")
+              router.push("/templateDetails");
             }, 2000);
-
           } else {
             setFinalErr("Duplicate Entries Exists");
-
           }
         }
       }
     }
-  }
+  };
   const handleRunSimulation = async () => {
-    let error = 0
+    let error = 0;
     if (iterations == "") {
-      error = error + 1
-      setIterationsErr("Please Enter Iterations")
+      error = error + 1;
+      setIterationsErr("Please Enter Iterations");
     } else {
-      setIterationsErr("")
+      setIterationsErr("");
     }
     if (rounds == "") {
-      error = error + 1
-      setRoundsErr("Please Enter rounds")
+      error = error + 1;
+      setRoundsErr("Please Enter rounds");
     } else {
-      setRoundsErr("")
+      setRoundsErr("");
     }
     if (ordersRound == "") {
-      error = error + 1
-      setordersRoundErr("Please Enter Orders")
+      error = error + 1;
+      setordersRoundErr("Please Enter Orders");
     } else {
-      setordersRoundErr("")
+      setordersRoundErr("");
     }
     if (ordersVar == "") {
-      error = error + 1
-      setordersVarErr("Please Enter Order Variance")
+      error = error + 1;
+      setordersVarErr("Please Enter Order Variance");
     } else {
-      setordersVarErr("")
+      setordersVarErr("");
     }
     if (error == 0) {
       let body = {
-        "temp_name": templatename,
-        "nb_rounds": Number(rounds),
-        "nb_orders": Number(ordersRound),
-        "nb_orders_var": Number(ordersVar),
-        "admin_id": 15,
-        "iterations": Number(iterations),
-        "dynamic": 1
-      }
+        temp_name: templatename,
+        nb_rounds: Number(rounds),
+        nb_orders: Number(ordersRound),
+        nb_orders_var: Number(ordersVar),
+        admin_id: 15,
+        iterations: Number(iterations),
+        dynamic: 1,
+      };
       const result = await API_Auth.runSimulation(body);
       console.log(result);
       if (result.status == 400) {
-        toast.error(result.error)
+        toast.error(result.error);
       }
-
     }
-
-  }
-  const handleTradingHistoryWithoutStablization=()=>{
+  };
+  const handleTradingHistoryWithoutStablization = () => {
     let error = 0;
 
     if (siteration == "") {
       error = error + 1;
-      setSIterationErr("Please Enter Iteration")
+      setSIterationErr("Please Enter Iteration");
     } else {
-      setSIterationErr("")
+      setSIterationErr("");
     }
     if (sround == "") {
       error = error + 1;
-      setSRoundErr("Please Enter Round")
+      setSRoundErr("Please Enter Round");
     } else {
-      setSRoundErr("")
+      setSRoundErr("");
     }
     if (error == 0) {
-      let executionId = 19
-      getTradeHistoryNS(executionId, siteration, sround)
-
+      let executionId = 19;
+      getTradeHistoryNS(executionId, siteration, sround);
     }
-  }
+  };
   const handleTradingHistoryWithStablization = () => {
     let error = 0;
 
     if (siteration == "") {
       error = error + 1;
-      setSIterationErr("Please Enter Iteration")
+      setSIterationErr("Please Enter Iteration");
     } else {
-      setSIterationErr("")
+      setSIterationErr("");
     }
     if (sround == "") {
       error = error + 1;
-      setSRoundErr("Please Enter Round")
+      setSRoundErr("Please Enter Round");
     } else {
-      setSRoundErr("")
+      setSRoundErr("");
     }
     if (error == 0) {
-      let executionId = 19
-      getTradeHistoryWS(executionId, siteration, sround)
-
+      let executionId = 19;
+      getTradeHistoryWS(executionId, siteration, sround);
     }
-  }
+  };
   return (
     <div className="container-fluid">
       <div className="simulation-info">
-        <div className="template-header">
+        <div
+          className="template-header"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <div className="back-option">
             <img src="imgs/left-arrow.svg" alt="" />
             <p className="mb-0">Back</p>
           </div>
           <div className="main-header"></div>
-          <div></div>
+          <div className="right-head info">
+            {/* <div className="format"> */}
+            <p>Download Report :</p>
+            <div className="file-type">
+              <Button>
+                <img src="imgs/download-white.svg" alt="" />
+                PDF
+              </Button>
+              <Button>
+                <img src="imgs/download-white.svg" alt="" />
+                EXCEL
+              </Button>
+            </div>
+            {/* </div> */}
+          </div>
         </div>
 
         <div className="simulation-section">
@@ -872,10 +879,18 @@ export default function Home() {
                                     onChange={handleInput}
                                     required
                                   >
-                                    <option value="">Select Distribution Type</option>
-                                    {finalDistributions.map(item => (
-                                      <option key={item?.name} value={item?.name}>{item?.name}</option>
-                                    ))}  </select>
+                                    <option value="">
+                                      Select Distribution Type
+                                    </option>
+                                    {finalDistributions.map((item) => (
+                                      <option
+                                        key={item?.name}
+                                        value={item?.name}
+                                      >
+                                        {item?.name}
+                                      </option>
+                                    ))}{" "}
+                                  </select>
                                   {distributionErr != "" && (
                                     <p className="alert-message">
                                       {distributionErr}
@@ -888,104 +903,138 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <div className="table-responsive">
+                      {/* <div className="table-responsive">
                         <div className="template-content">
                           <table className="table">
                             <tbody>
-                              {distribution == "normal" && <tr>
-                                <td>Standard Deviation Price Buy</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="devpricebuy"
-                                    name="devpricebuy"
-                                    required
-                                    value={devpricebuy}
-                                    onChange={handleInput}
-                                  />
-                                  {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
-                                </td>
-                              </tr>}
-                              {distribution == 'normal' && <tr>
-                                <td>Standard Deviation Price Sell</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="devpricesell"
-                                    name="devpricesell"
-                                    required
-                                    value={devpricesell}
-                                    onChange={handleInput}
-                                  />
-                                  {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
-                                </td>
-                              </tr>}
-                              {distribution == 'normal' && <tr>
-                                <td>Standard Deviation Quantity</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="devqty"
-                                    name="devqty"
-                                    required
-                                    value={devqty}
-                                    onChange={handleInput}
-                                  />
-                                  {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
+                              {distribution == "normal" && (
+                                <tr>
+                                  <td>Standard Deviation Price Buy</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="devpricebuy"
+                                      name="devpricebuy"
+                                      required
+                                      value={devpricebuy}
+                                      onChange={handleInput}
+                                    />
+                                    {devpricebuyErr != "" && (
+                                      <p className="alert-message">
+                                        {devpricebuyErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
+                              {distribution == "normal" && (
+                                <tr>
+                                  <td>Standard Deviation Price Sell</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="devpricesell"
+                                      name="devpricesell"
+                                      required
+                                      value={devpricesell}
+                                      onChange={handleInput}
+                                    />
+                                    {devpricesellErr != "" && (
+                                      <p className="alert-message">
+                                        {devpricesellErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
+                              {distribution == "normal" && (
+                                <tr>
+                                  <td>Standard Deviation Quantity</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="devqty"
+                                      name="devqty"
+                                      required
+                                      value={devqty}
+                                      onChange={handleInput}
+                                    />
+                                    {devqtyErr != "" && (
+                                      <p className="alert-message">
+                                        {devqtyErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
 
-                                </td>
-                              </tr>}
-
-                              {(distribution == 'poisson' || distribution == 'normal') && <tr>
-                                <td>Mean Price Buy</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="meanpricebuy"
-                                    name="meanpricebuy"
-                                    required
-                                    value={meanpricebuy}
-                                    onChange={handleInput}
-                                  />
-                                  {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
-
-                                </td>
-                              </tr>}
-                              {(distribution == 'poisson' || distribution == 'normal') && <tr>
-                                <td>Mean Price Sell</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="meanpricesell"
-                                    name="meanpricesell"
-                                    required
-                                    value={meanpricesell}
-                                    onChange={handleInput}
-                                  />
-                                  {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
-
-                                </td>
-                              </tr>}
-                              {(distribution == 'poisson' || distribution == 'normal') && <tr>
-                                <td>Mean Price Quantity</td>
-                                <td>
-                                  <input
-                                    type="number"
-                                    id="meanqty"
-                                    name="meanqty"
-                                    required
-                                    value={meanqty}
-                                    onChange={handleInput}
-
-                                  />
-                                  {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
-
-                                </td>
-                              </tr>}
+                              {(distribution == "poisson" ||
+                                distribution == "normal") && (
+                                <tr>
+                                  <td>Mean Price Buy</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="meanpricebuy"
+                                      name="meanpricebuy"
+                                      required
+                                      value={meanpricebuy}
+                                      onChange={handleInput}
+                                    />
+                                    {meanpricebuyErr != "" && (
+                                      <p className="alert-message">
+                                        {meanpricebuyErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
+                              {(distribution == "poisson" ||
+                                distribution == "normal") && (
+                                <tr>
+                                  <td>Mean Price Sell</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="meanpricesell"
+                                      name="meanpricesell"
+                                      required
+                                      value={meanpricesell}
+                                      onChange={handleInput}
+                                    />
+                                    {meanpricesellErr != "" && (
+                                      <p className="alert-message">
+                                        {meanpricesellErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
+                              {(distribution == "poisson" ||
+                                distribution == "normal") && (
+                                <tr>
+                                  <td>Mean Price Quantity</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      id="meanqty"
+                                      name="meanqty"
+                                      required
+                                      value={meanqty}
+                                      onChange={handleInput}
+                                    />
+                                    {meanqtyErr != "" && (
+                                      <p className="alert-message">
+                                        {meanqtyErr}
+                                      </p>
+                                    )}
+                                  </td>
+                                </tr>
+                              )}
                             </tbody>
                           </table>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="table-responsive">
                         <div className="template-content">
                           <table className="table">
@@ -1000,10 +1049,12 @@ export default function Home() {
                                     required
                                     value={iterations}
                                     onChange={handleInput}
-
                                   />
-                                  {iterationsErr != "" && <p className="alert-message">{iterationsErr}</p>}
-
+                                  {iterationsErr != "" && (
+                                    <p className="alert-message">
+                                      {iterationsErr}
+                                    </p>
+                                  )}
                                 </td>
                               </tr>
                               <tr>
@@ -1016,9 +1067,10 @@ export default function Home() {
                                     required
                                     value={rounds}
                                     onChange={handleInput}
-
                                   />
-                                  {roundsErr != "" && <p className="alert-message">{roundsErr}</p>}
+                                  {roundsErr != "" && (
+                                    <p className="alert-message">{roundsErr}</p>
+                                  )}
                                 </td>
                               </tr>
                               <tr>
@@ -1031,12 +1083,15 @@ export default function Home() {
                                     required
                                     value={ordersRound}
                                     onChange={handleInput}
-
                                   />
-                                  {ordersRoundErr != "" && <p className="alert-message">{ordersRoundErr}</p>}
+                                  {ordersRoundErr != "" && (
+                                    <p className="alert-message">
+                                      {ordersRoundErr}
+                                    </p>
+                                  )}
                                 </td>
                               </tr>
-                              <tr>
+                              {/* <tr>
                                 <td>Orders Variance</td>
                                 <td>
                                   <input
@@ -1050,7 +1105,7 @@ export default function Home() {
                                   />
                                   {ordersVarErr != "" && <p className="alert-message">{ordersVarErr}</p>}
                                 </td>
-                              </tr>
+                              </tr> */}
                             </tbody>
                           </table>
                         </div>
@@ -1062,14 +1117,13 @@ export default function Home() {
                             <div className="radio-button">
                               <div className="form-check form-check-inline">
                                 <input
-                                   className="form-check-input"
-                                   type="radio"
-                                   name="publickey"
-                                   id="inlineRadio1"
-                                   value={1}
-                                   checked={publickey === 1}
-             
-                                   onChange={handleInput}
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="publickey"
+                                  id="inlineRadio1"
+                                  value={1}
+                                  checked={publickey === 1}
+                                  onChange={handleInput}
                                 />
                                 <label
                                   className="form-check-label"
@@ -1086,7 +1140,6 @@ export default function Home() {
                                   id="inlineRadio2"
                                   value={0}
                                   checked={publickey === 0}
-            
                                   onChange={handleInput}
                                 />
                                 <label
@@ -1116,7 +1169,12 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="modal-buttons">
-                      <button className="run-simulation" onClick={()=>handleRunSimulation()}>Run Simulation</button>
+                      <button
+                        className="run-simulation"
+                        onClick={() => handleRunSimulation()}
+                      >
+                        Run Simulation
+                      </button>
                       <button
                         className="create-template"
                         onClick={() => handleCreateTemplate()}
@@ -1141,19 +1199,30 @@ export default function Home() {
                           <div className="modal-details">
                             <div className="save">
                               <label htmlFor="">Save As</label>
-                              <input type="text" name="newtemplateName" value={newtemplateName}
-                                onChange={handleInput} />
+                              <input
+                                type="text"
+                                name="newtemplateName"
+                                value={newtemplateName}
+                                onChange={handleInput}
+                              />
                               {newtemplateNameErr != "" && (
-                                <p className="alert-message">{newtemplateNameErr}</p>
-                              )}                                </div>
+                                <p className="alert-message">
+                                  {newtemplateNameErr}
+                                </p>
+                              )}{" "}
+                            </div>
                             <div className="comment">
                               <label htmlFor="">Comment</label>
-                              <input type="text" name="finalComments" value={finalComments}
+                              <input
+                                type="text"
+                                name="finalComments"
+                                value={finalComments}
                                 onChange={handleInput}
-
                               />
                               {finalCommentsErr != "" && (
-                                <p className="alert-message">{finalCommentsErr}</p>
+                                <p className="alert-message">
+                                  {finalCommentsErr}
+                                </p>
                               )}
 
                               {finalErr != "" && (
@@ -1163,10 +1232,16 @@ export default function Home() {
                           </div>
                         </Modal.Body>
                         <div className="modal-button">
-                          <Button btn-close-black variant="dark" onClick={() => handleSaveTemplate()}>
-                            SAVE CHANGES
-                          </Button>
-                          <Button className="cancel" onClick={handleClose}>CANCEL</Button>
+                          <button
+                            className="create-template"
+                            btn-close-black
+                            onClick={() => handleSaveTemplate()}
+                          >
+                            Save Changes
+                          </button>
+                          <button className="cancel" onClick={handleClose}>
+                            Cancel
+                          </button>
                         </div>
                       </Modal>
                     </div>
@@ -1208,9 +1283,14 @@ export default function Home() {
                   >
                     <TabList>
                       <Tab>Info</Tab>
+                      <Tab>
+                        Order Book <span>(Stabilization)</span>
+                      </Tab>
                       <Tab>Order Book</Tab>
-                      <Tab>Trade History (WS)</Tab>
-                      <Tab>Trade History (NS)</Tab>
+                      <Tab>
+                        Trade History <span>(Stabilization)</span>
+                      </Tab>
+                      <Tab>Trade History</Tab>
                       <Tab>Simulation Result</Tab>
                       <Tab>Stabilization Fund</Tab>
                     </TabList>
@@ -1230,11 +1310,7 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <select name="" id="">
-                                  <option value="5">1</option>
-                                  <option value="10">10</option>
-                                  <option value="20">20</option>
-                                </select>
+                                <input type="text" />
                               </div>
                               <span>of 20</span>
                             </div>
@@ -1251,11 +1327,7 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <select name="" id="">
-                                  <option value="5">3</option>
-                                  <option value="10">10</option>
-                                  <option value="20">20</option>
-                                </select>
+                                <input type="text" />
                               </div>
                               <span>of 30</span>
                             </div>
@@ -1265,370 +1337,10 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search">SEARCH</button>
+                            <button className="search">Search</button>
                           </div>
                         </div>
-                        <div className="tabs">
-                          <Tabs>
-                            <TabList>
-                              <Tab>TRADE HISTORY (WS)</Tab>
-                              <Tab>TRADE HISTORY (NS)</Tab>
-                            </TabList>
-                            <TabPanel className="trade-history-ws">
-                              {" "}
-                              <div className="ws">
-                                <div className="stabilization">
-                                  <p>Stabilization Fund :</p>
-                                  <ul className="stabilization-fund">
-                                    <li className="token-issued">
-                                      <label htmlFor="token">
-                                        Token Issued
-                                      </label>
-                                      <span>100</span>
-                                    </li>
-                                    <li className="assets">
-                                      <label htmlFor="asset">
-                                        Assets (QTY)
-                                      </label>
-                                      <span>200</span>
-                                    </li>
-                                    <li className="cash">
-                                      <label htmlFor="cash">Cash</label>
-                                      <span>200</span>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div className="search-round">
-                                  <div className="controls">
-                                    <h3>Iteration</h3>
-                                    <div className="previous">
-                                      <img
-                                        src="imgs/last-previous.svg"
-                                        alt=""
-                                      />
-                                      <img src="imgs/previous.svg" alt="" />
-                                    </div>
-                                    <div className="iteration">
-                                      <div className="tooldrop">
-                                        <select name="" id="">
-                                          <option value="5">1</option>
-                                          <option value="10">10</option>
-                                          <option value="20">20</option>
-                                        </select>
-                                      </div>
-                                      <span>of 20</span>
-                                    </div>
-                                    <div className="next">
-                                      <img src="imgs/next-arrow.svg" alt="" />
-                                      <img src="imgs/last-arrow.svg" alt="" />
-                                    </div>
-                                  </div>
-                                  <div className="round">
-                                    <h3>Round</h3>
-                                    <div className="previous">
-                                      <img
-                                        src="imgs/last-previous.svg"
-                                        alt=""
-                                      />
-                                      <img src="imgs/previous.svg" alt="" />
-                                    </div>
-                                    <div className="iteration">
-                                      <div className="tooldrop">
-                                        <select name="" id="">
-                                          <option value="5">3</option>
-                                          <option value="10">10</option>
-                                          <option value="20">20</option>
-                                        </select>
-                                      </div>
-                                      <span>of 30</span>
-                                    </div>
-                                    <div className="next">
-                                      <img src="imgs/next-arrow.svg" alt="" />
-                                      <img src="imgs/last-arrow.svg" alt="" />
-                                    </div>
-                                  </div>
-                                  <div className="search-controls">
-                                    <button className="search">SEARCH</button>
-                                  </div>
-                                </div>
-                                <div className="ws-table">
-                                  <div className="table-responsive">
-                                    <div className="template-content">
-                                      <table className="table">
-                                        <thead>
-                                          <tr>
-                                            <th>Time</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-
-                                  <div className="pagination">
-                                    <div className="pagging-area">
-                                      <div className="paging-list">
-                                        <div className="iteration-para">
-                                          <p>Iteration</p>
-                                        </div>
-                                        <div className="leftaction disable-pointer">
-                                          <img
-                                            src="imgs/left-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="leftaction-single">
-                                          <img
-                                            src="imgs/left-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <ul className="paging-count">
-                                          <li>1</li>
-                                          <li>2</li>
-                                          <li>3</li>
-                                          <li>4</li>
-                                        </ul>
-                                        <div className="rightaction-single">
-                                          <img
-                                            src="imgs/right-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="rightaction">
-                                          <img
-                                            src="imgs/right-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="pagging-area rounds">
-                                      <div className="paging-list">
-                                        <div className="rounds-para">
-                                          <p>Round</p>
-                                        </div>
-                                        <div className="leftaction disable-pointer">
-                                          <img
-                                            src="imgs/left-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="leftaction-single">
-                                          <img
-                                            src="imgs/left-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <ul className="paging-count">
-                                          <li>1</li>
-                                          <li>2</li>
-                                          <li>3</li>
-                                          <li>4</li>
-                                        </ul>
-                                        <div className="rightaction-single">
-                                          <img
-                                            src="imgs/right-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="rightaction">
-                                          <img
-                                            src="imgs/right-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </TabPanel>
-                            <TabPanel className="trade-history-ns">
-                              <div className="ns">
-                                <div className="search-round">
-                                  <div className="controls">
-                                    <h3>Iteration</h3>
-                                    <div className="previous">
-                                      <img
-                                        src="imgs/last-previous.svg"
-                                        alt=""
-                                      />
-                                      <img src="imgs/previous.svg" alt="" />
-                                    </div>
-                                    <div className="iteration">
-                                      <div className="tooldrop">
-                                        <select name="" id="">
-                                          <option value="5">1</option>
-                                          <option value="10">10</option>
-                                          <option value="20">20</option>
-                                        </select>
-                                      </div>
-                                      <span>of 20</span>
-                                    </div>
-                                    <div className="next">
-                                      <img src="imgs/next-arrow.svg" alt="" />
-                                      <img src="imgs/last-arrow.svg" alt="" />
-                                    </div>
-                                  </div>
-                                  <div className="round">
-                                    <h3>Round</h3>
-                                    <div className="previous">
-                                      <img
-                                        src="imgs/last-previous.svg"
-                                        alt=""
-                                      />
-                                      <img src="imgs/previous.svg" alt="" />
-                                    </div>
-                                    <div className="iteration">
-                                      <div className="tooldrop">
-                                        <select name="" id="">
-                                          <option value="5">3</option>
-                                          <option value="10">10</option>
-                                          <option value="20">20</option>
-                                        </select>
-                                      </div>
-                                      <span>of 30</span>
-                                    </div>
-                                    <div className="next">
-                                      <img src="imgs/next-arrow.svg" alt="" />
-                                      <img src="imgs/last-arrow.svg" alt="" />
-                                    </div>
-                                  </div>
-                                  <div className="search-controls">
-                                    <button className="search">SEARCH</button>
-                                  </div>
-                                </div>
-                                <div className="ns-table">
-                                  <div className="table-responsive">
-                                    <div className="table-content">
-                                      <table className="table">
-                                        <thead>
-                                          <tr>
-                                            <th>Time</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                          <tr>
-                                            <td>2024-01-05 15:31:40</td>
-                                            <td>615.00</td>
-                                            <td>141.45</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                  <div className="pagination">
-                                    <div className="pagging-area">
-                                      <div className="paging-list">
-                                        <div className="iteration-para">
-                                          <p>Iteration</p>
-                                        </div>
-                                        <div className="leftaction disable-pointer">
-                                          <img
-                                            src="imgs/left-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="leftaction-single">
-                                          <img
-                                            src="imgs/left-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <ul className="paging-count">
-                                          <li>1</li>
-                                          <li>2</li>
-                                          <li>3</li>
-                                          <li>4</li>
-                                        </ul>
-                                        <div className="rightaction-single">
-                                          <img
-                                            src="imgs/right-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="rightaction">
-                                          <img
-                                            src="imgs/right-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="pagging-area rounds">
-                                      <div className="paging-list">
-                                        <div className="rounds-para">
-                                          <p>Round</p>
-                                        </div>
-                                        <div className="leftaction disable-pointer">
-                                          <img
-                                            src="imgs/left-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="leftaction-single">
-                                          <img
-                                            src="imgs/left-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <ul className="paging-count">
-                                          <li>1</li>
-                                          <li>2</li>
-                                          <li>3</li>
-                                          <li>4</li>
-                                        </ul>
-                                        <div className="rightaction-single">
-                                          <img
-                                            src="imgs/right-paging.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="rightaction">
-                                          <img
-                                            src="imgs/right-doublearrow.svg"
-                                            alt=""
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </TabPanel>
-                          </Tabs>
-                        </div>
+                        {/* <div className="tabs"></div> */}
                       </div>
                       <div className="row">
                         <div className="col sell">
@@ -1696,56 +1408,203 @@ export default function Home() {
                             </div>
                           </div>
                         </div>
-                        <div className="pagination">
-                          <div className="pagging-area">
-                            <div className="paging-list">
-                              <div className="iteration-para">
-                                <p>Iteration</p>
+                        <div className="footer">
+                          <div className="orderbook-header">
+                            <div className="search-round">
+                              <div className="controls">
+                                <h3>Iteration</h3>
+                                <div className="previous">
+                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/previous.svg" alt="" />
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input type="text" />
+                                  </div>
+                                  <span>of 20</span>
+                                </div>
+                                <div className="next">
+                                  <img src="imgs/next-arrow.svg" alt="" />
+                                  <img src="imgs/last-arrow.svg" alt="" />
+                                </div>
                               </div>
-                              <div className="leftaction disable-pointer">
-                                <img src="imgs/left-doublearrow.svg" alt="" />
+                              <div className="round">
+                                <h3>Round</h3>
+                                <div className="previous">
+                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/previous.svg" alt="" />
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input type="text" />
+                                  </div>
+                                  <span>of 30</span>
+                                </div>
+                                <div className="next">
+                                  <img src="imgs/next-arrow.svg" alt="" />
+                                  <img src="imgs/last-arrow.svg" alt="" />
+                                </div>
                               </div>
-                              <div className="leftaction-single">
-                                <img src="imgs/left-paging.svg" alt="" />
+                              <div className="search-controls">
+                                <button className="search">Search</button>
                               </div>
-                              <ul className="paging-count">
-                                <li>1</li>
-                                <li>2</li>
-                                <li>3</li>
-                                <li>4</li>
-                              </ul>
-                              <div className="rightaction-single">
-                                <img src="imgs/right-paging.svg" alt="" />
+                            </div>
+                            {/* <div className="tabs"></div> */}
+                          </div>
+                        </div>
+                      </div>
+                    </TabPanel>
+                    <TabPanel className="order-book">
+                      <div className="orderbook-header">
+                        <div className="search-round">
+                          <div className="controls">
+                            <h3>Iteration</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
+                            </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                <input type="text" />
                               </div>
-                              <div className="rightaction">
-                                <img src="imgs/right-doublearrow.svg" alt="" />
-                              </div>
+                              <span>of 20</span>
+                            </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
                             </div>
                           </div>
-                          <div className="pagging-area rounds">
-                            <div className="paging-list">
-                              <div className="rounds-para">
-                                <p>Round</p>
+                          <div className="round">
+                            <h3>Round</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
+                            </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                <input type="text" />
                               </div>
-                              <div className="leftaction disable-pointer">
-                                <img src="imgs/left-doublearrow.svg" alt="" />
+                              <span>of 30</span>
+                            </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
+                            </div>
+                          </div>
+                          <div className="search-controls">
+                            <button className="search">Search</button>
+                          </div>
+                        </div>
+                        {/* <div className="tabs"></div> */}
+                      </div>
+                      <div className="row">
+                        <div className="col sell">
+                          <div className="orderNo">
+                            <label htmlFor="order">Total Orders:</label>
+                            <span>30</span>
+                          </div>
+                          <div className="table-responsive">
+                            <div className="table-content">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>Quantity</th>
+                                    <th>Buy Price</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>153</td>
+                                    <td>8.94</td>
+                                  </tr>
+                                  <tr>
+                                    <td>153</td>
+                                    <td>8.94</td>
+                                  </tr>
+                                  <tr>
+                                    <td>153</td>
+                                    <td>8.94</td>
+                                  </tr>
+                                </tbody>
+                              </table>{" "}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="col buy">
+                          <div className="orderNo">
+                            <label htmlFor="order">Total Orders:</label>
+                            <span>25</span>
+                          </div>
+                          <div className="table-responsive">
+                            <div className="table-content">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>Sell Price</th>
+                                    <th>Quantity</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>9.87</td>
+                                    <td>54</td>
+                                  </tr>
+                                  <tr>
+                                    <td>9.87</td>
+                                    <td>54</td>
+                                  </tr>
+                                  <tr>
+                                    <td>9.87</td>
+                                    <td>54</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="footer">
+                          <div className="orderbook-header">
+                            <div className="search-round">
+                              <div className="controls">
+                                <h3>Iteration</h3>
+                                <div className="previous">
+                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/previous.svg" alt="" />
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input type="text" />
+                                  </div>
+                                  <span>of 20</span>
+                                </div>
+                                <div className="next">
+                                  <img src="imgs/next-arrow.svg" alt="" />
+                                  <img src="imgs/last-arrow.svg" alt="" />
+                                </div>
                               </div>
-                              <div className="leftaction-single">
-                                <img src="imgs/left-paging.svg" alt="" />
+                              <div className="round">
+                                <h3>Round</h3>
+                                <div className="previous">
+                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/previous.svg" alt="" />
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input type="text" />
+                                  </div>
+                                  <span>of 30</span>
+                                </div>
+                                <div className="next">
+                                  <img src="imgs/next-arrow.svg" alt="" />
+                                  <img src="imgs/last-arrow.svg" alt="" />
+                                </div>
                               </div>
-                              <ul className="paging-count">
-                                <li>1</li>
-                                <li>2</li>
-                                <li>3</li>
-                                <li>4</li>
-                              </ul>
-                              <div className="rightaction-single">
-                                <img src="imgs/right-paging.svg" alt="" />
-                              </div>
-                              <div className="rightaction">
-                                <img src="imgs/right-doublearrow.svg" alt="" />
+                              <div className="search-controls">
+                                <button className="search">Search</button>
                               </div>
                             </div>
+                            {/* <div className="tabs"></div> */}
                           </div>
                         </div>
                       </div>
@@ -1783,11 +1642,15 @@ export default function Home() {
                                   <option value="10">10</option>
                                   <option value="20">20</option>
                                 </select> */}
-                                <input value={siteration}
+                                <input
+                                  value={siteration}
                                   name="siteration"
-                                  onChange={handleInput} />
+                                  onChange={handleInput}
+                                />
                                 {siterationErr != "" && (
-                                  <p className="alert-message">{siterationErr}</p>
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
                                 )}
                               </div>
                               <span>of 20</span>
@@ -1805,9 +1668,11 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input value={sround}
+                                <input
+                                  value={sround}
                                   name="sround"
-                                  onChange={handleInput} />
+                                  onChange={handleInput}
+                                />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
@@ -1820,7 +1685,14 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search" onClick={() => handleTradingHistoryWithStablization()}>SEARCH</button>
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleTradingHistoryWithStablization()
+                              }
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                         <div className="ws-table">
@@ -1835,79 +1707,87 @@ export default function Home() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {tradeHistoryWS.map(item => (
-                                    <tr >
-                                      <td>{moment(item.timestamp).format("MM/DD/YYYY h:mm:ss A")}</td>
+                                  {tradeHistoryWS.map((item) => (
+                                    <tr>
+                                      <td>
+                                        {moment(item.timestamp).format(
+                                          "MM/DD/YYYY h:mm:ss A"
+                                        )}
+                                      </td>
                                       <td>{item.price}</td>
                                       <td>{item.quantity}</td>
-
-
                                     </tr>
                                   ))}
                                 </tbody>
-
-
                               </table>
                             </div>
                           </div>
-
-                          <div className="pagination">
-                            <div className="pagging-area">
-                              <div className="paging-list">
-                                <div className="iteration-para">
-                                  <p>Iteration</p>
-                                </div>
-                                <div className="leftaction disable-pointer">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                </div>
-                                <div className="leftaction-single">
-                                  <img src="imgs/left-paging.svg" alt="" />
-                                </div>
-                                <ul className="paging-count">
-                                  <li>1</li>
-                                  <li>2</li>
-                                  <li>3</li>
-                                  <li>4</li>
-                                </ul>
-                                <div className="rightaction-single">
-                                  <img src="imgs/right-paging.svg" alt="" />
-                                </div>
-                                <div className="rightaction">
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
-                                </div>
-                              </div>
+                        </div>
+                        <div className="search-round">
+                          <div className="controls">
+                            <h3>Iteration</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
                             </div>
-                            <div className="pagging-area rounds">
-                              <div className="paging-list">
-                                <div className="rounds-para">
-                                  <p>Round</p>
-                                </div>
-                                <div className="leftaction disable-pointer">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                </div>
-                                <div className="leftaction-single">
-                                  <img src="imgs/left-paging.svg" alt="" />
-                                </div>
-                                <ul className="paging-count">
-                                  <li>1</li>
-                                  <li>2</li>
-                                  <li>3</li>
-                                  <li>4</li>
-                                </ul>
-                                <div className="rightaction-single">
-                                  <img src="imgs/right-paging.svg" alt="" />
-                                </div>
-                                <div className="rightaction">
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
-                                </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                {/*   <select name="" id="">
+                                  <option value="5">1</option>
+                                  <option value="10">10</option>
+                                  <option value="20">20</option>
+                                </select> */}
+                                <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}
                               </div>
+                              <span>of 20</span>
                             </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
+                            </div>
+                          </div>
+                          <div className="round">
+                            <h3>Round</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
+                            </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}
+                              </div>
+                              <span>of 30</span>
+                            </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
+                            </div>
+                          </div>
+                          <div className="search-controls">
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleTradingHistoryWithStablization()
+                              }
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -1928,11 +1808,15 @@ export default function Home() {
                                   <option value="10">10</option>
                                   <option value="20">20</option>
                                 </select> */}
-                                <input value={siteration}
+                                <input
+                                  value={siteration}
                                   name="siteration"
-                                  onChange={handleInput} />
+                                  onChange={handleInput}
+                                />
                                 {siterationErr != "" && (
-                                  <p className="alert-message">{siterationErr}</p>
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
                                 )}
                               </div>
                               <span>of 20</span>
@@ -1950,14 +1834,16 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                               {/*  <select name="" id="">
+                                {/*  <select name="" id="">
                                   <option value="5">3</option>
                                   <option value="10">10</option>
                                   <option value="20">20</option>
                                 </select> */}
-                                 <input value={sround}
+                                <input
+                                  value={sround}
                                   name="sround"
-                                  onChange={handleInput} />
+                                  onChange={handleInput}
+                                />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
@@ -1970,106 +1856,104 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                          <button className="search" onClick={() => handleTradingHistoryWithoutStablization()}>SEARCH</button>
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleTradingHistoryWithoutStablization()
+                              }
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                         <div className="ns-table">
                           <div className="table-responsive">
                             <div className="table-content">
                               <table className="table">
-                                <thead>
+                                <thead className="sticky-header">
                                   <tr>
                                     <th>Time</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                   </tr>
                                 </thead>
-                                <tbody>
-                                 {/*  <tr>
-                                    <td>2024-01-05 15:31:40</td>
-                                    <td>615.00</td>
-                                    <td>141.45</td>
-                                  </tr>
-                                  <tr>
-                                    <td>2024-01-05 15:31:40</td>
-                                    <td>615.00</td>
-                                    <td>141.45</td>
-                                  </tr>
-                                  <tr> 
-                                    <td>2024-01-05 15:31:40</td>
-                                    <td>615.00</td>
-                                    <td>141.45</td>
-                                  </tr>*/}
-                                    {tradeHistoryNS.map(item => (
-                                    <tr >
-                                      <td>{moment(item.timestamp).format("MM/DD/YYYY h:mm:ss A")}</td>
+                                <tbody className="scrollable">
+                                  {tradeHistoryNS.map((item) => (
+                                    <tr>
+                                      <td>
+                                        {moment(item.timestamp).format(
+                                          "MM/DD/YYYY h:mm:ss A"
+                                        )}
+                                      </td>
                                       <td>{item.price}</td>
                                       <td>{item.quantity}</td>
-
-
                                     </tr>
                                   ))}
                                 </tbody>
                               </table>
                             </div>
                           </div>
-                          <div className="pagination">
-                            <div className="pagging-area">
-                              <div className="paging-list">
-                                <div className="iteration-para">
-                                  <p>Iteration</p>
-                                </div>
-                                <div className="leftaction disable-pointer">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                </div>
-                                <div className="leftaction-single">
-                                  <img src="imgs/left-paging.svg" alt="" />
-                                </div>
-                                <ul className="paging-count">
-                                  <li>1</li>
-                                  <li>2</li>
-                                  <li>3</li>
-                                  <li>4</li>
-                                </ul>
-                                <div className="rightaction-single">
-                                  <img src="imgs/right-paging.svg" alt="" />
-                                </div>
-                                <div className="rightaction">
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
-                                </div>
-                              </div>
+                        </div>
+                        <div className="search-round">
+                          <div className="controls">
+                            <h3>Iteration</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
                             </div>
-                            <div className="pagging-area rounds">
-                              <div className="paging-list">
-                                <div className="rounds-para">
-                                  <p>Round</p>
-                                </div>
-                                <div className="leftaction disable-pointer">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                </div>
-                                <div className="leftaction-single">
-                                  <img src="imgs/left-paging.svg" alt="" />
-                                </div>
-                                <ul className="paging-count">
-                                  <li>1</li>
-                                  <li>2</li>
-                                  <li>3</li>
-                                  <li>4</li>
-                                </ul>
-                                <div className="rightaction-single">
-                                  <img src="imgs/right-paging.svg" alt="" />
-                                </div>
-                                <div className="rightaction">
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
-                                </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}
                               </div>
+                              <span>of 20</span>
                             </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
+                            </div>
+                          </div>
+                          <div className="round">
+                            <h3>Round</h3>
+                            <div className="previous">
+                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/previous.svg" alt="" />
+                            </div>
+                            <div className="iteration">
+                              <div className="tooldrop">
+                                <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}
+                              </div>
+                              <span>of 30</span>
+                            </div>
+                            <div className="next">
+                              <img src="imgs/next-arrow.svg" alt="" />
+                              <img src="imgs/last-arrow.svg" alt="" />
+                            </div>
+                          </div>
+                          <div className="search-controls">
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleTradingHistoryWithoutStablization()
+                              }
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -2086,7 +1970,9 @@ export default function Home() {
                             </TabList>{" "}
                             <TabPanel>
                               {" "}
-                              <div className="simulation-graph">vjh</div>
+                              <div className="simulation-graph">
+                                MARKET PRICE UPDATES
+                              </div>
                               <div className="simulation-table">
                                 <div className="table-responsive">
                                   <div className="template-content">
@@ -2135,7 +2021,9 @@ export default function Home() {
                             </TabPanel>
                             <TabPanel>
                               {" "}
-                              <div className="simulation-graph">vjh</div>
+                              <div className="simulation-graph">
+                                VOLUME UPDATES
+                              </div>
                               <div className="simulation-table">
                                 <div className="table-responsive">
                                   <div className="template-content">
@@ -2184,7 +2072,9 @@ export default function Home() {
                             </TabPanel>
                             <TabPanel>
                               {" "}
-                              <div className="simulation-graph">vjh</div>
+                              <div className="simulation-graph">
+                                QUANTITY UPDATES
+                              </div>
                               <div className="simulation-table">
                                 <div className="table-responsive">
                                   <div className="template-content">

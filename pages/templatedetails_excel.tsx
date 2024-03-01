@@ -14,32 +14,38 @@ export default function Home() {
   const handleEdit = () => {
     router.push("/templatedetails_excel");
   };
-
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div className="container-fluid">
-      <div className="simulation-info compare">
-        <div className="head">
-          <img src="imgs/left-arrow.svg" alt="" />
-          <h3>Back</h3>
+      <div className="template simulation-info compare">
+        <div className="template-header">
+          <div className="back-option" onClick={() => handleBack()}>
+            <img src="imgs/left-arrow.svg" alt="" />
+            <p className="mb-0">Back</p>
+          </div>
+          <div className="main-header">
+            <h1>Template Details</h1>
+          </div>
+          <div className="right-head">
+            {/* <div className="format"> */}
+            <p>Download Template Details :</p>
+            <div className="file-type">
+              <Button>
+                <img src="imgs/download-white.svg" alt="" />
+                PDF
+              </Button>
+              <Button>
+                <img src="imgs/download-white.svg" alt="" />
+                EXCEL
+              </Button>
+            </div>
+            {/* </div> */}
+          </div>
         </div>
 
         <div className="template-details">
-          <div className="compare-header">
-            <div className="title">Template Details</div>
-            <div className="format">
-              <p>Download Compare Result</p>
-              <div className="file-type">
-                <Button>
-                  <img src="imgs/download-white.svg" alt="" />
-                  PDF
-                </Button>
-                <Button>
-                  <img src="imgs/download-white.svg" alt="" />
-                  EXCEL
-                </Button>
-              </div>
-            </div>
-          </div>
           <div className="table-responsive">
             <div className="template-content">
               <table className="table">
@@ -84,6 +90,18 @@ export default function Home() {
                   </tr>
                   <tr>
                     <th className="emptycell">Quantity Variance Limit</th>
+                    <td>55.01</td>
+                    <td>55.01</td>
+                    <td>55.01</td>
+                  </tr>
+                  <tr>
+                    <th className="emptycell">Limit Order Upper Bound</th>
+                    <td>55.01</td>
+                    <td>55.01</td>
+                    <td>55.01</td>
+                  </tr>
+                  <tr>
+                    <th className="emptycell">Limit Order Lower Bound</th>
                     <td>55.01</td>
                     <td>55.01</td>
                     <td>55.01</td>

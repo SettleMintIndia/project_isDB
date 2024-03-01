@@ -8,68 +8,147 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import API_Auth from './api/API_Auth';
+import API_Auth from "./api/API_Auth";
 import moment from "moment";
-
-
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
-  const [templateData, setTemplateData] = useState([{scenario_name:'',temp_name:'',created_timestamp:'',exe_id:''}]);
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [s_type, setSType] = useState('');
+  const [templateData, setTemplateData] = useState([
+    {
+      scenario_name: "",
+      temp_name: "",
+      created_timestamp: "",
+      exe_id: "",
+      is_public: 0,
+    },
+  ]);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [s_type, setSType] = useState("");
 
-  const [tempname, setTempName] = useState('');
+  const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [creatorName, setCreatorName] = useState('');
+  const [creatorName, setCreatorName] = useState("");
   const [perPage, setPerPage] = useState(10);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const[viewData,setViewData]=useState({})
+  const [viewData, setViewData] = useState({});
 
-  useEffect(() => {
-    getSimulations(tempname, creatorName, s_type, fromDate, toDate, perPage, pageNo)
-
-  }, [])
-  const getSimulations = async (tempname: any, creatorName: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+  const handlegetAllTemplateDetails = async () => {
     let body = {
-      "temp_name":tempname,
-      "creator":creatorName,
-      "scenario": s_type,
-      "datefrom": fromDate,
-      "dateto": toDate,
-      "resultPerPage": perPage,
-      "pgNo": pageNo
-    }
-    const result=await API_Auth.getSimulationHistory(body);
+      temp_name: tempname,
+      admin_id: "1",
+      scenario: s_type,
+      datefrom:
+        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      resultPerPage: perPage,
+      pgNo: pageNo,
+      showPrivate: true,
+    };
+    console.log(body);
+
+    const result = await API_Auth.getAllTemplates(body);
     console.log(result);
     if (result.status == 200) {
-      setTemplateData(result.simulations)
-      setTotalCount(result.count)
-      setPageCount(Math.ceil(result.count / perPage))
-
+      setTemplateData(result.templates);
+      setTotalCount(result.count);
+      setPageCount(Math.ceil(result.count / perPage));
     }
-  }
+  };
+  useEffect(() => {
+    getSimulations(
+      tempname,
+      creatorName,
+      s_type,
+      fromDate,
+      toDate,
+      perPage,
+      pageNo
+    );
+  }, []);
+  const getSimulations = async (
+    tempname: any,
+    creatorName: any,
+    s_type: any,
+    fromDate: any,
+    toDate: any,
+    perPage: any,
+    pageNo: any
+  ) => {
+    let body = {
+      temp_name: tempname,
+      creator: creatorName,
+      scenario: s_type,
+      datefrom: fromDate,
+      dateto: toDate,
+      resultPerPage: perPage,
+      pgNo: pageNo,
+    };
+    const result = await API_Auth.getSimulationHistory(body);
+    console.log(result);
+    if (result.status == 200) {
+      setTemplateData(result.simulations);
+      setTotalCount(result.count);
+      setPageCount(Math.ceil(result.count / perPage));
+    }
+  };
   const viewDetails = (data: any) => {
     console.log(data);
-    setViewData(data)
+    setViewData(data);
 
     router.push({
-      pathname: '/simulation_history_info',
-      query: { temp_name: data.temp_name,exe_id:data.exe_id },
+      pathname: "/simulation_history_info",
+      query: { temp_name: data.temp_name, exe_id: data.exe_id },
     });
   };
+  const handleButtonClick = async (data: any) => {
+    console.log(data);
+    let body = {
+      template_name: data.temp_name,
+      make_public: data.is_public == 1 ? false : true,
+    };
+    const result = await API_Auth.getChangeVisiblityTemplate(body);
+    console.log("visibilityresult", result);
+    if (result.status == 400) {
+      toast.error(result.error);
+    } else {
+      toast.success(result.message);
+      handlegetAllTemplateDetails();
+    }
+  };
+  const handleInput = async (e: any) => {};
   return (
     <div className="container-fluid">
       <div className="template details">
-        <div className="head">
-          <h1>Simulation History</h1>
+        <div className="template-header">
+          <div className="back-option"></div>
+          <div className="main-header">
+            <h1>Simulation History</h1>
+
+            {/* <p>({totalCount} )</p> */}
+          </div>
+          <div className="head"></div>
+        </div>
+
+        <div className="compare-banner">
+          <label htmlFor="">Compare Templates :</label>
+          <button className="templatename">
+            Template1 <img src="imgs/close-black.svg" alt="" />
+          </button>
+          <button className="templatename">
+            Template2 <img src="imgs/close-black.svg" alt="" />
+          </button>
+          <button className="compare-button">
+            <a href="templatedetails_excel">Compare Templates</a>
+          </button>
+          <button className="clear">Clear All</button>
         </div>
         <div className="template-type">
           <div className="tabs">
@@ -93,12 +172,20 @@ export default function Home() {
               </div>
               <div className="searchArea">
                 <div className="searchFilter options">
-                  <select name="filter" id="searchtype">
-                    <option value="template">Template</option>
-                    <option value="creator">Creator</option>
-                  </select>
-                  <input type="text" placeholder="Search by template name" />
-                  <img src="imgs/search-icon.svg" alt="" />
+                  {/* <select name="filter" id="searchtype">
+                        <option value="template">Template</option>
+                        <option value="creator">Creator</option>
+                      </select> */}
+                  <input
+                    type="text"
+                    placeholder="Search by template name"
+                    onChange={handleInput}
+                    value={tempname}
+                    name="tempname"
+                  />
+                  <div className="search-icon">
+                    <img src="imgs/search-icon.svg" alt="" />
+                  </div>
                 </div>
                 <div className="calendar">
                   <img src="imgs/calendar.svg" alt="" />
@@ -114,11 +201,11 @@ export default function Home() {
                 <table className="table" style={{ borderSpacing: 0 }}>
                   <thead>
                     <tr>
-                      <th>Compare</th>
+                      <th>Compare Templates</th>
                       <th>Scenario Type</th>
                       <th>Template Name</th>
-                      <th>Simulation Time</th>
-                      <th>Simulation Type</th>
+                      <th>Visibility</th>
+                      <th>Simulation Date</th>
                       <th>Execution Details</th>
                       <th>
                         <img src=" imgs/download-white.svg" alt="" /> Download
@@ -129,21 +216,47 @@ export default function Home() {
                   <tbody>
                     {templateData.map((data) => (
                       <tr key={data.exe_id}>
-                        <td>
+                        <td id="checkbox">
                           {" "}
                           <input type="checkbox" className="checkbox" />
                         </td>
                         <td>{data.scenario_name}</td>
                         <td>{data.temp_name}</td>
-                        <td>{moment(data.created_timestamp).format("MM/DD/YYYY h:mm:ss A")}</td>
+                        <td id="privacy">
+                          <div className="btn-group privacy">
+                            <button
+                              className={
+                                data.is_public === 1 ? "btn active" : "btn"
+                              }
+                              onClick={() => handleButtonClick(data)}
+                            >
+                              Public
+                            </button>
+                            <button
+                              className={
+                                data.is_public === 0 ? "btn active" : "btn"
+                              }
+                              onClick={() => handleButtonClick(data)}
+                            >
+                              Private
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          {moment(data.created_timestamp).format(
+                            "MM/DD/YYYY h:mm:ss A"
+                          )}
+                        </td>
 
-                        <td>Dynamic</td>
                         <td
                           className="actions execution
                   "
                         >
-                          <a >
-                            <button className="details-button" onClick={()=>viewDetails(data)}>
+                          <a>
+                            <button
+                              className="details-button"
+                              onClick={() => viewDetails(data)}
+                            >
                               View Details
                             </button>
                           </a>
@@ -160,7 +273,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="pagging-area">
+        <div className="pagging-area mt-2">
           <div className="toolbar">
             <label htmlFor="">Results per page :</label>
             <div className="tooldrop">

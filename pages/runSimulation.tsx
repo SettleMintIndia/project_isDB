@@ -9,14 +9,13 @@ import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import moment from "moment";
-import API_Auth from './api/API_Auth'
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import API_Auth from "./api/API_Auth";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import Loader from "@/components/layout/Loader";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
+import "react-toastify/dist/ReactToastify.css";
 
 // @ts-ignore
 
@@ -26,78 +25,122 @@ export default function Home() {
 
   const [showModal, setShowModal] = useState(false);
   const [key, setKey] = useState();
-  const [activeButton, setActiveButton] = useState("Static");
+  const [activeButton, setActiveButton] = useState("Public");
 
   const [tabIndex, setTabIndex] = useState(0);
 
-  const [templateData, setTemplateData] = useState([{ is_public: 1, scenario_name: '', temp_name: '', created_timestamp: '', comments: '' }])
-  const [globalTemplates, setGlobalTemplates] = useState([{display_name:'', scenario_name: '', temp_name: '', created_timestamp: '', comments: '' }])
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [s_type, setSType] = useState('');
-  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: '' }]);
-  const [tempname, setTempName] = useState('');
+  const [templateData, setTemplateData] = useState([
+    {
+      is_public: 1,
+      scenario_name: "",
+      temp_name: "",
+      created_timestamp: "",
+      comments: "",
+    },
+  ]);
+  const [globalTemplates, setGlobalTemplates] = useState([
+    {
+      display_name: "",
+      scenario_name: "",
+      temp_name: "",
+      created_timestamp: "",
+      comments: "",
+    },
+  ]);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [s_type, setSType] = useState("");
+  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
+  const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
-  const [totalCount, setTotalCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0);
   const [viewData, setViewData] = useState({
-    temp_name: '', created_timestamp: '', scenario_name: '',
-    initial_mkt_price: '', price_var: '', base_quant: '',
-    quant_var: '', alpha0: '', alpha1: '',
-    theta0: '', theta1: '', std_dev_price_buy: '',
-    std_dev_price_sell: '', std_dev_quant: '', mean_quant: '',
-    distribution: '', comments: '', mean_price_buy: '',
-    mean_price_sell: '',is_public:1
-  })
+    temp_name: "",
+    created_timestamp: "",
+    scenario_name: "",
+    initial_mkt_price: "",
+    price_var: "",
+    base_quant: "",
+    quant_var: "",
+    alpha0: "",
+    alpha1: "",
+    theta0: "",
+    theta1: "",
+    std_dev_price_buy: "",
+    std_dev_price_sell: "",
+    std_dev_quant: "",
+    mean_quant: "",
+    distribution: "",
+    comments: "",
+    mean_price_buy: "",
+    mean_price_sell: "",
+    is_public: 1,
+  });
 
   useEffect(() => {
-    console.log("tabIndex", tabIndex)
+    console.log("tabIndex", tabIndex);
     if (tabIndex == 0) {
       getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
     } else {
       getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
     }
+  }, [tabIndex]);
 
-  }, [tabIndex])
-
-  const getUserTemplates = async (tempname: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+  const getUserTemplates = async (
+    tempname: any,
+    s_type: any,
+    fromDate: any,
+    toDate: any,
+    perPage: any,
+    pageNo: any
+  ) => {
     setLoading(true);
     let body = {
-      "temp_name": tempname,
-      "admin_id": "15",
-      "scenario": s_type,
-      "datefrom": fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      "dateto": toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      "resultPerPage": perPage,
-      "pgNo": pageNo,
-      "showPrivate": true
-    }
+      temp_name: tempname,
+      admin_id: "2",
+      scenario: s_type,
+      datefrom:
+        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      resultPerPage: perPage,
+      pgNo: pageNo,
+      showPrivate: true,
+    };
     console.log(body);
     const result = await API_Auth.getAllTemplates(body);
     console.log(result);
     setLoading(false);
     if (result.status == 200) {
-      setTemplateData(result.templates)
-      setTotalCount(result.count)
-      setPageCount(Math.ceil(result.count / perPage))
+      setTemplateData(result.templates);
+      setTotalCount(result.count);
+      setPageCount(Math.ceil(result.count / perPage));
     }
-  }
-  const getglobalTemplates = async (tempname: any, s_type: any, fromDate: any, toDate: any, perPage: any, pageNo: any) => {
+  };
+  const getglobalTemplates = async (
+    tempname: any,
+    s_type: any,
+    fromDate: any,
+    toDate: any,
+    perPage: any,
+    pageNo: any
+  ) => {
     setLoading(true);
     let body = {
-      "temp_name": tempname,
-      "admin_id": "",
-      "scenario": s_type,
-      "datefrom": fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      "dateto": toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      "resultPerPage": perPage,
-      "pgNo": pageNo,
-      "showPrivate": false
-    }
+      temp_name: tempname,
+      admin_id: "",
+      scenario: s_type,
+      datefrom:
+        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      resultPerPage: perPage,
+      pgNo: pageNo,
+      showPrivate: false,
+    };
 
     console.log("global", body);
 
@@ -105,12 +148,11 @@ export default function Home() {
     console.log(result);
     setLoading(false);
     if (result.status == 200) {
-      setGlobalTemplates(result.templates)
-      setTotalCount(result.count)
-      setPageCount(Math.ceil(result.count / perPage))
-
+      setGlobalTemplates(result.templates);
+      setTotalCount(result.count);
+      setPageCount(Math.ceil(result.count / perPage));
     }
-  }
+  };
 
   const handleDeleteClick = (data: any) => {
     setTooltipVisible(!tooltipVisible);
@@ -119,7 +161,6 @@ export default function Home() {
   };
 
   const handleDeleteConfirm = async () => {
-
     let body = {
       template_name: viewData.temp_name,
     };
@@ -152,7 +193,6 @@ export default function Home() {
   const viewDetails = (data: any) => {
     setShowModal(true);
     setViewData(data);
-
   };
 
   const handleCloseModal = () => {
@@ -163,32 +203,31 @@ export default function Home() {
   };
 
   const handleSimulation = (data: any) => {
-    console.log(data.temp_name)
+    console.log(data.temp_name);
     router.push({
-      pathname: '/runSimulation_infoPage',
+      pathname: "/runSimulation",
       query: { temp_name: data.temp_name },
     });
-  }
+  };
   const handleButtonClick = async (data: any) => {
     //setActiveButton(buttonName);
 
     console.log(data);
     let body = {
-      "template_name": data.temp_name,
-      "make_public": data.is_public == 1 ? false : true
-    }
+      template_name: data.temp_name,
+      make_public: data.is_public == 1 ? false : true,
+    };
     const result = await API_Auth.getChangeVisiblityTemplate(body);
-    console.log("visibilityresult", result)
+    console.log("visibilityresult", result);
     if (result.status == 400) {
-      toast.error(result.error)
+      toast.error(result.error);
     } else {
-      toast.success(result.message)
+      toast.success(result.message);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
       } else {
         getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
       }
-
     }
   };
 
@@ -211,10 +250,10 @@ export default function Home() {
       } else {
         getglobalTemplates(value, s_type, fromDate, toDate, perPage, 1);
       }
-      setTempName(value)
+      setTempName(value);
     }
     if (name == "fromDate") {
-      setFromDate(value)
+      setFromDate(value);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, value, toDate, perPage, 1);
       } else {
@@ -231,7 +270,7 @@ export default function Home() {
     }
 
     if (name == "perPage") {
-      setPerPage(Number(value))
+      setPerPage(Number(value));
       setPageNo(1);
       setCurrentPage(1);
       if (tabIndex == 0) {
@@ -239,28 +278,28 @@ export default function Home() {
       } else {
         getglobalTemplates(tempname, s_type, fromDate, toDate, value, 1);
       }
-
     }
-  }
+  };
 
   const handleDownloadExel = () => {
-    console.log(viewData)
+    console.log(viewData);
     let finalData = [];
-    let finaldata = finalData.push(viewData)
-    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileExtension = '.xlsx';
-    const fileName = viewData.temp_name
+    let finaldata = finalData.push(viewData);
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = viewData.temp_name;
 
     const ws = XLSX.utils.json_to_sheet(finalData);
 
-    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
 
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
 
     const data = new Blob([excelBuffer], { type: fileType });
 
     FileSaver.saveAs(data, fileName + fileExtension);
-  }
+  };
 
   return (
     <div className="container-fluid">
@@ -320,7 +359,7 @@ export default function Home() {
                     <div className="calendar">
                       <img src="imgs/calendar.svg" alt="" />
                       <select name="" id="calendar">
-                        <option value="">From-to</option>
+                        <option value="">Start date - End date</option>
                       </select>
                     </div>
                   </div>
@@ -338,61 +377,60 @@ export default function Home() {
                           <th>Actions</th>
                         </tr>
                       </thead>
-                      {templateData.length == 0 && <tbody>
-                        <tr >
-                          <td colSpan={12}>
-                            <p className="no_Data_table">No Data Found</p>
-                          </td>
-                        </tr>
-                      </tbody>
-                      }
+                      {templateData.length == 0 && (
+                        <tbody>
+                          <tr>
+                            <td colSpan={12}>
+                              <p className="no_Data_table">No Data Found</p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      )}
 
                       <tbody>
                         {templateData.map((data) => (
                           <tr key={data.temp_name}>
                             <td>{data.scenario_name}</td>
                             <td>{data.temp_name}</td>
-                            <td>
-                              <div className="btn-group">
+                            <td id="privacy">
+                              <div className="btn-group privacy">
                                 <button
                                   className={
-                                    data.is_public === 1
-                                      ? "btn active"
-                                      : "btn"
+                                    data.is_public === 1 ? "btn active" : "btn"
                                   }
-                                  onClick={() => handleButtonClick("Static")}
+                                  onClick={() => handleButtonClick(data)}
                                 >
                                   Public
                                 </button>
                                 <button
                                   className={
-                                    data.is_public === 0
-                                      ? "btn active"
-                                      : "btn"
+                                    data.is_public === 0 ? "btn active" : "btn"
                                   }
-                                  onClick={() => handleButtonClick("Dynamic")}
+                                  onClick={() => handleButtonClick(data)}
                                 >
                                   Private
                                 </button>
                               </div>
                             </td>
-                            <td>{moment(data.created_timestamp).format(
-                              "MM/DD/YYYY h:mm:ss A"
-
-                            )}   
-                            </td>                       
-                              <td>{data.comments}</td>
+                            <td>
+                              {moment(data.created_timestamp).format(
+                                "MM/DD/YYYY h:mm:ss A"
+                              )}
+                            </td>
+                            <td>{data.comments}</td>
                             <td
                               className="actions
                   "
                             >
-                              <button className="edit-icon" onClick={() => handleEditTemplate(data)}>
+                              <button
+                                className="edit-icon"
+                                onClick={() => handleEditTemplate(data)}
+                              >
                                 <img
                                   src="imgs/pencil.svg"
                                   alt=""
                                   title="Edit"
                                 />
-
                               </button>
                               <button
                                 className="delete-icon"
@@ -438,7 +476,10 @@ export default function Home() {
                               >
                                 View Details
                               </button>
-                              <button className="btn simulation-btn" onClick={() => handleSimulation(data)}>
+                              <button
+                                className="btn simulation-btn"
+                                onClick={() => handleSimulation(data)}
+                              >
                                 Run Simulation
                               </button>
                             </td>
@@ -447,7 +488,6 @@ export default function Home() {
                       </tbody>
                     </table>
                   </div>
-
                 </div>
               </TabPanel>
               <TabPanel>
@@ -484,7 +524,7 @@ export default function Home() {
                     <div className="calendar">
                       <img src="imgs/calendar.svg" alt="" />
                       <select name="" id="calendar">
-                        <option value="">From-to</option>
+                        <option value="">Start date - End date</option>
                       </select>
                     </div>
                   </div>
@@ -504,33 +544,35 @@ export default function Home() {
                         </tr>
                       </thead>
 
-                      {globalTemplates.length == 0 && <tbody>
-                        <tr >
-                          <td colSpan={12}>
-                            <p className="no_Data_table">No Data Found</p>
-                          </td>
-                        </tr>
-                      </tbody>
-                      }
+                      {globalTemplates.length == 0 && (
+                        <tbody>
+                          <tr>
+                            <td colSpan={12}>
+                              <p className="no_Data_table">No Data Found</p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      )}
                       <tbody>
                         {globalTemplates.map((data) => (
-
                           <tr key={data.temp_name}>
                             <td>{data.scenario_name}</td>
                             <td>{data.temp_name}</td>
-
                             <td>{data.display_name}</td>
-
-                            <td>{moment(data.created_timestamp).format(
-                              "MM/DD/YYYY h:mm:ss A"
-
-                            )}   
-                            </td>                                <td>{data.comments}</td>
+                            <td>
+                              {moment(data.created_timestamp).format(
+                                "MM/DD/YYYY h:mm:ss A"
+                              )}
+                            </td>{" "}
+                            <td>{data.comments}</td>
                             <td
                               className="actions
                   "
                             >
-                              <button className="edit-icon" onClick={() => handleEditTemplate(data)}>
+                              <button
+                                className="edit-icon"
+                                onClick={() => handleEditTemplate(data)}
+                              >
                                 <img
                                   src="imgs/pencil.svg"
                                   alt=""
@@ -545,16 +587,15 @@ export default function Home() {
                                 View Details
                               </button>
 
-
-                              <button className="btn btn-dark simulation-btn"
-                                onClick={() => handleSimulation(data)}>
+                              <button
+                                className="btn btn-dark simulation-btn"
+                                onClick={() => handleSimulation(data)}
+                              >
                                 Run Simulation
                               </button>
                             </td>
                           </tr>
                         ))}
-
-
                       </tbody>
                     </table>
                   </div>
@@ -563,8 +604,6 @@ export default function Home() {
             </Tabs>
           </div>
         </div>
-
-
 
         <div className="pagging-area mt-2">
           <div className="toolbar">
@@ -708,9 +747,8 @@ export default function Home() {
                 <table className="independant-table">
                   <tr>
                     <td>Visibility</td>
-                    {viewData.is_public==1 &&<td>Public</td>}
-                    {viewData.is_public==0 &&<td>Private</td>}
-
+                    {viewData.is_public == 1 && <td>Public</td>}
+                    {viewData.is_public == 0 && <td>Private</td>}
                   </tr>
                 </table>
               </div>

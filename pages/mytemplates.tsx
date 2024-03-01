@@ -168,7 +168,7 @@ export default function Home() {
     setTooltipVisible(false);
   };
   const handleEdit = () => {
-    router.push("/templateDetails");
+    router.push("/mytemplates");
   };
   const [showModal, setShowModal] = useState(false);
   const viewDetails = (data: any) => {
@@ -236,15 +236,15 @@ export default function Home() {
         <div className="template-header">
           <div className="back-option"></div>
           <div className="main-header">
-            <h1> Template Details</h1>
-            <p>({totalCount} )</p>
+            <h1> My Templates </h1>
+            <p>({totalCount})</p>
           </div>
           <div className="head">
-            <button>
+            {/* <button>
               <Link href="createtemplate">
                 <img src="/imgs/plus.svg" alt="" /> Create Template
               </Link>
-            </button>
+            </button> */}
           </div>
         </div>
         {/* </div> */}

@@ -144,7 +144,7 @@ export default function Home() {
               </div>
               <input
                 type="text"
-                placeholder="Search by template name"
+                placeholder="Search by"
                 onChange={handleSearchChange}
                 // value={tempname}
                 name="tempname"
@@ -268,7 +268,7 @@ export default function Home() {
             </div>
           </div>
         </div> */}
-        <div className="pagging-area">
+        <div className="pagging-area" style={{ marginTop: "20px" }}>
           <div className="toolbar">
             <label htmlFor="">Results per page :</label>
             <div className="tooldrop">
@@ -287,7 +287,7 @@ export default function Home() {
             <span>{totalCount}</span>}
             {totalCount > offset + perPage &&
               <span>{offset + pageNo}</span>} of {totalCount} items</p> */}
-            <ReactPaginate
+            {/* <ReactPaginate
               previousLabel={"<"}
               nextLabel={">"}
               breakLabel={"..."}
@@ -299,9 +299,9 @@ export default function Home() {
               containerClassName={"pagination"}
               activeClassName={"active"}
               forcePage={currentPage}
-            />
+            /> */}
 
-            {/*  <div className="leftaction disable-pointer">
+            <div className="leftaction disable-pointer">
               <img src="imgs/left-doublearrow.svg" alt="" />
             </div>
             <div className="leftaction-single">
@@ -318,12 +318,11 @@ export default function Home() {
             </div>
             <div className="rightaction">
               <img src="imgs/right-doublearrow.svg" alt="" />
-            </div> 
-            */}
+            </div>
           </div>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
