@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
+import { UserContext } from "./context";
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState("");
@@ -8,6 +9,8 @@ export default function Home() {
   const [userErr, setUserErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const router = useRouter();
+  const { loginuseremail, setloginuseremail } = useContext(UserContext);
+
   const [err, setErr] = useState("");
 
   const handleLogin = async () => {
@@ -38,6 +41,9 @@ export default function Home() {
         password: password,
       };
       console.log(body);
+      localStorage.setItem("useremail", "superadmin@isdb.com")
+      setloginuseremail("superadmin@isdb.com");
+
       router.push("/createtemplate");
       /* 
       const result = await API_Auth.getLogin(body);

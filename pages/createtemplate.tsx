@@ -1,10 +1,12 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { use, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { UserContext } from "./context";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -52,10 +54,13 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
-
+  const {
+    loginuseremail, setloginuseremail
+  } = useContext(UserContext);
   useEffect(() => {
     getScenarios();
     getDistributions();
+    console.log("email",loginuseremail)
   }, []);
 
   const getScenarios = async () => {

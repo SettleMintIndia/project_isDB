@@ -414,7 +414,7 @@ export default function Home() {
         "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
         "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
         "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
-        "admin_id": 15,
+        "admin_id": 2,
         "limit_order_upper_bound": upperbound,
         "limit_order_lower_bound": lowerbound
 

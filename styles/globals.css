@@ -1,3 +1,4 @@
+
 html,
 body {
   padding: 0;
@@ -2196,6 +2197,17 @@ label {
   max-height: 300px;
   overflow-y: auto;
 }
+/* kavya */
+
+.react-datepicker__input-container input{
+  height: 30px;
+}
+.no_Data_table{
+  text-align: center;
+  font-weight: 600;
+  margin:5px;
+}
+
 
 /* Md css Media ccqueries*/
 
@@ -2645,3 +2657,7 @@ label {
     flex-wrap: wrap;
   }
 }
+
+
+
+

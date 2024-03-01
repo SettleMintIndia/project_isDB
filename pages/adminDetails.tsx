@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import API_Auth from "./api/API_Auth";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Home() {
   const router = useRouter();
@@ -27,6 +28,11 @@ export default function Home() {
   const [useremail, setUserEmail] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [offset, setOffSet] = useState(0);
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
+
+
+
 
   const handleDeleteClick = (data: any) => {
     console.log(data);
@@ -113,7 +119,10 @@ export default function Home() {
   };
 
   return (
+
     <div className="container-fluid">
+
+
       <div className="template admin">
         {/* <div className="head"> */}
         <div className="template-header">
@@ -153,12 +162,22 @@ export default function Home() {
                 <img src="imgs/search-icon.svg" alt="" />
               </div>
             </div>
-            <div className="calendar">
+                <div className="calendar">
               <img src="imgs/calendar.svg" alt="" />
               <select name="" id="calendar">
                 <option value="">From-to</option>
               </select>
-            </div>
+            </div> 
+            
+        {/*     <DatePicker
+              selectsRange={true}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update: any) => {
+                setDateRange(update);
+              }}
+              isClearable={true}
+            /> */}
           </div>
         </div>
         <div className="table-responsive">

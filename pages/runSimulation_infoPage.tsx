@@ -1,7 +1,7 @@
 "use client";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -12,6 +12,7 @@ import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import { UserContext } from "./context";
 
 export default function Home() {
   const router = useRouter();
@@ -87,17 +88,19 @@ export default function Home() {
   const [ordersVarErr, setordersVarErr] = useState("");
   const [executionId, setExecutionId] = useState("");
   const [siteration, setSIteration] = useState(1);
-  const [siterationErr, setSIterationErr] = useState("");
-  const [sroundErr, setSRoundErr] = useState("");
+  
+  const [siterationErr, setSIterationErr] = useState('');
+  const [sroundErr, setSRoundErr] = useState('')
 
-  const [sround, setSRound] = useState(1);
-  const [tradeHistoryWS, setTradeHistoryWS] = useState([
-    { price: "", quantity: "", timestamp: "" },
-  ]);
-  const [tradeHistoryNS, setTradeHistoryNS] = useState([
-    { price: "", quantity: "", timestamp: "" },
-  ]);
-  const [type, setType] = useState("price");
+  const [sround, setSRound] = useState(1)
+  const [tradeHistoryWS, setTradeHistoryWS] = useState([{ price: '', quantity: '', timestamp: '' }])
+  const [tradeHistoryNS, setTradeHistoryNS] = useState([{ price: '', quantity: '', timestamp: '' }])
+  const[type,setType]=useState('price')
+
+  const { loginexid, setloginexid } = useContext(UserContext);
+
+
+  
 
   useEffect(() => {
     console.log(totalTempName);
@@ -106,8 +109,9 @@ export default function Home() {
     getDistributions();
     console.log(tabIndex);
     let executionId = 10;
+    console.log("executionId",executionId)
     if (tabIndex == 1) {
-      getOrderBook(executionId);
+      getOrderBook(10);
     }
     if (tabIndex == 2) {
       setSIteration(1);
@@ -509,7 +513,7 @@ export default function Home() {
           distribution == "poisson" || distribution == "normal"
             ? Number(meanqty)
             : 0,
-        admin_id: 7,
+        admin_id: 2,
         limit_order_upper_bound: upperbound,
         limit_order_lower_bound: lowerbound,
       };
@@ -582,6 +586,10 @@ export default function Home() {
       console.log(result);
       if (result.status == 400) {
         toast.error(result.error);
+      }
+      else{
+        console.log(result.exe)
+        setExecutionId(result.exe)
       }
     }
   };
@@ -1706,6 +1714,14 @@ export default function Home() {
                                     <th>Quantity</th>
                                   </tr>
                                 </thead>
+                                {tradeHistoryWS.length == 0 && <tbody>
+                        <tr >
+                          <td colSpan={12}>
+                            <p className="no_Data_table">No Data Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                      }
                                 <tbody>
                                   {tradeHistoryWS.map((item) => (
                                     <tr>

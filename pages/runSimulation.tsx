@@ -205,7 +205,7 @@ export default function Home() {
   const handleSimulation = (data: any) => {
     console.log(data.temp_name);
     router.push({
-      pathname: "/runSimulation",
+      pathname: "/runSimulation_infoPage",
       query: { temp_name: data.temp_name },
     });
   };
@@ -400,7 +400,7 @@ export default function Home() {
                                   }
                                   onClick={() => handleButtonClick(data)}
                                 >
-                                  Public
+                                  Public 
                                 </button>
                                 <button
                                   className={

@@ -1,9 +1,10 @@
 // components/Layout.js
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactNode, useEffect, useState } from "react";
-import API_Auth from "../../pages/api/API_Auth";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import API_Auth from '../../pages/api/API_Auth'
 import moment from "moment";
+import { UserContext } from "@/pages/context";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,15 +14,24 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [totalNotifications, setTotalNotifications] = useState([]);
 
-  // const [key, setKey] = useState("superadmin"); //superadmin
+  //const [key, setKey] = useState("superadmin"); //superadmin
   const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
+  const [email, setEmail] = useState('')
+  const {
+    loginuseremail, setloginuseremail
+  } = useContext(UserContext);
+
 
   useEffect(() => {
     let admin_id = 1;
-    getNotifications(admin_id);
+    getNotifications(admin_id)
+    const data = localStorage.getItem('useremail')
+    console.log("email", loginuseremail);
+
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      console.log(window.scrollY)
+      if (window.scrollY >=10) {
         setIsNavFixed(true);
       } else {
         setIsNavFixed(false);
@@ -33,7 +43,8 @@ const AppLayout = ({ children }: LayoutProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+
+  }, [email]);
 
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
@@ -41,6 +52,11 @@ const AppLayout = ({ children }: LayoutProps) => {
 
     setTotalNotifications(admin_notifications.notifications);
   };
+
+  const handleLogout=()=>{
+    localStorage.clear();
+    router.push("/")
+  }
 
   return (
     <div className="base">
@@ -204,7 +220,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <Link href="adminDetails">Admins Details</Link>
                 </li>
                 <li className="logout">
-                  <Link href="/">Logout</Link>
+                  <a onClick={()=>handleLogout()}>Logout</a>
                 </li>
               </ul>
             )}
@@ -226,7 +242,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </Link>
                 </li>
                 <li className="logout">
-                  <Link href="/">Logout</Link>
+                <a onClick={()=>handleLogout()}>Logout</a>
                 </li>
               </ul>
             )}
