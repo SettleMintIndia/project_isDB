@@ -1840,7 +1840,7 @@ label {
   border-radius: 50%;
   height: initial;
   width: inherit;
-  padding: 5px;
+  padding: 1px;
 }
 .pagination > li > a {
   padding: 0px 6px;
@@ -1848,6 +1848,11 @@ label {
   margin: 0px 4px;
   border-radius: 3px;
   cursor: pointer;
+}
+
+.pagination .disabled {
+  cursor: not-allowed;
+  color: #ccc;
 }
 .pagination > .active > a,
 .pagination > .active > span,

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "@/components/layout/Loader";
 
 export default function Home() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Home() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [marginTop, setMarginTop] = useState("-30px");
   const [totalErrors, setTotalErrors] = useState([])
+  const[loading,setLoading]=useState(false)
 
   const handleInput1 = (event:any) => {
     const { name, value } = event.target;
@@ -145,9 +147,12 @@ export default function Home() {
         display_name: username,
       };
       console.log(body);
+      setLoading(true);
 
       const result = await API_Auth.createAdmin(body);
       console.log("result", result, result.msg);
+      setLoading(false);
+
       if (result.status == 200) {
         toast.success("Admin Created Successfully");
 
@@ -170,6 +175,7 @@ export default function Home() {
           </div>
           <div></div>
         </div>
+        {loading==true && <Loader/>}
         <div className="table-responsive">
           <div className="row">
             <div className="col-md-6 mb-3">

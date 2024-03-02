@@ -53,12 +53,13 @@ export default function Home() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(2);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [keyname, setKeyName] = useState('template')
   const [viewData, setViewData] = useState({
     temp_name: "",
     created_timestamp: "",
@@ -85,9 +86,13 @@ export default function Home() {
   useEffect(() => {
     console.log("tabIndex", tabIndex);
     if (tabIndex == 0) {
-      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+      setCurrentPage(0);
+
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
     } else {
-      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+      setCurrentPage(0);
+
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
     }
   }, [tabIndex]);
 
@@ -131,7 +136,8 @@ export default function Home() {
   ) => {
     setLoading(true);
     let body = {
-      temp_name: tempname,
+      temp_name: keyname == "template" ? tempname : "",
+      creator: keyname == "creator" ? tempname : "",
       admin_id: "",
       scenario: s_type,
       datefrom:
@@ -168,9 +174,10 @@ export default function Home() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
+      setCurrentPage(0);
 
       setTimeout(() => {
-        getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+        getUserTemplates("", "", "", "", perPage, 1);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -223,9 +230,14 @@ export default function Home() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
+
       if (tabIndex == 0) {
+        setCurrentPage(0);
+
         getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
       } else {
+        setCurrentPage(0);
+
         getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
       }
     }
@@ -236,6 +248,7 @@ export default function Home() {
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
       setSType(value);
+      setCurrentPage(0);
 
       if (tabIndex == 0) {
         getUserTemplates(tempname, value, fromDate, toDate, perPage, 1);
@@ -245,6 +258,8 @@ export default function Home() {
     }
     if (name == "tempname") {
       console.log(tabIndex);
+      setCurrentPage(0);
+
       if (tabIndex == 0) {
         getUserTemplates(value, s_type, fromDate, toDate, perPage, 1);
       } else {
@@ -254,6 +269,8 @@ export default function Home() {
     }
     if (name == "fromDate") {
       setFromDate(value);
+      setCurrentPage(0);
+
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, value, toDate, perPage, 1);
       } else {
@@ -262,6 +279,8 @@ export default function Home() {
     }
     if (name == "toDate") {
       setToDate(value);
+      setCurrentPage(0);
+
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, value, perPage, 1);
       } else {
@@ -271,12 +290,24 @@ export default function Home() {
 
     if (name == "perPage") {
       setPerPage(Number(value));
+      setCurrentPage(0);
+
       setPageNo(1);
-      setCurrentPage(1);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, toDate, value, 1);
       } else {
         getglobalTemplates(tempname, s_type, fromDate, toDate, value, 1);
+      }
+    }
+    if (name == "keyname") {
+      setKeyName(value);
+      setCurrentPage(0);
+
+      setPageNo(1);
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, fromDate, toDate, value, 1);
+      } else {
+        getglobalTemplates(value, s_type, fromDate, toDate, value, 1);
       }
     }
   };
@@ -301,6 +332,56 @@ export default function Home() {
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
+  const handlePageClick = async (e: any) => {
+    const selectedPage = e.selected;
+    let page = selectedPage * perPage;
+    setOffSet(page);
+    console.log("selectedPage", selectedPage);
+    //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
+    //setPageNo(pageData);
+    let data = e.selected + 1;
+    console.log("asdakl", data, page)
+    setPageNo(data);
+    setCurrentPage(e.selected);
+    if (tabIndex == 0) {
+
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, data);
+
+    } else {
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, data);
+
+    }
+
+
+
+  };
+
+  const handleFirstRecord = () => {
+    setCurrentPage(0)
+    if (tabIndex == 0) {
+
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
+    } else {
+
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
+    }
+
+
+  }
+  const handlelastRecord = () => {
+    setCurrentPage(pageCount - 1)
+
+    if (tabIndex == 0) {
+
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageCount);
+    } else {
+
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageCount);
+    }
+
+
+
+  }
   return (
     <div className="container-fluid">
       <div className="template run-simulation">
@@ -356,14 +437,33 @@ export default function Home() {
                         <img src="imgs/search-icon.svg" alt="" />
                       </div>
                     </div>
-                    <div className="calendar">
+                    {/*   <div className="calendar">
                       <img src="imgs/calendar.svg" alt="" />
                       <select name="" id="calendar">
                         <option value="">Start date - End date</option>
                       </select>
+                    </div> */}
+                    <div className="dateFilter">
+                      <input
+                        type="date"
+                        name="fromDate"
+                        value={fromDate}
+                        onChange={handleInput}
+                        placeholder="Start Date"
+                      />
+
+                      <input
+                        type="date"
+                        name="toDate"
+                        value={toDate}
+                        onChange={handleInput}
+                        placeholder="End Date"
+                      />
                     </div>
                   </div>
                 </div>
+                {loading == true && <Loader />}
+
                 <div className="template-content">
                   <div className=" table-responsive">
                     <table className="table" style={{ borderSpacing: 0 }}>
@@ -400,7 +500,7 @@ export default function Home() {
                                   }
                                   onClick={() => handleButtonClick(data)}
                                 >
-                                  Public 
+                                  Public
                                 </button>
                                 <button
                                   className={
@@ -489,6 +589,62 @@ export default function Home() {
                     </table>
                   </div>
                 </div>
+                <div className="pagging-area mt-2">
+                  <div className="toolbar">
+                    <label htmlFor="">Results per page :</label>
+                    <div className="tooldrop">
+                      <select name="" id="">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                      </select>
+                    </div>
+                    <span>of {totalCount}</span>
+                  </div>
+                  <div className="paging-list">
+                    {currentPage == 0 && <div className="leftaction disable-pointer" >
+                      <img src="imgs/left-doublearrowg.svg" alt="" />
+                    </div>}
+                    {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
+                      <img src="imgs/left-doublearrow.svg" alt="" />
+                    </div>}
+                    {/* <div className="leftaction-single">
+              <img src="imgs/left-paging.svg" alt="" />
+            </div>
+            <ul className="paging-count">
+              <li>1</li>
+              <li>2</li>
+              <li>3</li>
+              <li>4</li>
+            </ul> */}
+                    <ReactPaginate
+                      previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+                      nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+                      breakLabel={"..."}
+                      breakClassName={"break-me"}
+                      pageCount={pageCount}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={5}
+                      onPageChange={handlePageClick}
+                      containerClassName={"pagination"}
+                      activeClassName={"active"}
+                      forcePage={currentPage}
+                      disabledClassName="disabled"
+                      disableInitialCallback
+                    />
+                    {/*  <div className="rightaction-single">
+              <img src="imgs/right-paging.svg" alt="" />
+            </div> */}
+                    {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
+                      <img src="imgs/right-doublearrow.svg" alt="" />
+                    </div>
+                    }
+                    {currentPage == pageCount - 1 && <div className="rightaction" >
+                      <img src="imgs/right-doublearrowg.svg" alt="" />
+                    </div>
+                    }
+                  </div>
+                </div>
               </TabPanel>
               <TabPanel>
                 <div className="filter">
@@ -511,24 +667,44 @@ export default function Home() {
                   </div>
                   <div className="searchArea">
                     <div className="searchFilter options">
-                      <select name="filter" id="searchtype">
+                      <select name="keyname" id="searchtype" value={keyname} onChange={handleInput}>
                         <option value="template">Template</option>
                         <option value="creator">Creator</option>
                       </select>
                       <input
                         type="text"
-                        placeholder="Search by template name"
+                        placeholder={keyname == "template" ? "Search by template name" : "Search by creator name"}
+                        name="tempname" value={tempname} onChange={handleInput}
                       />
                       <img src="imgs/search-icon.svg" alt="" />
                     </div>
-                    <div className="calendar">
+                    {/*   <div className="calendar">
                       <img src="imgs/calendar.svg" alt="" />
                       <select name="" id="calendar">
                         <option value="">Start date - End date</option>
                       </select>
+                    </div> */}
+                    <div className="dateFilter">
+                      <input
+                        type="date"
+                        name="fromDate"
+                        value={fromDate}
+                        onChange={handleInput}
+                        placeholder="Start Date"
+                      />
+
+                      <input
+                        type="date"
+                        name="toDate"
+                        value={toDate}
+                        onChange={handleInput}
+                        placeholder="End Date"
+                      />
                     </div>
                   </div>
                 </div>
+                {loading == true && <Loader />}
+
                 <div className="template-content">
                   <div className=" table-responsive">
                     <table className="table" style={{ borderSpacing: 0 }}>
@@ -600,28 +776,26 @@ export default function Home() {
                     </table>
                   </div>
                 </div>
-              </TabPanel>
-            </Tabs>
-          </div>
-        </div>
-
-        <div className="pagging-area mt-2">
-          <div className="toolbar">
-            <label htmlFor="">Results per page :</label>
-            <div className="tooldrop">
-              <select name="" id="">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-            <span>of 40</span>
-          </div>
-          <div className="paging-list">
-            <div className="leftaction disable-pointer">
-              <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
+                <div className="pagging-area mt-2">
+                  <div className="toolbar">
+                    <label htmlFor="">Results per page :</label>
+                    <div className="tooldrop">
+                      <select name="" id="">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                      </select>
+                    </div>
+                    <span>of {totalCount}</span>
+                  </div>
+                  <div className="paging-list">
+                    {currentPage == 0 && <div className="leftaction disable-pointer" >
+                      <img src="imgs/left-doublearrowg.svg" alt="" />
+                    </div>}
+                    {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
+                      <img src="imgs/left-doublearrow.svg" alt="" />
+                    </div>}
+                    {/* <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
@@ -629,15 +803,41 @@ export default function Home() {
               <li>2</li>
               <li>3</li>
               <li>4</li>
-            </ul>
-            <div className="rightaction-single">
+            </ul> */}
+                    <ReactPaginate
+                      previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+                      nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+                      breakLabel={"..."}
+                      breakClassName={"break-me"}
+                      pageCount={pageCount}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={5}
+                      onPageChange={handlePageClick}
+                      containerClassName={"pagination"}
+                      activeClassName={"active"}
+                      forcePage={currentPage}
+                      disabledClassName="disabled"
+                      disableInitialCallback
+                    />
+                    {/*  <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
-              <img src="imgs/right-doublearrow.svg" alt="" />
-            </div>
+            </div> */}
+                    {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
+                      <img src="imgs/right-doublearrow.svg" alt="" />
+                    </div>
+                    }
+                    {currentPage == pageCount - 1 && <div className="rightaction" >
+                      <img src="imgs/right-doublearrowg.svg" alt="" />
+                    </div>
+                    }
+                  </div>
+                </div>
+              </TabPanel>
+            </Tabs>
           </div>
         </div>
+
+
       </div>
       <Modal
         show={showModal}
@@ -760,6 +960,7 @@ export default function Home() {
           </div>
         </Modal.Body>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }

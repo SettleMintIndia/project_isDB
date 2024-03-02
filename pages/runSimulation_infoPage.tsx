@@ -88,19 +88,23 @@ export default function Home() {
   const [ordersVarErr, setordersVarErr] = useState("");
   const [executionId, setExecutionId] = useState("");
   const [siteration, setSIteration] = useState(1);
-  
+
   const [siterationErr, setSIterationErr] = useState('');
   const [sroundErr, setSRoundErr] = useState('')
 
   const [sround, setSRound] = useState(1)
   const [tradeHistoryWS, setTradeHistoryWS] = useState([{ price: '', quantity: '', timestamp: '' }])
   const [tradeHistoryNS, setTradeHistoryNS] = useState([{ price: '', quantity: '', timestamp: '' }])
-  const[type,setType]=useState('price')
+  const [type, setType] = useState('price')
 
   const { loginexid, setloginexid } = useContext(UserContext);
 
+  const [orderWs, setorderWs] = useState([])
+  const [orderNs, setorderNs] = useState([])
 
-  
+
+
+
 
   useEffect(() => {
     console.log(totalTempName);
@@ -108,26 +112,33 @@ export default function Home() {
     getTemplateDetails(totalTempName);
     getDistributions();
     console.log(tabIndex);
-    let executionId = 10;
-    console.log("executionId",executionId)
+    console.log("executionId", executionId)
     if (tabIndex == 1) {
-      getOrderBook(10);
+      setSIteration(1);
+      setSRound(1);
+      getOrderBook(executionId, 1, 1);
     }
     if (tabIndex == 2) {
       setSIteration(1);
       setSRound(1);
+      getOrderBook(executionId, 1, 1);
+    }
+
+    if (tabIndex == 3) {
+      setSIteration(1);
+      setSRound(1);
       getTradeHistoryWS(executionId, 1, 1);
     }
-    if (tabIndex == 3) {
+    if (tabIndex == 4) {
       setSIteration(1);
       setSRound(1);
       getTradeHistoryNS(executionId, 1, 1);
     }
-    // if (tabIndex == 4) {
-    //   getSimulationResultDetails(executionId);
-    // }
-
     if (tabIndex == 5) {
+      getSimulationResultDetails(executionId);
+    }
+
+    if (tabIndex == 6) {
       getStablizationFund(executionId);
     }
     console.log("tabIndex", tabIndex);
@@ -142,9 +153,12 @@ export default function Home() {
     console.log("simulationresult", result);
   };
 
-  const getOrderBook = async (id: any) => {
+  const getOrderBook = async (id: any,
+    siteration: any, sround: any) => {
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
+    setorderNs(result.ordersNS)
+    setorderWs(result.ordersWS)
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getTradeHistoryWithStablization(
@@ -152,7 +166,7 @@ export default function Home() {
       siteration,
       sround
     );
-    console.log("tadingws", result.trade);
+    console.log("tadingws", result.trade, result);
     setTradeHistoryWS(result.trades);
   };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
@@ -161,7 +175,7 @@ export default function Home() {
       siteration,
       sround
     );
-    console.log("tadingws", result.trade);
+    console.log("tadingns", result.trade);
     setTradeHistoryNS(result.trade);
   };
   const getDistributions = async () => {
@@ -280,7 +294,7 @@ export default function Home() {
       setcomment(value);
     }
     if (name == "publickey") {
-      setPublicKey(value);
+      setPublicKey(Number(value));
     }
 
     if (name == "devpricebuy") {
@@ -522,7 +536,13 @@ export default function Home() {
         setFinalErr("price or quant variance should be less than 1");
       } else if (Number(upperbound) > 1) {
         setFinalErr("upper lmt order price variance should be less than 1");
-      } else {
+      }
+      else if (Number(lowerbound) < 1) {
+        setFinalErr("lower lmt order price variance should be greater than 1")
+
+
+      }
+      else {
         const template_exist = await API_Auth.getTemplateExists(
           newtemplateName
         );
@@ -578,7 +598,7 @@ export default function Home() {
         nb_rounds: Number(rounds),
         nb_orders: Number(ordersRound),
         nb_orders_var: Number(ordersVar),
-        admin_id: 15,
+        admin_id: 2,
         iterations: Number(iterations),
         dynamic: 1,
       };
@@ -587,50 +607,64 @@ export default function Home() {
       if (result.status == 400) {
         toast.error(result.error);
       }
-      else{
+      else {
         console.log(result.exe)
         setExecutionId(result.exe)
       }
     }
   };
-  const handleTradingHistoryWithoutStablization = () => {
+
+  const handleSearch = () => {
     let error = 0;
 
     if (siteration == "") {
       error = error + 1;
       setSIterationErr("Please Enter Iteration");
-    } else {
-      setSIterationErr("");
-    }
-    if (sround == "") {
+    } else if (Number(siteration) > Number(iterations)) {
       error = error + 1;
-      setSRoundErr("Please Enter Round");
-    } else {
-      setSRoundErr("");
-    }
-    if (error == 0) {
-      let executionId = 19;
-      getTradeHistoryNS(executionId, siteration, sround);
-    }
-  };
-  const handleTradingHistoryWithStablization = () => {
-    let error = 0;
+      toast.error("Iteration should not be greater than " + iterations);
 
-    if (siteration == "") {
-      error = error + 1;
-      setSIterationErr("Please Enter Iteration");
     } else {
-      setSIterationErr("");
+      setSIterationErr("")
     }
     if (sround == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
-    } else {
+    }
+    else if (Number(sround) > Number(rounds)) {
+      error = error + 1;
+      toast.error("Round should not be greater than " + rounds);
+
+    }
+    else {
       setSRoundErr("");
     }
+
     if (error == 0) {
-      let executionId = 19;
-      getTradeHistoryWS(executionId, siteration, sround);
+
+      if (tabIndex == 1) {
+        getOrderBook(executionId, siteration, sround);
+      }
+      if (tabIndex == 2) {
+        getOrderBook(executionId, siteration, sround);
+      }
+
+      if (tabIndex == 3) {
+
+        getTradeHistoryWS(executionId, siteration, sround);
+      }
+      if (tabIndex == 4) {
+
+        getTradeHistoryNS(executionId, siteration, sround);
+      }
+      if (tabIndex == 5) {
+        getSimulationResultDetails(executionId);
+      }
+
+      if (tabIndex == 6) {
+        getStablizationFund(executionId);
+      }
+      console.log("tabIndex", tabIndex)
     }
   };
   return (
@@ -1099,7 +1133,7 @@ export default function Home() {
                                   )}
                                 </td>
                               </tr>
-                              {/* <tr>
+                              <tr>
                                 <td>Orders Variance</td>
                                 <td>
                                   <input
@@ -1113,7 +1147,7 @@ export default function Home() {
                                   />
                                   {ordersVarErr != "" && <p className="alert-message">{ordersVarErr}</p>}
                                 </td>
-                              </tr> */}
+                              </tr>
                             </tbody>
                           </table>
                         </div>
@@ -1291,16 +1325,16 @@ export default function Home() {
                   >
                     <TabList>
                       <Tab>Info</Tab>
-                      <Tab>
+                      {executionId != "" && <Tab>
                         Order Book <span>(Stabilization)</span>
-                      </Tab>
-                      <Tab>Order Book</Tab>
-                      <Tab>
+                      </Tab>}
+                      {executionId != "" && <Tab>Order Book</Tab>}
+                      {executionId != "" && <Tab>
                         Trade History <span>(Stabilization)</span>
-                      </Tab>
-                      <Tab>Trade History</Tab>
-                      <Tab>Simulation Result</Tab>
-                      <Tab>Stabilization Fund</Tab>
+                      </Tab>}
+                      {executionId != "" && <Tab>Trade History</Tab>}
+                      {executionId != "" && <Tab>Simulation Result</Tab>}
+                      {executionId != "" && <Tab>Stabilization Fund</Tab>}
                     </TabList>
                     <TabPanel className="info">
                       Lorem Ipsum is simply dummy text of the printing and
@@ -1318,9 +1352,17 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 20</span>
+                                <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                              </div>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1335,9 +1377,15 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 30</span>
+                                <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                              </div>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1345,8 +1393,14 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search">Search</button>
-                          </div>
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleSearch()
+                              }
+                            >
+                              Search
+                            </button>                          </div>
                         </div>
                         {/* <div className="tabs"></div> */}
                       </div>
@@ -1354,7 +1408,7 @@ export default function Home() {
                         <div className="col sell">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>30</span>
+                            <span>{ordersRound}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -1387,7 +1441,7 @@ export default function Home() {
                         <div className="col buy">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>25</span>
+                            <span>{ordersRound}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -1427,9 +1481,17 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 20</span>
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}                                  </div>
+                                  <span>of {iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1444,9 +1506,15 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 30</span>
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">{sroundErr}</p>
+                                    )}                                  </div>
+                                  <span>of {rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1454,8 +1522,14 @@ export default function Home() {
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search">Search</button>
-                              </div>
+                                <button
+                                  className="search"
+                                  onClick={() =>
+                                    handleSearch()
+                                  }
+                                >
+                                  Search
+                                </button>                              </div>
                             </div>
                             {/* <div className="tabs"></div> */}
                           </div>
@@ -1473,9 +1547,17 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 20</span>
+                                <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                              </div>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1490,9 +1572,15 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 30</span>
+                                <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                              </div>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1500,8 +1588,14 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search">Search</button>
-                          </div>
+                            <button
+                              className="search"
+                              onClick={() =>
+                                handleSearch()
+                              }
+                            >
+                              Search
+                            </button>                          </div>
                         </div>
                         {/* <div className="tabs"></div> */}
                       </div>
@@ -1509,7 +1603,7 @@ export default function Home() {
                         <div className="col sell">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>30</span>
+                            <span>{ordersRound}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -1542,7 +1636,7 @@ export default function Home() {
                         <div className="col buy">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>25</span>
+                            <span>{ordersRound}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -1582,9 +1676,17 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 20</span>
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}                                  </div>
+                                  <span>of {iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1599,9 +1701,15 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 30</span>
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">{sroundErr}</p>
+                                    )}                                  </div>
+                                  <span>of {rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1609,8 +1717,14 @@ export default function Home() {
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search">Search</button>
-                              </div>
+                                <button
+                                  className="search"
+                                  onClick={() =>
+                                    handleSearch()
+                                  }
+                                >
+                                  Search
+                                </button>                              </div>
                             </div>
                             {/* <div className="tabs"></div> */}
                           </div>
@@ -1661,7 +1775,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1685,7 +1799,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1696,7 +1810,7 @@ export default function Home() {
                             <button
                               className="search"
                               onClick={() =>
-                                handleTradingHistoryWithStablization()
+                                handleSearch()
                               }
                             >
                               Search
@@ -1715,13 +1829,21 @@ export default function Home() {
                                   </tr>
                                 </thead>
                                 {tradeHistoryWS.length == 0 && <tbody>
-                        <tr >
-                          <td colSpan={12}>
-                            <p className="no_Data_table">No Data Found</p>
-                          </td>
-                        </tr>
-                      </tbody>
-                      }
+                                  <tr >
+                                    <td colSpan={12}>
+                                      <p className="no_Data_table">No Data Found</p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                }
+                                {tradeHistoryWS.length == 0 && <tbody>
+                                  <tr >
+                                    <td colSpan={12}>
+                                      <p className="no_Data_table">No Data Found</p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                }
                                 <tbody>
                                   {tradeHistoryWS.map((item) => (
                                     <tr>
@@ -1764,7 +1886,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1788,7 +1910,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1799,7 +1921,7 @@ export default function Home() {
                             <button
                               className="search"
                               onClick={() =>
-                                handleTradingHistoryWithStablization()
+                                handleSearch()
                               }
                             >
                               Search
@@ -1835,7 +1957,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1864,7 +1986,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1875,7 +1997,7 @@ export default function Home() {
                             <button
                               className="search"
                               onClick={() =>
-                                handleTradingHistoryWithoutStablization()
+                                handleSearch()
                               }
                             >
                               Search
@@ -1893,6 +2015,15 @@ export default function Home() {
                                     <th>Quantity</th>
                                   </tr>
                                 </thead>
+                                {tradeHistoryNS.length == 0 && <tbody>
+                                  <tr >
+                                    <td colSpan={12}>
+                                      <p className="no_Data_table">No Data Found</p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                }
+                                
                                 <tbody className="scrollable">
                                   {tradeHistoryNS.map((item) => (
                                     <tr>
@@ -1930,7 +2061,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1954,7 +2085,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1965,7 +2096,7 @@ export default function Home() {
                             <button
                               className="search"
                               onClick={() =>
-                                handleTradingHistoryWithoutStablization()
+                                handleSearch()
                               }
                             >
                               Search

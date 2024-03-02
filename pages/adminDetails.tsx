@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Loader from "@/components/layout/Loader";
 
 export default function Home() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function Home() {
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
   //const [count, setCount] = useState(10);
-  const [perPage, setPerPage] = useState(8);
+  const [perPage, setPerPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -30,7 +31,9 @@ export default function Home() {
   const [offset, setOffSet] = useState(0);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-
+  const [loading, setLoading] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
 
 
@@ -42,7 +45,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    handlegetAllAdmins(searchKey, perPage, pageNo);
+    handlegetAllAdmins(searchKey, perPage, 1);
   }, []);
 
   const handlegetAllAdmins = async (
@@ -55,8 +58,12 @@ export default function Home() {
       resultPerPage: perPage,
       pgNo: pageNo,
     };
+
+    setLoading(true)
     const result = await API_Auth.getAdmins(body);
     console.log(result);
+    setLoading(false)
+
     setAdminData(result.admins);
     setTotalCount(result.count);
 
@@ -71,9 +78,9 @@ export default function Home() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Admin Deleted Successfully");
-
+      setCurrentPage(0)
       setTimeout(() => {
-        handlegetAllAdmins(searchKey, perPage, pageNo);
+        handlegetAllAdmins("", perPage, 1);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -86,23 +93,21 @@ export default function Home() {
   const handleSearchChange = (event: any) => {
     setSearchKey(event.target.value);
 
-    setPerPage(10);
-    setPageNo(1);
-    setCurrentPage(1);
+    setCurrentPage(0)
 
-    handlegetAllAdmins(event.target.value, perPage, pageNo);
+    handlegetAllAdmins(event.target.value, perPage, 1);
   };
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
     let page = selectedPage * perPage;
     setOffSet(page);
     console.log("selectedPage", selectedPage);
-    let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
-    setPageNo(pageData);
+    let data = e.selected + 1;
+    console.log("asdakl", data, page)
+    setPageNo(data);
+    setCurrentPage(e.selected);
+    handlegetAllAdmins(searchKey, perPage, data);
 
-    handlegetAllAdmins(searchKey, perPage, pageData);
-
-    setCurrentPage(page);
   };
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
@@ -112,11 +117,37 @@ export default function Home() {
     if (name == "perPage") {
       setPerPage(Number(value));
       setPageNo(1);
-      setCurrentPage(1);
+      setCurrentPage(0);
 
       handlegetAllAdmins(searchKey, Number(value), 1);
     }
+    if (name == "fromDate") {
+      setFromDate(value);
+      setCurrentPage(0)
+
+      //handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, 1);
+    }
+    if (name == "toDate") {
+      setToDate(value);
+      setCurrentPage(0)
+
+      //handlegetAllTemplateDetails(tempname, s_type, fromDate, value, perPage, 1);
+    }
   };
+
+  const handleFirstRecord = () => {
+    handlegetAllAdmins(searchKey, perPage, 1);
+    setCurrentPage(0)
+
+
+  }
+  const handlelastRecord = () => {
+    handlegetAllAdmins(searchKey, perPage, pageCount);
+    setCurrentPage(pageCount - 1)
+
+
+  }
+
 
   return (
 
@@ -142,6 +173,7 @@ export default function Home() {
           </div>
         </div>
 
+
         <div className="filterArea">
           <div className="searchArea">
             <div className="searchFilter options">
@@ -162,14 +194,31 @@ export default function Home() {
                 <img src="imgs/search-icon.svg" alt="" />
               </div>
             </div>
-                <div className="calendar">
+            {/*   <div className="calendar">
               <img src="imgs/calendar.svg" alt="" />
               <select name="" id="calendar">
                 <option value="">From-to</option>
               </select>
-            </div> 
-            
-        {/*     <DatePicker
+            </div>  */}
+            <div className="dateFilter">
+              <input
+                type="date"
+                name="fromDate"
+                value={fromDate}
+                onChange={handleInput}
+                placeholder="Start Date"
+              />
+
+              <input
+                type="date"
+                name="toDate"
+                value={toDate}
+                onChange={handleInput}
+                placeholder="End Date"
+              />
+            </div>
+
+            {/*     <DatePicker
               selectsRange={true}
               startDate={startDate}
               endDate={endDate}
@@ -180,6 +229,8 @@ export default function Home() {
             /> */}
           </div>
         </div>
+        {loading == true && <Loader />}
+
         <div className="table-responsive">
           <div className="template-content">
             <table
@@ -192,6 +243,7 @@ export default function Home() {
                 <col style={{ width: "20%" }} />
                 <col style={{ width: "50%" }} />
               </colgroup>
+
               <thead>
                 <tr>
                   <th>Name</th>
@@ -200,7 +252,14 @@ export default function Home() {
                   <th>Delete Account</th>
                 </tr>
               </thead>
-
+              {adminData.length == 0 && <tbody>
+                <tr >
+                  <td colSpan={12}>
+                    <p className="no_Data_table">No Data Found</p>
+                  </td>
+                </tr>
+              </tbody>
+              }
               <tbody>
                 {adminData.map((data) => (
                   <tr key={data.id}>
@@ -320,24 +379,47 @@ export default function Home() {
               forcePage={currentPage}
             /> */}
 
-            <div className="leftaction disable-pointer">
+            {currentPage == 0 && <div className="leftaction disable-pointer" >
+              <img src="imgs/left-doublearrowg.svg" alt="" />
+            </div>}
+            {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
               <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
+            </div>}
+            {/*  <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
-            </div>
-            <ul className="paging-count">
+            </div> */}
+            <ReactPaginate
+               previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+               nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              forcePage={currentPage}
+              disabledClassName="disabled"
+              disableInitialCallback
+            />
+            {/*  <ul className="paging-count">
               <li>1</li>
               <li>2</li>
               <li>3</li>
               <li>4</li>
-            </ul>
+            </ul> 
             <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
+            </div>*/}
+             {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()} >
               <img src="imgs/right-doublearrow.svg" alt="" />
             </div>
+            }
+             {currentPage == pageCount - 1 && <div className="rightaction" >
+              <img src="imgs/right-doublearrowg.svg" alt="" />
+            </div>
+            }
           </div>
         </div>
       </div>

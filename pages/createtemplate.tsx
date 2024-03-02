@@ -138,7 +138,8 @@ export default function Home() {
       setcomment(value);
     }
     if (name == "publickey") {
-      setPublicKey(value);
+      console.log("publickey",typeof(value))
+      setPublicKey(Number(value));
     }
     if (name == "comment") {
       setcomment(value);
@@ -307,7 +308,7 @@ export default function Home() {
         "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
         "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
         "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
-        "admin_id": 1,
+        "admin_id": 2,
         "limit_order_upper_bound": upperbound,
         "limit_order_lower_bound": lowerbound
 
@@ -372,11 +373,11 @@ export default function Home() {
     setMeanPricesell("");
     setDevqty("");
     setMeanqty("");
-    setDistribution("");
+    setDistribution("uniform");
     setcomment("")
     setlowerbound("");
     setupperbound("");
-    setPublicKey("")
+    setPublicKey(1)
   
   }
   return (
@@ -724,7 +725,7 @@ export default function Home() {
                       onChange={handleInput}
                     />
                     <label className="form-check-label" htmlFor="inlineRadio1">
-                      Public
+                      Public 
                     </label>
                   </div>
                   <div className="form-check form-check-inline">

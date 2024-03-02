@@ -71,10 +71,10 @@ export default function Home() {
 
   const [executionData, setExecutionData] = useState({
     created_timestamp: "",
-    iterations: "",
-    nb_orders: "",
-    nb_orders_var: "",
-    nb_rounds: "",
+    iterations: 0,
+    nb_orders: 0,
+    nb_orders_var: 0,
+    nb_rounds: 0,
   });
   const [siteration, setSIteration] = useState(1);
   const [siterationErr, setSIterationErr] = useState("");
@@ -82,7 +82,8 @@ export default function Home() {
   const [type, setType] = useState("price");
 
   const [sround, setSRound] = useState(1);
-
+  const [orderWs, setorderWs] = useState([])
+  const [orderNs, setorderNs] = useState([])
   const handleEdit = () => {
     router.push("/simulation_history_info");
   };
@@ -93,26 +94,36 @@ export default function Home() {
     getTemplateDetails(totalTempName);
     getExecutionDetails(totalTempName, ex_id);
     if (tabIndex == 1) {
-      getOrderBook(ex_id);
+      setSIteration(1);
+      setSRound(1);
+      getOrderBook(ex_id, 1, 1);
     }
     if (tabIndex == 2) {
       setSIteration(1);
       setSRound(1);
-      getTradeHistoryWS(19, 1, 1);
+      getOrderBook(ex_id, 1, 1);
     }
+
     if (tabIndex == 3) {
       setSIteration(1);
       setSRound(1);
-      getTradeHistoryNS(19, 1, 1);
+      getTradeHistoryWS(ex_id, 1, 1);
     }
-    // if (tabIndex == 4) {
-    //   getSimulationResultDetails(ex_id);
-    // }
-
+    if (tabIndex == 4) {
+      setSIteration(1);
+      setSRound(1);
+      getTradeHistoryNS(ex_id, 1, 1);
+    }
     if (tabIndex == 5) {
+      getSimulationResultDetails(ex_id);
+    }
+
+    if (tabIndex == 6) {
       getStablizationFund(ex_id);
     }
-  }, [totalTempName, tabIndex]);
+    console.log("tabIndex", tabIndex);
+ 
+  }, [totalTempName, tabIndex,ex_id]);
   const getStablizationFund = async (id: any) => {
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
@@ -122,9 +133,12 @@ export default function Home() {
     console.log("simulationresult", result);
   };
 
-  const getOrderBook = async (id: any) => {
+  const getOrderBook = async (id: any,
+    siteration: any, sround: any) => {
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
+    setorderNs(result.ordersNS)
+    setorderWs(result.ordersWS)
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getTradeHistoryWithStablization(
@@ -292,47 +306,61 @@ export default function Home() {
     }
   };
 
-  const handleTradingHistoryWithoutStablization = () => {
+  
+
+  const handleSearch = () => {
     let error = 0;
 
     if (siteration == "") {
       error = error + 1;
       setSIterationErr("Please Enter Iteration");
+    } else if (Number(siteration) > Number(executionData.iterations)) {
+      error = error + 1;
+      toast.error("Iteration should not be greater than " + executionData.iterations);
+
     } else {
-      setSIterationErr("");
+      setSIterationErr("")
     }
     if (sround == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
-    } else {
+    }
+    else if (Number(sround) > Number(executionData.nb_rounds)) {
+      error = error + 1;
+      toast.error("Round should not be greater than " + executionData.nb_rounds);
+
+    }
+    else {
       setSRoundErr("");
     }
+
     if (error == 0) {
-      let executionId = 19;
-      getTradeHistoryNS(executionId, siteration, sround);
+
+      if (tabIndex == 1) {
+        getOrderBook(ex_id, siteration, sround);
+      }
+      if (tabIndex == 2) {
+        getOrderBook(ex_id, siteration, sround);
+      }
+
+      if (tabIndex == 3) {
+
+        getTradeHistoryWS(ex_id, siteration, sround);
+      }
+      if (tabIndex == 4) {
+
+        getTradeHistoryNS(ex_id, siteration, sround);
+      }
+      if (tabIndex == 5) {
+        getSimulationResultDetails(ex_id);
+      }
+
+      if (tabIndex == 6) {
+        getStablizationFund(ex_id);
+      }
+      console.log("tabIndex", tabIndex)
     }
   };
-  const handleTradingHistoryWithStablization = () => {
-    let error = 0;
-
-    if (siteration == "") {
-      error = error + 1;
-      setSIterationErr("Please Enter Iteration");
-    } else {
-      setSIterationErr("");
-    }
-    if (sround == "") {
-      error = error + 1;
-      setSRoundErr("Please Enter Round");
-    } else {
-      setSRoundErr("");
-    }
-    if (error == 0) {
-      let executionId = 19;
-      getTradeHistoryWS(executionId, siteration, sround);
-    }
-  };
-
   return (
     <div className="container-fluid">
       <div className="simulation-info history">
@@ -702,16 +730,16 @@ export default function Home() {
                     <TabList>
                       <Tab>Info</Tab>
                       <Tab>
-                        Order Book <span> (WITH STABILIZATION)</span>{" "}
+                        Order Book <span> (Stabilization)</span>{" "}
                       </Tab>
                       <Tab>
-                        Order Book <span> (WITHOUT STABILIZATION)</span>{" "}
+                        Order Book {" "}
                       </Tab>
                       <Tab>
-                        Trade History <span>(WITH STABILIZATION)</span>{" "}
+                        Trade History <span>(Stabilization)</span>{" "}
                       </Tab>
                       <Tab>
-                        Trade History <span> (WITHOUT STABILIZATION)</span>{" "}
+                        Trade History{" "}
                       </Tab>
                       <Tab>Simulation Result</Tab>
                       <Tab>Stabilization Fund</Tab>
@@ -732,9 +760,17 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 20</span>
+                              <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                              </div>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -749,9 +785,15 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 30</span>
+                              <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                              </div>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -759,7 +801,7 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search">Search</button>
+                            <button className="search" onClick={()=>handleSearch()}>Search</button>
                           </div>
                         </div>
                         {/* <div className="tabs"></div> */}
@@ -841,9 +883,17 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 20</span>
+                                  <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                                  </div>
+                                  <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -858,9 +908,15 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 30</span>
+                                  <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                                  </div>
+                                  <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -868,7 +924,7 @@ export default function Home() {
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search">Search</button>
+                                <button className="search" onClick={()=>handleSearch()}>Search</button>
                               </div>
                             </div>
                             {/* <div className="tabs"></div> */}
@@ -887,9 +943,17 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 20</span>
+                              <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                              </div>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -904,9 +968,15 @@ export default function Home() {
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                                <input type="text" />
-                              </div>
-                              <span>of 30</span>
+                              <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                              </div>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -914,7 +984,7 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search">Search</button>
+                            <button className="search" onClick={()=>handleSearch()}>Search</button>
                           </div>
                         </div>
                         {/* <div className="tabs"></div> */}
@@ -996,9 +1066,17 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 20</span>
+                                  <input
+                                  value={siteration}
+                                  name="siteration"
+                                  onChange={handleInput}
+                                />
+                                {siterationErr != "" && (
+                                  <p className="alert-message">
+                                    {siterationErr}
+                                  </p>
+                                )}                                  </div>
+                                  <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1013,9 +1091,15 @@ export default function Home() {
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                    <input type="text" />
-                                  </div>
-                                  <span>of 30</span>
+                                  <input
+                                  value={sround}
+                                  name="sround"
+                                  onChange={handleInput}
+                                />
+                                {sroundErr != "" && (
+                                  <p className="alert-message">{sroundErr}</p>
+                                )}                                  </div>
+                                  <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
@@ -1023,7 +1107,7 @@ export default function Home() {
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search">Search</button>
+                                <button className="search" onClick={()=>handleSearch()}>Search</button>
                               </div>
                             </div>
                             {/* <div className="tabs"></div> */}
@@ -1075,7 +1159,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1099,7 +1183,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1109,9 +1193,7 @@ export default function Home() {
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleTradingHistoryWithStablization()
-                              }
+                              onClick={()=>handleSearch()}
                             >
                               Search
                             </button>
@@ -1170,7 +1252,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1194,7 +1276,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1204,9 +1286,7 @@ export default function Home() {
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleTradingHistoryWithStablization()
-                              }
+                              onClick={()=>handleSearch()}
                             >
                               Search
                             </button>
@@ -1241,7 +1321,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1270,7 +1350,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1280,9 +1360,7 @@ export default function Home() {
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleTradingHistoryWithoutStablization()
-                              }
+                              onClick={()=>handleSearch()}
                             >
                               Search
                             </button>
@@ -1351,7 +1429,7 @@ export default function Home() {
                                   </p>
                                 )}
                               </div>
-                              <span>of 20</span>
+                              <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1375,7 +1453,7 @@ export default function Home() {
                                   <p className="alert-message">{sroundErr}</p>
                                 )}
                               </div>
-                              <span>of 30</span>
+                              <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
@@ -1385,9 +1463,7 @@ export default function Home() {
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleTradingHistoryWithoutStablization()
-                              }
+                              onClick={()=>handleSearch()}
                             >
                               Search
                             </button>
@@ -1635,6 +1711,7 @@ export default function Home() {
                       </div>
                     </TabPanel>
                   </Tabs>
+                  <ToastContainer/>
                   <br />
                 </div>
               </div>

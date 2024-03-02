@@ -204,7 +204,7 @@ export default function Home() {
       setcomment(value);
     }
     if (name == "publickey") {
-      setPublicKey(value);
+      setPublicKey(Number(value));
     }
 
     if (name == "devpricebuy") {

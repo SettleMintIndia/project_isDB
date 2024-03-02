@@ -11,11 +11,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import API_Auth from "./api/API_Auth";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
+import ReactPaginate from "react-paginate";
+import Loader from "@/components/layout/Loader";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
+  const [selectedRecords, setSelectedRecords] = useState([]);
+  const [dataRecords, setDataRecords] = useState([])
+
   const [templateData, setTemplateData] = useState([
     {
       scenario_name: "",
@@ -32,7 +38,7 @@ export default function Home() {
   const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
   const [creatorName, setCreatorName] = useState("");
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -40,28 +46,7 @@ export default function Home() {
   const [totalCount, setTotalCount] = useState(0);
   const [viewData, setViewData] = useState({});
 
-  const handlegetAllTemplateDetails = async () => {
-    let body = {
-      temp_name: tempname,
-      admin_id: "1",
-      scenario: s_type,
-      datefrom:
-        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
-      showPrivate: true,
-    };
-    console.log(body);
 
-    const result = await API_Auth.getAllTemplates(body);
-    console.log(result);
-    if (result.status == 200) {
-      setTemplateData(result.templates);
-      setTotalCount(result.count);
-      setPageCount(Math.ceil(result.count / perPage));
-    }
-  };
   useEffect(() => {
     getSimulations(
       tempname,
@@ -91,8 +76,10 @@ export default function Home() {
       resultPerPage: perPage,
       pgNo: pageNo,
     };
+    setLoading(true)
     const result = await API_Auth.getSimulationHistory(body);
     console.log(result);
+    setLoading(false)
     if (result.status == 200) {
       setTemplateData(result.simulations);
       setTotalCount(result.count);
@@ -120,10 +107,208 @@ export default function Home() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
-      handlegetAllTemplateDetails();
+      getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        fromDate,
+        toDate,
+        perPage,
+        1)
     }
   };
-  const handleInput = async (e: any) => {};
+  const handleInput = async (e: any) => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+    if (name === "scenarioType") {
+      setSType(value);
+      setCurrentPage(0)
+      getSimulations(
+        tempname,
+        creatorName,
+        value,
+        fromDate,
+        toDate,
+        perPage,
+        1)
+    }
+    if (name == "tempname") {
+      setTempName(value);
+      setCurrentPage(0)
+
+
+      getSimulations(
+        value,
+        creatorName,
+        s_type,
+        fromDate,
+        toDate,
+        perPage,
+        1)
+      //handlegetAllTemplateDetails();
+    }
+    if (name == "fromDate") {
+      setFromDate(value);
+      setCurrentPage(0)
+
+      getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        value,
+        toDate,
+        perPage,
+        1)
+    }
+    if (name == "toDate") {
+      setToDate(value);
+      setCurrentPage(0)
+
+      getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        fromDate,
+        value,
+        perPage,
+        1)
+    }
+
+    if (name == "perPage") {
+      setPerPage(Number(value));
+      setPageNo(1);
+      setCurrentPage(0)
+
+
+      getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        fromDate,
+        toDate,
+        value,
+        1)
+    }
+  };
+
+  const handlePageClick = async (e: any) => {
+    const selectedPage = e.selected;
+    let page = selectedPage * perPage;
+    setOffSet(page);
+    console.log("selectedPage", selectedPage);
+    //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
+    //setPageNo(pageData);
+    let data = e.selected + 1;
+    console.log("asdakl", data, page)
+    setPageNo(data);
+    setCurrentPage(e.selected);
+
+
+    getSimulations(
+      tempname,
+      creatorName,
+      s_type,
+      fromDate,
+      toDate,
+      perPage,
+      data)
+  };
+
+  const handleCheckboxChange = async (id: any) => {
+    console.log(id)
+    // Check if the record is already in the array
+    const index = selectedRecords.indexOf(id);
+    console.log(selectedRecords)
+
+    const filteredArray = templateData.filter((item) => item.exe_id === id);
+    console.log("filteredArray", filteredArray, dataRecords)
+
+    if (dataRecords.length < 3) {
+
+
+      // If the record is checked, add it to the array
+      if (index === -1) {
+        setSelectedRecords([...selectedRecords, id]);
+        setDataRecords([...dataRecords, filteredArray[0]])
+      } else {
+        // If the record is unchecked, remove it from the array
+        const updatedRecords = [...selectedRecords];
+        const updateDataRecords = [...dataRecords]
+        updatedRecords.splice(index, 1);
+        //updateDataRecords.splice(index, 1);
+        const updatedData = updateDataRecords.filter((item) => item.exe_id === id);
+
+        setDataRecords([...updatedData])
+        setSelectedRecords(updatedRecords);
+      }
+    } else {
+      toast.error("Template Records should not more than 3")
+    }
+  };
+  const handleClear = () => {
+    setDataRecords([])
+    setSelectedRecords([])
+  }
+
+  const handleCompareClick = () => {
+    if (dataRecords.length != 3) {
+      toast.error("Template Records length should be 3")
+
+    } else {
+      //router.push("/templatedetails_excel")
+
+      router.push({
+        pathname: "/templatedetails_excel",
+        query: {
+          temp_name1: dataRecords[0]?.temp_name,
+          temp_name2: dataRecords[1]?.temp_name,
+          temp_name3: dataRecords[2]?.temp_name
+        },
+      });
+    }
+  }
+  const handleClose = (id: any) => {
+    console.log("Exid", id);
+    const updatedRecords = [...selectedRecords];
+    const index = selectedRecords.indexOf(id);
+
+    const updateDataRecords = [...dataRecords]
+    updatedRecords.splice(index, 1);
+    //updateDataRecords.splice(index, 1);
+    const updatedData = updateDataRecords.filter((item) => item.exe_id != id);
+    console.log("updatedData", updatedData, updateDataRecords)
+
+    setDataRecords([...updatedData])
+    setSelectedRecords(updatedRecords);
+
+  }
+
+  const handleFirstRecord = () => {
+    setCurrentPage(0)
+    getSimulations(
+      tempname,
+      creatorName,
+      s_type,
+      fromDate,
+      toDate,
+      perPage,
+      1)
+
+
+  }
+  const handlelastRecord = () => {
+    getSimulations(
+      tempname,
+      creatorName,
+      s_type,
+      fromDate,
+      toDate,
+      perPage,
+      pageCount)   
+       setCurrentPage(pageCount - 1)
+
+
+  }
   return (
     <div className="container-fluid">
       <div className="template details">
@@ -139,16 +324,20 @@ export default function Home() {
 
         <div className="compare-banner">
           <label htmlFor="">Compare Templates :</label>
-          <button className="templatename">
+          {dataRecords.map((item: any) => (
+            <button className="templatename">
+              {item.temp_name} <img src="imgs/close-black.svg" alt="" onClick={() => handleClose(item.exe_id)} />
+            </button>
+          ))}
+
+          {/*  <button className="templatename">
             Template1 <img src="imgs/close-black.svg" alt="" />
-          </button>
-          <button className="templatename">
-            Template2 <img src="imgs/close-black.svg" alt="" />
-          </button>
+          </button> */}
+
           <button className="compare-button">
-            <a href="templatedetails_excel">Compare Templates</a>
+            <a onClick={() => handleCompareClick()}>Compare Templates</a>
           </button>
-          <button className="clear">Clear All</button>
+          <button className="clear" onClick={() => handleClear()}>Clear All</button>
         </div>
         <div className="template-type">
           <div className="tabs">
@@ -187,15 +376,33 @@ export default function Home() {
                     <img src="imgs/search-icon.svg" alt="" />
                   </div>
                 </div>
-                <div className="calendar">
+                {/*   <div className="calendar">
                   <img src="imgs/calendar.svg" alt="" />
                   <select name="" id="calendar">
                     <option value="">From-to</option>
                   </select>
+                </div> */}
+                <div className="dateFilter">
+                  <input
+                    type="date"
+                    name="fromDate"
+                    value={fromDate}
+                    onChange={handleInput}
+                    placeholder="Start Date"
+                  />
+
+                  <input
+                    type="date"
+                    name="toDate"
+                    value={toDate}
+                    onChange={handleInput}
+                    placeholder="End Date"
+                  />
                 </div>
               </div>
             </div>
 
+            {loading == true && <Loader />}
             <div className=" table-responsive">
               <div className="template-content">
                 <table className="table" style={{ borderSpacing: 0 }}>
@@ -213,12 +420,22 @@ export default function Home() {
                       </th>
                     </tr>
                   </thead>
+                  {templateData.length == 0 && <tbody>
+                    <tr >
+                      <td colSpan={12}>
+                        <p className="no_Data_table">No Data Found</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                  }
                   <tbody>
                     {templateData.map((data) => (
                       <tr key={data.exe_id}>
                         <td id="checkbox">
                           {" "}
-                          <input type="checkbox" className="checkbox" />
+                          <input type="checkbox" className="checkbox"
+                            checked={selectedRecords.includes(data.exe_id)}
+                            onChange={() => handleCheckboxChange(data.exe_id)} />
                         </td>
                         <td>{data.scenario_name}</td>
                         <td>{data.temp_name}</td>
@@ -283,13 +500,16 @@ export default function Home() {
                 <option value="20">20</option>
               </select>
             </div>
-            <span>of 40</span>
+            <span>of {totalCount}</span>
           </div>
           <div className="paging-list">
-            <div className="leftaction disable-pointer">
+            {currentPage == 0 && <div className="leftaction disable-pointer" >
+              <img src="imgs/left-doublearrowg.svg" alt="" />
+            </div>}
+            {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
               <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
+            </div>}
+            {/*   <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
@@ -300,13 +520,34 @@ export default function Home() {
             </ul>
             <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
+            </div> */}
+            <ReactPaginate
+              previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+              nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              forcePage={currentPage}
+              disabledClassName="disabled"
+              disableInitialCallback
+            />
+             {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
               <img src="imgs/right-doublearrow.svg" alt="" />
             </div>
+            }
+             {currentPage == pageCount - 1 && <div className="rightaction" >
+              <img src="imgs/right-doublearrowg.svg" alt="" />
+            </div>
+            }
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

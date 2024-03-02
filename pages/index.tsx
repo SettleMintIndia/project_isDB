@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { UserContext } from "./context";
+import Link from "next/link";
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState("");
@@ -78,6 +79,17 @@ export default function Home() {
     setShowPassword(!showPassword);
   };
   return (
+    <>
+    {/*  <div className="login-nav">
+          <Link href="/">
+            <img
+              src="/imgs/isdb-logo-signin.svg"
+              className="isDB-logo"
+              alt=""
+            />
+          </Link>
+          <img className="close" src="/imgs/close.svg" alt="" />
+        </div> */}
     <div className="container-fluid login">
       <div className="row">
         <div className="col-md-6 img">
@@ -153,5 +165,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }

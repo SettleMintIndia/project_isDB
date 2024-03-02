@@ -77,10 +77,41 @@ const AppLayout = ({ children }: LayoutProps) => {
               <img src="/imgs/isdb-logo-layout.png" alt="" />
             </Link>
           </div>
-          {router.route === "/createtemplate" ||
-          router.route === "/createadmin" ||
-          router.route === "/runSimulation" ? (
-            <div className="nav-links">
+          {(router.route === "/createtemplate" ||
+            router.route === "/createadmin") &&
+            key == "superadmin" ? (
+            <>
+              <div className="nav-links">
+                <ul>
+                  <li
+                    className={
+                      router.pathname === "/createtemplate"
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    <a href="createtemplate">
+                      <img src="imgs/template.svg" alt="" />
+                      Create Template
+                    </a>
+                  </li>
+                  <li
+                    className={
+                      router.pathname === "/createadmin"
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    <a href="createadmin">
+                      <img src="imgs/admin.svg" alt="" />
+                      Create Admin
+                    </a>
+                  </li>
+                </ul>
+
+              </div>
+
+              {/*  <div className="nav-links">
               <ul>
                 <li
                   className={
@@ -116,7 +147,83 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </li>
                 )}
               </ul>
-            </div>
+            </div> */}
+            </>
+          ) : (
+            <div></div>
+          )}
+
+          {(router.route === "/createtemplate" ||
+            router.route === "/runSimulation") &&
+            key == "admin" ? (
+            <>
+              <div className="nav-links">
+                <ul>
+                  <li
+                    className={
+                      router.pathname === "/runSimulation" ? "active" : ""
+                    }
+                  >
+                    <a href="runSimulation">
+                      <img src="imgs/run.svg" alt="" />
+                      Run Simulation
+                    </a>
+                  </li>
+                  <li
+                    className={
+                      router.pathname === "/createtemplate"
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    <a href="createtemplate">
+                      <img src="imgs/template.svg" alt="" />
+                      Create Template
+                    </a>
+                  </li>
+
+                </ul>
+
+              </div>
+
+              {/*  <div className="nav-links">
+              <ul>
+                <li
+                  className={
+                    router.pathname === "/createtemplate" ||
+                    router.pathname === "/createadmin" ||
+                    router.pathname === "/runSimulation"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <a href="createtemplate">
+                    <img src="imgs/template.svg" alt="" />
+                    Create Template
+                  </a>
+                </li>
+                {router.route === "/runSimulation" ? (
+                  <li
+                    className={
+                      router.pathname === "/runSimulation" ? "active" : ""
+                    }
+                  >
+                    <a href="runSimulation">
+                      <img src="imgs/run.svg" alt="" />
+                      Run Simulation
+                    </a>
+                  </li>
+                ) : (
+                  <li className="active">
+                    <a href="createadmin">
+                      <img src="imgs/admin.svg" alt="" />
+                      Create Admin
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div> */}
+            </>
           ) : (
             <div></div>
           )}

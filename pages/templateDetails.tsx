@@ -15,11 +15,13 @@ import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import Loader from "@/components/layout/Loader";
 
 export default function templateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
+
   const [templateData, setTemplateData] = useState([
     {
       scenario_name: "",
@@ -29,7 +31,7 @@ export default function templateDetails() {
       is_public: 0,
     },
   ]);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -40,6 +42,7 @@ export default function templateDetails() {
   const [s_type, setSType] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [totalCount, setTotalCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [viewData, setViewData] = useState({
     temp_name: "",
     created_timestamp: "",
@@ -65,22 +68,28 @@ export default function templateDetails() {
 
   const [tempname, setTempName] = useState("");
   useEffect(() => {
-    handlegetAllTemplateDetails();
+    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, 1);
     getScenarios();
-  }, [tempname, s_type, fromDate, toDate]);
+  }, []);
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
     console.log("scenarios", result);
     setFinalScenarios(result.scenarios);
   };
-  const handlegetAllTemplateDetails = async () => {
+  const handlegetAllTemplateDetails = async (tempname: any,
+    s_type: any,
+    fromDate: any,
+    toDate: any,
+    perPage: any,
+    pageNo: any) => {
+
+    setLoading(true)
     let body = {
       temp_name: tempname,
-      admin_id: "1",
+      admin_id: 1,
       scenario: s_type,
-      datefrom:
-        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      datefrom: fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
@@ -91,10 +100,13 @@ export default function templateDetails() {
 
     const result = await API_Auth.getAllTemplates(body);
     console.log(result);
+    setLoading(false)
+
     if (result.status == 200) {
       setTemplateData(result.templates);
       setTotalCount(result.count);
       setPageCount(Math.ceil(result.count / perPage));
+      console.log(Math.ceil(result.count / perPage))
     }
   };
 
@@ -103,12 +115,16 @@ export default function templateDetails() {
     let page = selectedPage * perPage;
     setOffSet(page);
     console.log("selectedPage", selectedPage);
-    let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
-    setPageNo(pageData);
+    //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
+    //setPageNo(pageData);
+    let data = e.selected + 1;
+    console.log("asdakl", data, page)
+    setPageNo(data);
+    setCurrentPage(e.selected);
 
-    handlegetAllTemplateDetails();
 
-    setCurrentPage(page);
+    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, data);
+
   };
 
   const handleInput = async (e: any) => {
@@ -116,28 +132,39 @@ export default function templateDetails() {
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
       setSType(value);
-      handlegetAllTemplateDetails();
+      setCurrentPage(0)
+      handlegetAllTemplateDetails(tempname, value, fromDate, toDate, perPage, 1);
+
     }
     if (name == "tempname") {
       setTempName(value);
-      handlegetAllTemplateDetails();
+      setCurrentPage(0)
+
+      handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, 1);
+
+      //handlegetAllTemplateDetails();
     }
     if (name == "fromDate") {
       setFromDate(value);
-      handlegetAllTemplateDetails();
+      setCurrentPage(0)
+
+      handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, 1);
     }
     if (name == "toDate") {
       setToDate(value);
+      setCurrentPage(0)
 
-      handlegetAllTemplateDetails();
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, value, perPage, 1);
     }
 
     if (name == "perPage") {
       setPerPage(Number(value));
       setPageNo(1);
       setCurrentPage(1);
+      setCurrentPage(0)
 
-      handlegetAllTemplateDetails();
+
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, value, 1);
     }
   };
 
@@ -156,9 +183,10 @@ export default function templateDetails() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
+      setCurrentPage(0)
 
       setTimeout(() => {
-        handlegetAllTemplateDetails();
+        handlegetAllTemplateDetails("", "", "", "", "", 1);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -224,11 +252,34 @@ export default function templateDetails() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
-      handlegetAllTemplateDetails();
+      handlegetAllTemplateDetails("", "", "", "", perPage, 1);
     }
 
     //setActiveButton(buttonName);
   };
+  const handleAllData = () => {
+    setSType("");
+    setTempName("");
+    setFromDate("");
+    setToDate("");
+    setCurrentPage(0);
+    handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+
+  }
+  const handleFirstRecord = () => {
+    handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+    setCurrentPage(0)
+
+
+  }
+  const handlelastRecord = () => {
+    handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
+    setCurrentPage(pageCount - 1)
+
+
+  }
+
+
   return (
     <div className="container-fluid">
       <div className="template details">
@@ -240,11 +291,11 @@ export default function templateDetails() {
             <p>({totalCount})</p>
           </div>
           <div className="head">
-            {/* <button>
+            <button>
               <Link href="createtemplate">
                 <img src="/imgs/plus.svg" alt="" /> Create Template
               </Link>
-            </button> */}
+            </button>
           </div>
         </div>
         {/* </div> */}
@@ -273,7 +324,9 @@ export default function templateDetails() {
                       {" "}
                       <Tabs>
                         <TabList>
-                          <Tab>All</Tab>
+                          <Tab>
+                            <div onClick={() => handleAllData()}>All</div>
+                          </Tab>
                           {/* <Tab>Crash</Tab>
                           <Tab>Bubble</Tab> */}
                           <select
@@ -340,6 +393,7 @@ export default function templateDetails() {
                   </div>
                 </div>
 
+                {loading == true && <Loader />}
                 <div className="table-responsive">
                   <div className="template-content">
                     <table className="table" style={{ borderSpacing: 0 }}>
@@ -353,6 +407,14 @@ export default function templateDetails() {
                           <th>Actions</th>
                         </tr>
                       </thead>
+                      {templateData.length == 0 && <tbody>
+                        <tr >
+                          <td colSpan={12}>
+                            <p className="no_Data_table">No Data Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                      }
                       <tbody>
                         {templateData.map((data) => (
                           <tr key={data.temp_name}>
@@ -642,10 +704,29 @@ export default function templateDetails() {
               forcePage={currentPage}
             /> */}
 
-            <div className="leftaction disable-pointer">
+            {currentPage == 0 && <div className="leftaction disable-pointer" >
+              <img src="imgs/left-doublearrowg.svg" alt="" />
+            </div>}
+            {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
               <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
+            </div>}
+
+            <ReactPaginate
+              previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+              nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              forcePage={currentPage}
+              disabledClassName="disabled"
+              disableInitialCallback
+            />
+            {/*   <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
@@ -656,10 +737,17 @@ export default function templateDetails() {
             </ul>
             <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
+            </div> */}
+           
+          
+            {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
               <img src="imgs/right-doublearrow.svg" alt="" />
             </div>
+            }
+             {currentPage == pageCount - 1 && <div className="rightaction" >
+              <img src="imgs/right-doublearrowg.svg" alt="" />
+            </div>
+            }
           </div>
         </div>
       </div>
