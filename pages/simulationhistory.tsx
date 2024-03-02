@@ -262,7 +262,7 @@ export default function Home() {
                           </a>
                         </td>
                         <td id="file">
-                          <Link href="#">PDF</Link>
+                          <Link href="pdf">PDF</Link>
                           <Link href="templatedetails_excel">EXCEL</Link>
                         </td>
                       </tr>

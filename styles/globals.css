@@ -1,4 +1,3 @@
-
 html,
 body {
   padding: 0;
@@ -864,7 +863,7 @@ label {
 }
 .paging-list {
   display: flex;
-  align-items: baseline;
+  /* align-items: baseline; */
   gap: 5px;
 }
 .paging-count {
@@ -2199,16 +2198,115 @@ label {
 }
 /* kavya */
 
-.react-datepicker__input-container input{
+.react-datepicker__input-container input {
   height: 30px;
 }
-.no_Data_table{
+.no_Data_table {
   text-align: center;
   font-weight: 600;
-  margin:5px;
+  margin: 5px;
 }
-
-
+.container-fluid.pdf {
+  width: 95%;
+}
+.container-fluid.pdf .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ced4da;
+  padding-bottom: 15px;
+}
+.container-fluid.pdf .isDB-logo {
+  padding: 0;
+}
+.container-fluid.pdf .pdf-title {
+  border-bottom: 1px solid #bfbfbf;
+  font-size: 30px;
+  font-family: bressay, serif;
+  float: left;
+}
+.container-fluid.pdf .right-head .pdf.info {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+.container-fluid.pdf .right-head {
+  display: grid;
+}
+.container-fluid.pdf .right-head .pdf-time,
+.type {
+  display: grid;
+  justify-items: baseline;
+  gap: 5px;
+}
+.container-fluid.pdf .right-head .pdf-time label,
+.type label {
+  color: #6f6d6d;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+.container-fluid.pdf .pdf-section .pdf-name {
+  font-size: 30px;
+  font-family: bressay, serif;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.container-fluid.pdf .pdf-section .pdf-data {
+  background: #0d3c47 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 21px #0000005e;
+  border-radius: 10px;
+  padding: 40px 30px 30px;
+  display: flex;
+}
+.container-fluid.pdf .pdf-section .pdf-data .modal-details {
+  width: 100%;
+  padding: 0 !important;
+}
+.container-fluid.pdf .pdf-section .pdf-data .details-section {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin-top: -10px;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details {
+  display: flex;
+  grid-gap: 20px;
+  gap: 30px;
+  font-size: 14px;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details .table,
+.right-section {
+  width: 40%;
+  height: fit-content;
+  margin-bottom: 0;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details .right-section {
+  display: grid;
+  gap: 20px;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details td {
+  background: #f3f3f3;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details td {
+  border-bottom: none;
+  padding: 10px 15px;
+  font-weight: inherit;
+  font-size: 14px;
+}
+.container-fluid.pdf .pdf-section .pdf-data .template-details tr td:last-child {
+  font-weight: bold;
+  font-family: "Segoe UI Regular";
+  width: 150px;
+}
+.container-fluid.pdf .pdf-section .pdf-data .modal-comment {
+  padding: 0 10px;
+  padding-bottom: 0px;
+  padding-bottom: 0;
+  font-size: 14px;
+  margin-left: 4px;
+}
 /* Md css Media ccqueries*/
 
 @media screen and (max-width: 1279px) and (min-width: 769px) {
@@ -2657,7 +2755,3 @@ label {
     flex-wrap: wrap;
   }
 }
-
-
-
-
