@@ -89,22 +89,22 @@ export default function Home() {
   const [executionId, setExecutionId] = useState("");
   const [siteration, setSIteration] = useState(1);
 
-  const [siterationErr, setSIterationErr] = useState('');
-  const [sroundErr, setSRoundErr] = useState('')
+  const [siterationErr, setSIterationErr] = useState("");
+  const [sroundErr, setSRoundErr] = useState("");
 
-  const [sround, setSRound] = useState(1)
-  const [tradeHistoryWS, setTradeHistoryWS] = useState([{ price: '', quantity: '', timestamp: '' }])
-  const [tradeHistoryNS, setTradeHistoryNS] = useState([{ price: '', quantity: '', timestamp: '' }])
-  const [type, setType] = useState('price')
+  const [sround, setSRound] = useState(1);
+  const [tradeHistoryWS, setTradeHistoryWS] = useState([
+    { price: "", quantity: "", timestamp: "" },
+  ]);
+  const [tradeHistoryNS, setTradeHistoryNS] = useState([
+    { price: "", quantity: "", timestamp: "" },
+  ]);
+  const [type, setType] = useState("price");
 
   const { loginexid, setloginexid } = useContext(UserContext);
 
-  const [orderWs, setorderWs] = useState([])
-  const [orderNs, setorderNs] = useState([])
-
-
-
-
+  const [orderWs, setorderWs] = useState([]);
+  const [orderNs, setorderNs] = useState([]);
 
   useEffect(() => {
     console.log(totalTempName);
@@ -112,7 +112,7 @@ export default function Home() {
     getTemplateDetails(totalTempName);
     getDistributions();
     console.log(tabIndex);
-    console.log("executionId", executionId)
+    console.log("executionId", executionId);
     if (tabIndex == 1) {
       setSIteration(1);
       setSRound(1);
@@ -153,12 +153,11 @@ export default function Home() {
     console.log("simulationresult", result);
   };
 
-  const getOrderBook = async (id: any,
-    siteration: any, sround: any) => {
+  const getOrderBook = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
-    setorderNs(result.ordersNS)
-    setorderWs(result.ordersWS)
+    setorderNs(result.ordersNS);
+    setorderWs(result.ordersWS);
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getTradeHistoryWithStablization(
@@ -536,13 +535,9 @@ export default function Home() {
         setFinalErr("price or quant variance should be less than 1");
       } else if (Number(upperbound) > 1) {
         setFinalErr("upper lmt order price variance should be less than 1");
-      }
-      else if (Number(lowerbound) < 1) {
-        setFinalErr("lower lmt order price variance should be greater than 1")
-
-
-      }
-      else {
+      } else if (Number(lowerbound) < 1) {
+        setFinalErr("lower lmt order price variance should be greater than 1");
+      } else {
         const template_exist = await API_Auth.getTemplateExists(
           newtemplateName
         );
@@ -606,10 +601,9 @@ export default function Home() {
       console.log(result);
       if (result.status == 400) {
         toast.error(result.error);
-      }
-      else {
-        console.log(result.exe)
-        setExecutionId(result.exe)
+      } else {
+        console.log(result.exe);
+        setExecutionId(result.exe);
       }
     }
   };
@@ -623,25 +617,20 @@ export default function Home() {
     } else if (Number(siteration) > Number(iterations)) {
       error = error + 1;
       toast.error("Iteration should not be greater than " + iterations);
-
     } else {
-      setSIterationErr("")
+      setSIterationErr("");
     }
     if (sround == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
-    }
-    else if (Number(sround) > Number(rounds)) {
+    } else if (Number(sround) > Number(rounds)) {
       error = error + 1;
       toast.error("Round should not be greater than " + rounds);
-
-    }
-    else {
+    } else {
       setSRoundErr("");
     }
 
     if (error == 0) {
-
       if (tabIndex == 1) {
         getOrderBook(executionId, siteration, sround);
       }
@@ -650,11 +639,9 @@ export default function Home() {
       }
 
       if (tabIndex == 3) {
-
         getTradeHistoryWS(executionId, siteration, sround);
       }
       if (tabIndex == 4) {
-
         getTradeHistoryNS(executionId, siteration, sround);
       }
       if (tabIndex == 5) {
@@ -664,7 +651,7 @@ export default function Home() {
       if (tabIndex == 6) {
         getStablizationFund(executionId);
       }
-      console.log("tabIndex", tabIndex)
+      console.log("tabIndex", tabIndex);
     }
   };
   return (
@@ -1143,9 +1130,12 @@ export default function Home() {
                                     required
                                     value={ordersVar}
                                     onChange={handleInput}
-
                                   />
-                                  {ordersVarErr != "" && <p className="alert-message">{ordersVarErr}</p>}
+                                  {ordersVarErr != "" && (
+                                    <p className="alert-message">
+                                      {ordersVarErr}
+                                    </p>
+                                  )}
                                 </td>
                               </tr>
                             </tbody>
@@ -1325,13 +1315,17 @@ export default function Home() {
                   >
                     <TabList>
                       <Tab>Info</Tab>
-                      {executionId != "" && <Tab>
-                        Order Book <span>(Stabilization)</span>
-                      </Tab>}
+                      {executionId != "" && (
+                        <Tab>
+                          Order Book <span>(Stabilization)</span>
+                        </Tab>
+                      )}
                       {executionId != "" && <Tab>Order Book</Tab>}
-                      {executionId != "" && <Tab>
-                        Trade History <span>(Stabilization)</span>
-                      </Tab>}
+                      {executionId != "" && (
+                        <Tab>
+                          Trade History <span>(Stabilization)</span>
+                        </Tab>
+                      )}
                       {executionId != "" && <Tab>Trade History</Tab>}
                       {executionId != "" && <Tab>Simulation Result</Tab>}
                       {executionId != "" && <Tab>Stabilization Fund</Tab>}
@@ -1347,7 +1341,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1361,18 +1355,19 @@ export default function Home() {
                                   <p className="alert-message">
                                     {siterationErr}
                                   </p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1384,23 +1379,23 @@ export default function Home() {
                                 />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
-                            </button>                          </div>
+                            </button>{" "}
+                          </div>
                         </div>
                         {/* <div className="tabs"></div> */}
                       </div>
@@ -1476,7 +1471,7 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
@@ -1490,18 +1485,22 @@ export default function Home() {
                                       <p className="alert-message">
                                         {siterationErr}
                                       </p>
-                                    )}                                  </div>
+                                    )}{" "}
+                                  </div>
                                   <span>of {iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
@@ -1512,24 +1511,29 @@ export default function Home() {
                                       onChange={handleInput}
                                     />
                                     {sroundErr != "" && (
-                                      <p className="alert-message">{sroundErr}</p>
-                                    )}                                  </div>
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="search-controls">
                                 <button
                                   className="search"
-                                  onClick={() =>
-                                    handleSearch()
-                                  }
+                                  onClick={() => handleSearch()}
                                 >
                                   Search
-                                </button>                              </div>
+                                </button>{" "}
+                              </div>
                             </div>
                             {/* <div className="tabs"></div> */}
                           </div>
@@ -1542,7 +1546,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1556,18 +1560,19 @@ export default function Home() {
                                   <p className="alert-message">
                                     {siterationErr}
                                   </p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1579,23 +1584,23 @@ export default function Home() {
                                 />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
-                            </button>                          </div>
+                            </button>{" "}
+                          </div>
                         </div>
                         {/* <div className="tabs"></div> */}
                       </div>
@@ -1671,7 +1676,7 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
@@ -1685,18 +1690,22 @@ export default function Home() {
                                       <p className="alert-message">
                                         {siterationErr}
                                       </p>
-                                    )}                                  </div>
+                                    )}{" "}
+                                  </div>
                                   <span>of {iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
@@ -1707,24 +1716,29 @@ export default function Home() {
                                       onChange={handleInput}
                                     />
                                     {sroundErr != "" && (
-                                      <p className="alert-message">{sroundErr}</p>
-                                    )}                                  </div>
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="search-controls">
                                 <button
                                   className="search"
-                                  onClick={() =>
-                                    handleSearch()
-                                  }
+                                  onClick={() => handleSearch()}
                                 >
                                   Search
-                                </button>                              </div>
+                                </button>{" "}
+                              </div>
                             </div>
                             {/* <div className="tabs"></div> */}
                           </div>
@@ -1754,7 +1768,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1779,13 +1793,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1803,15 +1817,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1828,22 +1840,28 @@ export default function Home() {
                                     <th>Quantity</th>
                                   </tr>
                                 </thead>
-                                {tradeHistoryWS.length == 0 && <tbody>
-                                  <tr >
-                                    <td colSpan={12}>
-                                      <p className="no_Data_table">No Data Found</p>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                                }
-                                {tradeHistoryWS.length == 0 && <tbody>
-                                  <tr >
-                                    <td colSpan={12}>
-                                      <p className="no_Data_table">No Data Found</p>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                                }
+                                {tradeHistoryWS.length == 0 && (
+                                  <tbody>
+                                    <tr>
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">
+                                          No Data Found
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                )}
+                                {tradeHistoryWS.length == 0 && (
+                                  <tbody>
+                                    <tr>
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">
+                                          No Data Found
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                )}
                                 <tbody>
                                   {tradeHistoryWS.map((item) => (
                                     <tr>
@@ -1865,7 +1883,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1890,13 +1908,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1914,15 +1932,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1936,7 +1952,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1961,13 +1977,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1990,15 +2006,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -2015,15 +2029,18 @@ export default function Home() {
                                     <th>Quantity</th>
                                   </tr>
                                 </thead>
-                                {tradeHistoryNS.length == 0 && <tbody>
-                                  <tr >
-                                    <td colSpan={12}>
-                                      <p className="no_Data_table">No Data Found</p>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                                }
-                                
+                                {tradeHistoryNS.length == 0 && (
+                                  <tbody>
+                                    <tr>
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">
+                                          No Data Found
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                )}
+
                                 <tbody className="scrollable">
                                   {tradeHistoryNS.map((item) => (
                                     <tr>
@@ -2045,7 +2062,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -2065,13 +2082,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -2089,15 +2106,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={() =>
-                                handleSearch()
-                              }
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>

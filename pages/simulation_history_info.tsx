@@ -82,8 +82,8 @@ export default function Home() {
   const [type, setType] = useState("price");
 
   const [sround, setSRound] = useState(1);
-  const [orderWs, setorderWs] = useState([])
-  const [orderNs, setorderNs] = useState([])
+  const [orderWs, setorderWs] = useState([]);
+  const [orderNs, setorderNs] = useState([]);
   const handleEdit = () => {
     router.push("/simulation_history_info");
   };
@@ -122,8 +122,7 @@ export default function Home() {
       getStablizationFund(ex_id);
     }
     console.log("tabIndex", tabIndex);
- 
-  }, [totalTempName, tabIndex,ex_id]);
+  }, [totalTempName, tabIndex, ex_id]);
   const getStablizationFund = async (id: any) => {
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
@@ -133,12 +132,11 @@ export default function Home() {
     console.log("simulationresult", result);
   };
 
-  const getOrderBook = async (id: any,
-    siteration: any, sround: any) => {
+  const getOrderBook = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
-    setorderNs(result.ordersNS)
-    setorderWs(result.ordersWS)
+    setorderNs(result.ordersNS);
+    setorderWs(result.ordersWS);
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
     const result = await API_Auth.getTradeHistoryWithStablization(
@@ -306,8 +304,6 @@ export default function Home() {
     }
   };
 
-  
-
   const handleSearch = () => {
     let error = 0;
 
@@ -316,26 +312,25 @@ export default function Home() {
       setSIterationErr("Please Enter Iteration");
     } else if (Number(siteration) > Number(executionData.iterations)) {
       error = error + 1;
-      toast.error("Iteration should not be greater than " + executionData.iterations);
-
+      toast.error(
+        "Iteration should not be greater than " + executionData.iterations
+      );
     } else {
-      setSIterationErr("")
+      setSIterationErr("");
     }
     if (sround == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
-    }
-    else if (Number(sround) > Number(executionData.nb_rounds)) {
+    } else if (Number(sround) > Number(executionData.nb_rounds)) {
       error = error + 1;
-      toast.error("Round should not be greater than " + executionData.nb_rounds);
-
-    }
-    else {
+      toast.error(
+        "Round should not be greater than " + executionData.nb_rounds
+      );
+    } else {
       setSRoundErr("");
     }
 
     if (error == 0) {
-
       if (tabIndex == 1) {
         getOrderBook(ex_id, siteration, sround);
       }
@@ -344,11 +339,9 @@ export default function Home() {
       }
 
       if (tabIndex == 3) {
-
         getTradeHistoryWS(ex_id, siteration, sround);
       }
       if (tabIndex == 4) {
-
         getTradeHistoryNS(ex_id, siteration, sround);
       }
       if (tabIndex == 5) {
@@ -358,7 +351,7 @@ export default function Home() {
       if (tabIndex == 6) {
         getStablizationFund(ex_id);
       }
-      console.log("tabIndex", tabIndex)
+      console.log("tabIndex", tabIndex);
     }
   };
   return (
@@ -732,15 +725,11 @@ export default function Home() {
                       <Tab>
                         Order Book <span> (Stabilization)</span>{" "}
                       </Tab>
-                      <Tab>
-                        Order Book {" "}
-                      </Tab>
+                      <Tab>Order Book </Tab>
                       <Tab>
                         Trade History <span>(Stabilization)</span>{" "}
                       </Tab>
-                      <Tab>
-                        Trade History{" "}
-                      </Tab>
+                      <Tab>Trade History </Tab>
                       <Tab>Simulation Result</Tab>
                       <Tab>Stabilization Fund</Tab>
                     </TabList>
@@ -755,12 +744,12 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                              <input
+                                <input
                                   value={siteration}
                                   name="siteration"
                                   onChange={handleInput}
@@ -769,39 +758,46 @@ export default function Home() {
                                   <p className="alert-message">
                                     {siterationErr}
                                   </p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                              <input
+                                <input
                                   value={sround}
                                   name="sround"
                                   onChange={handleInput}
                                 />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search" onClick={()=>handleSearch()}>Search</button>
+                            <button
+                              className="search"
+                              onClick={() => handleSearch()}
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                         {/* <div className="tabs"></div> */}
@@ -878,53 +874,68 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                  <input
-                                  value={siteration}
-                                  name="siteration"
-                                  onChange={handleInput}
-                                />
-                                {siterationErr != "" && (
-                                  <p className="alert-message">
-                                    {siterationErr}
-                                  </p>
-                                )}                                  </div>
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                  <input
-                                  value={sround}
-                                  name="sround"
-                                  onChange={handleInput}
-                                />
-                                {sroundErr != "" && (
-                                  <p className="alert-message">{sroundErr}</p>
-                                )}                                  </div>
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search" onClick={()=>handleSearch()}>Search</button>
+                                <button
+                                  className="search"
+                                  onClick={() => handleSearch()}
+                                >
+                                  Search
+                                </button>
                               </div>
                             </div>
                             {/* <div className="tabs"></div> */}
@@ -938,12 +949,12 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                              <input
+                                <input
                                   value={siteration}
                                   name="siteration"
                                   onChange={handleInput}
@@ -952,39 +963,46 @@ export default function Home() {
                                   <p className="alert-message">
                                     {siterationErr}
                                   </p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
-                              <input
+                                <input
                                   value={sround}
                                   name="sround"
                                   onChange={handleInput}
                                 />
                                 {sroundErr != "" && (
                                   <p className="alert-message">{sroundErr}</p>
-                                )}                              </div>
+                                )}{" "}
+                              </div>
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
-                            <button className="search" onClick={()=>handleSearch()}>Search</button>
+                            <button
+                              className="search"
+                              onClick={() => handleSearch()}
+                            >
+                              Search
+                            </button>
                           </div>
                         </div>
                         {/* <div className="tabs"></div> */}
@@ -1061,53 +1079,68 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                  <input
-                                  value={siteration}
-                                  name="siteration"
-                                  onChange={handleInput}
-                                />
-                                {siterationErr != "" && (
-                                  <p className="alert-message">
-                                    {siterationErr}
-                                  </p>
-                                )}                                  </div>
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/last-previous.svg" alt="" />
+                                  <img src="imgs/left-doublearrow.svg" alt="" />
                                   <img src="imgs/previous.svg" alt="" />
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
-                                  <input
-                                  value={sround}
-                                  name="sround"
-                                  onChange={handleInput}
-                                />
-                                {sroundErr != "" && (
-                                  <p className="alert-message">{sroundErr}</p>
-                                )}                                  </div>
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
                                   <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
                                   <img src="imgs/next-arrow.svg" alt="" />
-                                  <img src="imgs/last-arrow.svg" alt="" />
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                  />
                                 </div>
                               </div>
                               <div className="search-controls">
-                                <button className="search" onClick={()=>handleSearch()}>Search</button>
+                                <button
+                                  className="search"
+                                  onClick={() => handleSearch()}
+                                >
+                                  Search
+                                </button>
                               </div>
                             </div>
                             {/* <div className="tabs"></div> */}
@@ -1138,7 +1171,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1163,13 +1196,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1187,13 +1220,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={()=>handleSearch()}
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1231,7 +1264,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1256,13 +1289,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1280,13 +1313,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={()=>handleSearch()}
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1300,7 +1333,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1325,13 +1358,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1354,13 +1387,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={()=>handleSearch()}
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1413,7 +1446,7 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1433,13 +1466,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/last-previous.svg" alt="" />
+                              <img src="imgs/left-doublearrow.svg" alt="" />
                               <img src="imgs/previous.svg" alt="" />
                             </div>
                             <div className="iteration">
@@ -1457,13 +1490,13 @@ export default function Home() {
                             </div>
                             <div className="next">
                               <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/last-arrow.svg" alt="" />
+                              <img src="imgs/right-doublearrow.svg" alt="" />
                             </div>
                           </div>
                           <div className="search-controls">
                             <button
                               className="search"
-                              onClick={()=>handleSearch()}
+                              onClick={() => handleSearch()}
                             >
                               Search
                             </button>
@@ -1711,7 +1744,7 @@ export default function Home() {
                       </div>
                     </TabPanel>
                   </Tabs>
-                  <ToastContainer/>
+                  <ToastContainer />
                   <br />
                 </div>
               </div>

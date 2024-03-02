@@ -1321,6 +1321,9 @@ label {
   align-items: center;
   height: 70px;
 }
+.simulation-info .details-section .search-round .controls {
+  margin-right: 50px;
+}
 /* .simulation-info .details-section .search-round .controls::after {
   content: " ";
   position: absolute;
@@ -1335,12 +1338,12 @@ label {
 .simulation-info .details-section .search-round .controls,
 .round {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: left;
   width: max-content;
   border-radius: 10px;
   padding: 10px;
-  gap: 10px;
+  gap: 40px;
 }
 .simulation-info .details-section .search-round .controls button,
 .round button {
@@ -1380,8 +1383,9 @@ label {
 }
 .simulation-info .details-section .search-round .previous,
 .next {
-  gap: 25px;
+  gap: 20px;
   display: flex;
+  margin-left: -30px;
 }
 
 .simulation-info .details-section .orderbook-header {
