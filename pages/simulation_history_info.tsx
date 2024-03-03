@@ -354,6 +354,55 @@ export default function Home() {
       console.log("tabIndex", tabIndex);
     }
   };
+  const handleFirstIteration = () => {
+    setSIteration(1)
+  }
+  const handleLastIteration = () => {
+    setSIteration(executionData.iterations)
+
+  }
+  const handleIncrementIteration = () => {
+    if (Number(siteration) > Number(executionData.iterations)) {
+      toast.error(
+        "Iteration should not be greater than " + executionData.iterations
+      );
+    } else {
+      let x = siteration + 1;
+      setSIteration(x)
+    }
+  }
+  const handleDecrementIteration = () => {
+    if (Number(siteration) < 1) { } else {
+      let x = Number(siteration) - 1;
+      setSIteration(x)
+    }
+  }
+
+  const handleFirstRound = () => {
+    setSRound(1)
+  }
+  const handleLastRound = () => {
+    setSRound(executionData.nb_rounds)
+
+  }
+  const handleIncrementRound = () => {
+    if (Number(sround) > Number(executionData.nb_rounds)) {
+      toast.error(
+        "Rounds should not be greater than " + executionData.nb_rounds
+      );
+    } else {
+      let x = sround + 1;
+      setSRound(x)
+    }
+  }
+  const handleDecrementRound = () => {
+    if (Number(sround) < 1) { } else {
+      let x = Number(sround) - 1;
+      setSRound(x)
+    }
+  }
+
+
   return (
     <div className="container-fluid">
       <div className="simulation-info history">
@@ -744,8 +793,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -763,15 +817,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -787,8 +850,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">
@@ -806,7 +874,7 @@ export default function Home() {
                         <div className="col sell">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>30</span>
+                            <span>{executionData.nb_orders}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -839,7 +907,7 @@ export default function Home() {
                         <div className="col buy">
                           <div className="orderNo">
                             <label htmlFor="order">Total Orders:</label>
-                            <span>25</span>
+                            <span>{executionData.nb_orders}</span>
                           </div>
                           <div className="table-responsive">
                             <div className="table-content">
@@ -874,8 +942,12 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                  <img src="imgs/previous.svg" alt="" />
+                                  {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                                  {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                    handleFirstIteration()} />}
+
+                                  {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                                  {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
@@ -893,18 +965,24 @@ export default function Home() {
                                   <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
-                                  <img src="imgs/next-arrow.svg" alt="" />
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
+                                  {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                                  {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                                  {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                                  {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                  <img src="imgs/previous.svg" alt="" />
+                                  {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                                  {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                    handleFirstRound()} />}
+
+                                  {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                    onClick={() => handleDecrementRound()} />}
+                                  {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
@@ -922,11 +1000,14 @@ export default function Home() {
                                   <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
-                                  <img src="imgs/next-arrow.svg" alt="" />
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
+                                  {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                    onClick={() => handleIncrementRound()} />}
+                                  {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                                  {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                    onClick={() => handleLastRound()} />}
+                                  {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                                 </div>
                               </div>
                               <div className="search-controls">
@@ -949,8 +1030,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -968,15 +1054,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -992,8 +1087,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">
@@ -1079,8 +1179,13 @@ export default function Home() {
                               <div className="controls">
                                 <h3>Iteration</h3>
                                 <div className="previous">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                  <img src="imgs/previous.svg" alt="" />
+                                  {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                                  {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                    handleFirstIteration()} />}
+
+                                  {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                                  {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
@@ -1098,18 +1203,24 @@ export default function Home() {
                                   <span>of {executionData.iterations}</span>
                                 </div>
                                 <div className="next">
-                                  <img src="imgs/next-arrow.svg" alt="" />
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
+                                  {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                                  {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                                  {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                                  {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                                 </div>
                               </div>
                               <div className="round">
                                 <h3>Round</h3>
                                 <div className="previous">
-                                  <img src="imgs/left-doublearrow.svg" alt="" />
-                                  <img src="imgs/previous.svg" alt="" />
+                                  {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                                  {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                    handleFirstRound()} />}
+
+                                  {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                    onClick={() => handleDecrementRound()} />}
+                                  {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                                 </div>
                                 <div className="iteration">
                                   <div className="tooldrop">
@@ -1127,11 +1238,13 @@ export default function Home() {
                                   <span>of {executionData.nb_rounds}</span>
                                 </div>
                                 <div className="next">
-                                  <img src="imgs/next-arrow.svg" alt="" />
-                                  <img
-                                    src="imgs/right-doublearrow.svg"
-                                    alt=""
-                                  />
+                                  {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                    onClick={() => handleIncrementRound()} />}
+                                  {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                                  {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                    onClick={() => handleLastRound()} />}
+                                  {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                                 </div>
                               </div>
                               <div className="search-controls">
@@ -1171,8 +1284,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1195,15 +1313,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1219,8 +1346,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">
@@ -1264,8 +1396,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1288,15 +1425,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1312,8 +1458,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">
@@ -1333,8 +1484,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1357,15 +1513,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1386,8 +1551,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">
@@ -1446,8 +1616,13 @@ export default function Home() {
                           <div className="controls">
                             <h3>Iteration</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstIteration()} />}
+
+                              {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
+                              {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1465,15 +1640,24 @@ export default function Home() {
                               <span>of {executionData.iterations}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
+                              {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
+
                             </div>
                           </div>
                           <div className="round">
                             <h3>Round</h3>
                             <div className="previous">
-                              <img src="imgs/left-doublearrow.svg" alt="" />
-                              <img src="imgs/previous.svg" alt="" />
+                              {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
+                              {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
+                                handleFirstRound()} />}
+
+                              {sround != 1 && <img src="imgs/left-paging.svg" alt=""
+                                onClick={() => handleDecrementRound()} />}
+                              {sround == 1 && <img src="imgs/previous.svg" alt="" />}
                             </div>
                             <div className="iteration">
                               <div className="tooldrop">
@@ -1489,8 +1673,13 @@ export default function Home() {
                               <span>of {executionData.nb_rounds}</span>
                             </div>
                             <div className="next">
-                              <img src="imgs/next-arrow.svg" alt="" />
-                              <img src="imgs/right-doublearrow.svg" alt="" />
+                              {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
+                                onClick={() => handleIncrementRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+
+                              {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
+                                onClick={() => handleLastRound()} />}
+                              {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
                             </div>
                           </div>
                           <div className="search-controls">

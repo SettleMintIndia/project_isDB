@@ -16,7 +16,8 @@ import ReactPaginate from "react-paginate";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import Loader from "@/components/layout/Loader";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 export default function templateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -219,6 +220,40 @@ export default function templateDetails() {
       query: { temp_name: data.temp_name },
     });
   };
+
+  /* const handleDownloadPDF=()=>{
+    const capture = document.querySelector('.pdfclass');
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [297, 210] // A4 page size in mm
+    });
+  
+    // Get the resume template element
+  
+    // Convert the resume template element to a canvas
+    html2canvas(capture, {allowTaint: true, useCORS: true, scale: 2.8 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/jpeg', 0.1);
+  
+      // Set the image size and position to fit the page
+      var imgWidth = 210;
+      var pageHeight = 295;
+      var imgHeight = canvas.height * imgWidth / canvas.width;
+      var heightLeft = imgHeight;
+      var position = 0;
+      
+      // Add the canvas image to the PDF document
+    //  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+     
+      // Save the PDF document
+      doc.save('resume.pdf');
+    });
+
+
+
+  } */
   const handleDownloadExel = () => {
     console.log(viewData);
     let finalData = [];
@@ -566,8 +601,8 @@ export default function templateDetails() {
                 <div className="right-head">
                   <p>Download Template Details :</p>
                   <div className="file-type">
-                    <Button>
-                      <img src="imgs/download-white.svg" alt="" />
+                    <Button >
+                      <img src="imgs/download-white.svg" alt=""  />
                       PDF
                     </Button>
                     <Button onClick={() => handleDownloadExel()}>
@@ -752,6 +787,10 @@ export default function templateDetails() {
         </div>
       </div>
       <ToastContainer />
+
+      <div className="pdfclass" style={{display:"none"}}>
+        <p>Hafjksd'sdsj;akfdfkl</p>
+      </div>
     </div>
   );
 }
