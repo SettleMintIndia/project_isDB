@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { UserContext } from "./context";
 import Link from "next/link";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState("");
@@ -80,16 +81,8 @@ export default function Home() {
   };
   return (
     <>
-      {/*  <div className="login-nav">
-          <Link href="/">
-            <img
-              src="/imgs/isdb-logo-signin.svg"
-              className="isDB-logo"
-              alt=""
-            />
-          </Link>
-          <img className="close" src="/imgs/close.svg" alt="" />
-        </div> */}
+
+     <AppLayout>
       <div className="container-fluid login">
         <div className="row">
           <div className="col-md-6 img">
@@ -167,6 +160,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      </AppLayout>
     </>
   );
 }

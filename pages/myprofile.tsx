@@ -6,6 +6,7 @@ import Link from "next/link";
 import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function Home() {
     }
   };
   return (
+    <AppLayout>
     <div className="container-fluid">
       <div className="template profile">
         <div className="template-header">
@@ -125,5 +127,6 @@ export default function Home() {
       </div>
       <ToastContainer />
     </div>
+    </AppLayout>
   );
 }

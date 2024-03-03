@@ -12,6 +12,7 @@ import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -403,14 +404,18 @@ export default function Home() {
   }
 
 
+  const handleBack=()=>{
+    router.back()
+  }
   return (
+    <AppLayout>
     <div className="container-fluid">
       <div className="simulation-info history">
         <div
           className="template-header"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <div className="back-option">
+          <div className="back-option" onClick={()=>handleBack()}>
             <img src="imgs/left-arrow.svg" alt="" />
             <p className="mb-0">Back</p>
           </div>
@@ -1942,5 +1947,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </AppLayout>
   );
 }

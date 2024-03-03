@@ -381,7 +381,7 @@ export default function Home() {
   
   }
   return (
-    <div className="container-fluid">
+    <AppLayout>    <div className="container-fluid">
       <div className="template create">
         <div className="template-header">
           <div className="back-option"></div>
@@ -789,5 +789,7 @@ export default function Home() {
       </div>
       <ToastContainer />
     </div>
+    </AppLayout>
+
   );
 }

@@ -10,6 +10,7 @@ import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import API_Auth from './api/API_Auth'
 import moment from "moment";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -150,6 +151,7 @@ export default function Home() {
     router.back();
   };
   return (
+    <AppLayout>
     <div className="container-fluid">
       <div className="template simulation-info compare">
         <div className="template-header">
@@ -282,5 +284,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </AppLayout>
   );
 }

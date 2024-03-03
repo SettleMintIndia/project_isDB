@@ -16,6 +16,7 @@ import Loader from "@/components/layout/Loader";
 import ReactPaginate from "react-paginate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AppLayout from "@/components/layout/AppLayout";
 
 // @ts-ignore
 
@@ -390,6 +391,7 @@ export default function Home() {
 
   }
   return (
+    <AppLayout>
     <div className="container-fluid">
       <div className="template run-simulation">
         <div className="template-header mb-1">
@@ -969,5 +971,6 @@ export default function Home() {
       </Modal>
       <ToastContainer />
     </div>
+    </AppLayout>
   );
 }

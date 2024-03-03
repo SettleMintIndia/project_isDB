@@ -18,6 +18,7 @@ import * as XLSX from "xlsx";
 import Loader from "@/components/layout/Loader";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import AppLayout from "@/components/layout/AppLayout";
 export default function templateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -323,6 +324,7 @@ export default function templateDetails() {
 
 
   return (
+    <AppLayout>
     <div className="container-fluid">
       <div className="template details">
         {/* <div className="head"> */}
@@ -799,5 +801,6 @@ export default function templateDetails() {
         <p>Hafjksd'sdsj;akfdfkl</p>
       </div>
     </div>
+    </AppLayout>
   );
 }

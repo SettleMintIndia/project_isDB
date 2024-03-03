@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { UserContext } from "./context";
 import Link from "next/link";
+import MainLayout from "@/components/layout/MainLayout";
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState("");
@@ -79,8 +80,11 @@ export default function Home() {
     setShowPassword(!showPassword);
   };
   return (
-    <>
-      <div className="container-fluid "></div>
-    </>
+    <MainLayout>
+      <div className="container-fluid ">
+
+        <p>Landing Page</p>
+      </div>
+    </MainLayout>
   );
 }

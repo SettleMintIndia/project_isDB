@@ -9,11 +9,9 @@ export default function App({ Component, pageProps }) {
     <>
       <UserProvider>
 
-        <AppLayout>
-          <Component {...pageProps} />
-        </AppLayout>
-        </UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
 
-        </>
-        );
+    </>
+  );
 }

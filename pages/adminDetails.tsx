@@ -12,6 +12,7 @@ import ReactPaginate from "react-paginate";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Loader from "@/components/layout/Loader";
+import AppLayout from "@/components/layout/AppLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -150,7 +151,7 @@ export default function Home() {
 
 
   return (
-
+<AppLayout>
     <div className="container-fluid">
 
 
@@ -425,5 +426,6 @@ export default function Home() {
       </div>
       <ToastContainer />
     </div>
+    </AppLayout>
   );
 }
