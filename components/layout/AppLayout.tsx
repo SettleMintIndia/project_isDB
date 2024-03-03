@@ -57,7 +57,7 @@ const AppLayout = ({ children }: LayoutProps) => {
   return (
     <div className="base">
       {/* Navbar */}
-      {router.route === "/" ? (
+      {router.route === "/login" ? (
         <div className="login-nav">
           <Link href="/">
             <img
@@ -79,15 +79,13 @@ const AppLayout = ({ children }: LayoutProps) => {
           </div>
           {(router.route === "/createtemplate" ||
             router.route === "/createadmin") &&
-            key == "superadmin" ? (
+          key == "superadmin" ? (
             <>
               <div className="nav-links">
                 <ul>
                   <li
                     className={
-                      router.pathname === "/createtemplate"
-                        ? "active"
-                        : ""
+                      router.pathname === "/createtemplate" ? "active" : ""
                     }
                   >
                     <a href="createtemplate">
@@ -97,9 +95,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </li>
                   <li
                     className={
-                      router.pathname === "/createadmin"
-                        ? "active"
-                        : ""
+                      router.pathname === "/createadmin" ? "active" : ""
                     }
                   >
                     <a href="createadmin">
@@ -108,7 +104,6 @@ const AppLayout = ({ children }: LayoutProps) => {
                     </a>
                   </li>
                 </ul>
-
               </div>
 
               {/*  <div className="nav-links">
@@ -155,7 +150,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
           {(router.route === "/createtemplate" ||
             router.route === "/runSimulation") &&
-            key == "admin" ? (
+          key == "admin" ? (
             <>
               <div className="nav-links">
                 <ul>
@@ -171,9 +166,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </li>
                   <li
                     className={
-                      router.pathname === "/createtemplate"
-                        ? "active"
-                        : ""
+                      router.pathname === "/createtemplate" ? "active" : ""
                     }
                   >
                     <a href="createtemplate">
@@ -181,9 +174,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                       Create Template
                     </a>
                   </li>
-
                 </ul>
-
               </div>
 
               {/*  <div className="nav-links">

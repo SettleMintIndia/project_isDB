@@ -4,6 +4,8 @@ body {
   margin: 0;
   background: #f7f7f7 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 @font-face {
@@ -1382,7 +1384,7 @@ label {
   border: none;
 }
 .simulation-info .details-section .search-round .previous,
-.next {
+.search-round .next {
   gap: 20px;
   display: flex;
   margin-left: -30px;
@@ -2316,6 +2318,10 @@ label {
   font-size: 14px;
   margin-left: 4px;
 }
+.back-option {
+  cursor: pointer;
+}
+
 /* Md css Media ccqueries*/
 
 @media screen and (max-width: 1279px) and (min-width: 769px) {
