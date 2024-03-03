@@ -70,6 +70,8 @@ const AppLayout = ({ children }: LayoutProps) => {
         </div>
       ) : (
         // <div className="nav">
+        <>
+        {router.route !="/templatepdf" &&
         <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
           {/* <div className="nav-container"> */}
           <div className="nav-logo">
@@ -341,7 +343,8 @@ const AppLayout = ({ children }: LayoutProps) => {
               </ul>
             )}
           </div>
-        </div>
+        </div>}
+        </>
         // </div>
       )}
 

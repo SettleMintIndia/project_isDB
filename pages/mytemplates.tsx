@@ -279,6 +279,13 @@ export default function templateDetails() {
 
   }
 
+  const handleDownloadPDF=()=>{
+    router.push({
+      pathname: "/templatepdf",
+      query: { temp_name: viewData.temp_name },
+    });
+
+  }
 
   return (
     <div className="container-fluid">
@@ -566,7 +573,7 @@ export default function templateDetails() {
                 <div className="right-head">
                   <p>Download Template Details :</p>
                   <div className="file-type">
-                    <Button>
+                    <Button onClick={()=>handleDownloadPDF()}>
                       <img src="imgs/download-white.svg" alt="" />
                       PDF
                     </Button>

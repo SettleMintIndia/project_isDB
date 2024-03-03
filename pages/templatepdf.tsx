@@ -1,19 +1,21 @@
 "use client";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import API_Auth from './api/API_Auth'
+import moment from "moment";
 
 export default function Home() {
   const router = useRouter();
-  const handleEdit = () => {
-    router.push("/pdf");
-  };
+  const [totalTempName, setTotalTempName] = useState(router.query.temp_name);
+
+
 
   const [viewData, setViewData] = useState({
     temp_name: "",
@@ -37,28 +39,62 @@ export default function Home() {
     mean_price_sell: "",
     is_public: 1,
   });
+
+  useEffect(() => {
+    console.log(totalTempName);
+
+    getTemplateDetails(totalTempName);
+
+  }, [totalTempName]);
+  const getTemplateDetails = async (totalTempName: any) => {
+    // const result=API_Auth.getTemplateDetails(totalTempName);
+
+    let body = {
+      temp_name: totalTempName,
+      admin_id: "",
+      scenario: "",
+      datefrom: "",
+      dateto: "",
+      resultPerPage: 1,
+      pgNo: 1,
+      showPrivate: true,
+    };
+
+    console.log(body);
+
+    const result = await API_Auth.getAllTemplates(body);
+
+    console.log("result", result);
+    if (result.status == 200) {
+      console.log(result.templates[0]);
+      var data = result.templates[0];
+      setViewData(result.templates[0])
+    }
+  }
   return (
-    <div className="container-fluid pdf">
+    <div className="container-fluid pdf mt-2">
       <div className="header">
         <div className="left-head">
           <img src="/imgs/isdb-logo-signin.svg" className="isDB-logo" alt="" />
         </div>
         <div className="right-head">
-          <div className="pdf-title">TEMPLATE DETAILS</div>
+          <div className="pdf-title">{viewData.temp_name}</div>
           <div className="pdf info">
             <div className="pdf-time">
               <label htmlFor="">Template Created On </label>
-              <span>Mon, 5 Feb 2024 15:31:40</span>
+              <span> {moment(viewData.created_timestamp).format(
+                "MM/DD/YYYY h:mm:ss A"
+              )}</span>
             </div>
             <div className="type">
               <label htmlFor="">Scenario Type </label>
-              <span>Crash</span>
+              <span>{viewData.scenario_name}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="pdf-section">
-        <div className="pdf-name">Template 1</div>
+        <div className="pdf-name">{viewData.temp_name}</div>
         <div className="pdf-data">
           <div className="modal-details">
             <div className="details-section">

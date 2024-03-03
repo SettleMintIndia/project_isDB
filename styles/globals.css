@@ -866,7 +866,7 @@ label {
 .paging-list {
   display: flex;
   /* align-items: baseline; */
-  gap: 5px;
+ /*  gap: 5px; */
 }
 .paging-count {
   display: flex;
@@ -878,7 +878,7 @@ label {
 .rightaction,
 .leftaction-single,
 .rightaction-single {
-  width: 30px;
+  width: 35px;
   height: 40px;
   text-align: center;
   display: flex;

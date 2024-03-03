@@ -22,10 +22,10 @@ export default function Home() {
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
   //const [count, setCount] = useState(10);
-  const [perPage, setPerPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageNo, setPageNo] = useState(1);
+  const [pageNo, setPageNo] = useState();
   const [useremail, setUserEmail] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [offset, setOffSet] = useState(0);

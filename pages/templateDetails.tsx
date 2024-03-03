@@ -254,6 +254,13 @@ export default function templateDetails() {
 
 
   } */
+  const handleDownloadPDF=()=>{
+    router.push({
+      pathname: "/templatepdf",
+      query: { temp_name: viewData.temp_name },
+    });
+
+  }
   const handleDownloadExel = () => {
     console.log(viewData);
     let finalData = [];
@@ -601,7 +608,7 @@ export default function templateDetails() {
                 <div className="right-head">
                   <p>Download Template Details :</p>
                   <div className="file-type">
-                    <Button >
+                    <Button onClick={()=>handleDownloadPDF()}>
                       <img src="imgs/download-white.svg" alt=""  />
                       PDF
                     </Button>
@@ -706,7 +713,7 @@ export default function templateDetails() {
             </div>
           </Modal.Body>
         </Modal>
-        <div className="pagging-area mt-2">
+        <div className="pagging-area mt-10">
           <div className="toolbar">
             <label htmlFor="">Results per page :</label>
             <div className="tooldrop">
