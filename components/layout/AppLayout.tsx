@@ -28,7 +28,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
     const handleScroll = () => {
       console.log(window.scrollY);
-      if (window.scrollY >= 10) {
+      if (window.scrollY >= 100) {
         setIsNavFixed(true);
       } else {
         setIsNavFixed(false);
@@ -71,279 +71,221 @@ const AppLayout = ({ children }: LayoutProps) => {
       ) : (
         // <div className="nav">
         <>
-        {router.route !="/templatepdf" &&
-        <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
-          {/* <div className="nav-container"> */}
-          <div className="nav-logo">
-            <Link href="/">
-              <img src="/imgs/isdb-logo-layout.png" alt="" />
-            </Link>
-          </div>
-          {(router.route === "/createtemplate" ||
-            router.route === "/createadmin") &&
-          key == "superadmin" ? (
-            <>
-              <div className="nav-links">
-                <ul>
-                  <li
-                    className={
-                      router.pathname === "/createtemplate" ? "active" : ""
-                    }
+          {router.route != "/templatepdf" && (
+            <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
+              {/* <div className="nav-container"> */}
+              <div className="nav-logo">
+                <Link href="/">
+                  <img src="/imgs/isdb-logo-layout.png" alt="" />
+                </Link>
+              </div>
+              {(router.route === "/createtemplate" ||
+                router.route === "/createadmin") &&
+              key == "superadmin" ? (
+                <>
+                  <div className="nav-links">
+                    <ul>
+                      <li
+                        className={
+                          router.pathname === "/createtemplate" ? "active" : ""
+                        }
+                      >
+                        <a href="createtemplate">
+                          <img src="imgs/template.svg" alt="" />
+                          Create Template
+                        </a>
+                      </li>
+                      <li
+                        className={
+                          router.pathname === "/createadmin" ? "active" : ""
+                        }
+                      >
+                        <a href="createadmin">
+                          <img src="imgs/admin.svg" alt="" />
+                          Create Admin
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    className="menu create"
+                    onMouseEnter={() => setTooltipVisible(true)}
+                    onMouseLeave={() => setTooltipVisible(false)}
                   >
-                    <a href="createtemplate">
-                      <img src="imgs/template.svg" alt="" />
-                      Create Template
-                    </a>
+                    <img src="/imgs/create.svg" alt="" />
+                  </div>
+                  <ul className="menu-list create">
+                    <li
+                      className={
+                        router.pathname === "/createtemplate" ? "active" : ""
+                      }
+                    >
+                      <a href="createtemplate">
+                        <img src="imgs/template.svg" alt="" />
+                        Create Template
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        router.pathname === "/createadmin" ? "active" : ""
+                      }
+                    >
+                      <a href="createadmin">
+                        <img src="imgs/admin.svg" alt="" />
+                        Create Admin
+                      </a>
+                    </li>
+                  </ul>
+                </>
+              ) : (
+                <div></div>
+              )}
+
+              {(router.route === "/createtemplate" ||
+                router.route === "/runSimulation") &&
+              key == "admin" ? (
+                <>
+                  <div className="nav-links">
+                    <ul>
+                      <li
+                        className={
+                          router.pathname === "/runSimulation" ? "active" : ""
+                        }
+                      >
+                        <a href="runSimulation">
+                          <img src="imgs/run.svg" alt="" />
+                          Run Simulation
+                        </a>
+                      </li>
+                      <li
+                        className={
+                          router.pathname === "/createtemplate" ? "active" : ""
+                        }
+                      >
+                        <a href="createtemplate">
+                          <img src="imgs/template.svg" alt="" />
+                          Create Template
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <div></div>
+              )}
+              <div className="nav-right">
+                <div
+                  className="menu"
+                  onMouseEnter={() => setTooltipVisible(true)}
+                  onMouseLeave={() => setTooltipVisible(false)}
+                >
+                  <img src="/imgs/menu.svg" alt="" />
+                </div>
+                <ul className="menu-list">
+                  <li>
+                    <Link href="#">Home</Link>
                   </li>
-                  <li
-                    className={
-                      router.pathname === "/createadmin" ? "active" : ""
-                    }
-                  >
-                    <a href="createadmin">
-                      <img src="imgs/admin.svg" alt="" />
-                      Create Admin
-                    </a>
+                  <li>
+                    <Link href="#">About Product</Link>
+                  </li>
+                  <li>
+                    <Link href="#">How It Works </Link>
+                  </li>
+                  <li>
+                    <Link href="#">FAQs</Link>
+                  </li>
+                  <li>
+                    <Link href="#">Contact Us</Link>
                   </li>
                 </ul>
-              </div>
-
-              {/*  <div className="nav-links">
-              <ul>
-                <li
-                  className={
-                    router.pathname === "/createtemplate" ||
-                    router.pathname === "/createadmin" ||
-                    router.pathname === "/runSimulation"
-                      ? "active"
-                      : ""
-                  }
+                <div
+                  className="notification"
+                  onMouseEnter={() => setTooltipVisible(true)}
+                  onMouseLeave={() => setTooltipVisible(false)}
                 >
-                  <a href="createtemplate">
-                    <img src="imgs/template.svg" alt="" />
-                    Create Template
-                  </a>
-                </li>
-                {router.route === "/runSimulation" ? (
-                  <li
-                    className={
-                      router.pathname === "/runSimulation" ? "active" : ""
-                    }
-                  >
-                    <a href="runSimulation">
-                      <img src="imgs/run.svg" alt="" />
-                      Run Simulation
-                    </a>
-                  </li>
-                ) : (
-                  <li className="active">
-                    <a href="createadmin">
-                      <img src="imgs/admin.svg" alt="" />
-                      Create Admin
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div> */}
-            </>
-          ) : (
-            <div></div>
-          )}
-
-          {(router.route === "/createtemplate" ||
-            router.route === "/runSimulation") &&
-          key == "admin" ? (
-            <>
-              <div className="nav-links">
-                <ul>
-                  <li
-                    className={
-                      router.pathname === "/runSimulation" ? "active" : ""
-                    }
-                  >
-                    <a href="runSimulation">
-                      <img src="imgs/run.svg" alt="" />
-                      Run Simulation
-                    </a>
-                  </li>
-                  <li
-                    className={
-                      router.pathname === "/createtemplate" ? "active" : ""
-                    }
-                  >
-                    <a href="createtemplate">
-                      <img src="imgs/template.svg" alt="" />
-                      Create Template
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/*  <div className="nav-links">
-              <ul>
-                <li
-                  className={
-                    router.pathname === "/createtemplate" ||
-                    router.pathname === "/createadmin" ||
-                    router.pathname === "/runSimulation"
-                      ? "active"
-                      : ""
-                  }
-                >
-                  <a href="createtemplate">
-                    <img src="imgs/template.svg" alt="" />
-                    Create Template
-                  </a>
-                </li>
-                {router.route === "/runSimulation" ? (
-                  <li
-                    className={
-                      router.pathname === "/runSimulation" ? "active" : ""
-                    }
-                  >
-                    <a href="runSimulation">
-                      <img src="imgs/run.svg" alt="" />
-                      Run Simulation
-                    </a>
-                  </li>
-                ) : (
-                  <li className="active">
-                    <a href="createadmin">
-                      <img src="imgs/admin.svg" alt="" />
-                      Create Admin
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div> */}
-            </>
-          ) : (
-            <div></div>
-          )}
-          <div className="nav-right">
-            <div
-              className="menu"
-              onMouseEnter={() => setTooltipVisible(true)}
-              onMouseLeave={() => setTooltipVisible(false)}
-            >
-              <img src="/imgs/menu.svg" alt="" />
-            </div>
-            <ul className="menu-list">
-              <li>
-                <Link href="#">Home</Link>
-              </li>
-              <li>
-                <Link href="#">About Product</Link>
-              </li>
-              <li>
-                <Link href="#">How It Works </Link>
-              </li>
-              <li>
-                <Link href="#">FAQs</Link>
-              </li>
-              <li>
-                <Link href="#">Contact Us</Link>
-              </li>
-            </ul>
-            <div
-              className="notification"
-              onMouseEnter={() => setTooltipVisible(true)}
-              onMouseLeave={() => setTooltipVisible(false)}
-            >
-              <img src="/imgs/notification.svg" alt="" />
-            </div>
-
-            <div className="notification-list">
-              <div className="notification-heading">
-                <h4>New Message</h4>
-              </div>
-              {/*   <div className="notification-details">
-                <div className="notification-info">
-                  <h5>Name1</h5>
-                  <p>13min ago</p>
+                  <img src="/imgs/notification.svg" alt="" />
                 </div>
-                <div className="notification-para">
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry
-                  </p>
-                </div>
-              </div> */}
 
-              {totalNotifications.map((item: any) => (
-                <div className="notification-details">
-                  <div className="notification-info">
-                    <h5>{item.source}</h5>
-                    <p>
-                      {" "}
-                      {moment(item.created_timestamp).format("MM/DD/YYYY")}
-                    </p>
+                <div className="notification-list">
+                  <div className="notification-heading">
+                    <h4>New Message</h4>
                   </div>
-                  <div className="notification-para">
-                    <p>{item.content}</p>
+
+                  {totalNotifications.map((item: any) => (
+                    <div className="notification-details">
+                      <div className="notification-info">
+                        <h5>{item.source}</h5>
+                        <p>
+                          {" "}
+                          {moment(item.created_timestamp).format("MM/DD/YYYY")}
+                        </p>
+                      </div>
+                      <div className="notification-para">
+                        <p>{item.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className="nav-user"
+                  onMouseEnter={() => setTooltipVisible(true)}
+                  onMouseLeave={() => setTooltipVisible(false)}
+                >
+                  <div className="user">
+                    <img src="/imgs/user.svg" alt="" />
+                    <div className="username">
+                      <h4>Name1</h4>
+                      <p>{key == "superadmin" ? "Super Admin" : "Admin"} </p>
+                    </div>
+                  </div>
+                  <div className="down-arrow">
+                    <img src="/imgs/down-arrow.svg" alt="" />
                   </div>
                 </div>
-              ))}
-            </div>
-            <div
-              className="nav-user"
-              onMouseEnter={() => setTooltipVisible(true)}
-              onMouseLeave={() => setTooltipVisible(false)}
-            >
-              <div className="user">
-                <img src="/imgs/user.svg" alt="" />
-                <div className="username">
-                  <h4>Name1</h4>
-                  <p>{key == "superadmin" ? "Super Admin" : "Admin"} </p>
-                </div>
-              </div>
-              <div className="down-arrow">
-                <img src="/imgs/down-arrow.svg" alt="" />
-              </div>
-            </div>
-            {key == "superadmin" && (
-              <ul className="menu-dropdown">
-                <li>
-                  <Link href="myprofile">My Profile</Link>
-                </li>
-                <li>
-                  <Link href="templateDetails">Template Details</Link>
-                </li>
-                <li>
-                  <Link href="scenarioType">Create Scenario Type</Link>
-                </li>
-                <li>
-                  <Link href="adminDetails">Admins Details</Link>
-                </li>
-                <li className="logout">
-                  <a onClick={() => handleLogout()}>Logout</a>
-                </li>
-              </ul>
-            )}
+                {key == "superadmin" && (
+                  <ul className="menu-dropdown">
+                    <li>
+                      <Link href="myprofile">My Profile</Link>
+                    </li>
+                    <li>
+                      <Link href="templateDetails">Template Details</Link>
+                    </li>
+                    <li>
+                      <Link href="scenarioType">Create Scenario Type</Link>
+                    </li>
+                    <li>
+                      <Link href="adminDetails">Admins Details</Link>
+                    </li>
+                    <li className="logout">
+                      <a onClick={() => handleLogout()}>Logout</a>
+                    </li>
+                  </ul>
+                )}
 
-            {key == "admin" && (
-              <ul className="menu-dropdown">
-                <li>
-                  <Link href="myprofile">My Profile</Link>
-                </li>
-                <li>
-                  <Link href="mytemplates">My Templates</Link>
-                </li>
-                <li>
-                  <Link href="simulationhistory">Simulation History</Link>
-                </li>
-                <li>
-                  <Link href="request_scenarioType">
-                    Scenario Type Creation Request
-                  </Link>
-                </li>
-                <li className="logout">
-                  <a onClick={() => handleLogout()}>Logout</a>
-                </li>
-              </ul>
-            )}
-          </div>
-        </div>}
+                {key == "admin" && (
+                  <ul className="menu-dropdown">
+                    <li>
+                      <Link href="myprofile">My Profile</Link>
+                    </li>
+                    <li>
+                      <Link href="mytemplates">My Templates</Link>
+                    </li>
+                    <li>
+                      <Link href="simulationhistory">Simulation History</Link>
+                    </li>
+                    <li>
+                      <Link href="request_scenarioType">
+                        Scenario Type Creation Request
+                      </Link>
+                    </li>
+                    <li className="logout">
+                      <a onClick={() => handleLogout()}>Logout</a>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
         </>
         // </div>
       )}

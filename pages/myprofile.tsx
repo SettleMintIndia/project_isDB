@@ -26,8 +26,8 @@ export default function Home() {
     getAdminInfo(email);
   }, []);
   const getAdminInfo = async (email: any) => {
-    let dummyemail = 'demo@isdb.com'
-    const result = await API_Auth.getAdminInformation(dummyemail)
+    let dummyemail = "demo@isdb.com";
+    const result = await API_Auth.getAdminInformation(dummyemail);
     console.log(result);
     setUserData(result);
   };
@@ -36,9 +36,9 @@ export default function Home() {
     const selectedFile = e.target.files[0];
     const fieldname = e.target.name;
     console.log(selectedFile, fieldname);
-    const email = localStorage.getItem('useremail')
-    console.log("email", email)
-    let dummyemail = 'demo@isdb.com'
+    const email = localStorage.getItem("useremail");
+    console.log("email", email);
+    let dummyemail = "demo@isdb.com";
 
     let body = {
       email: dummyemail,
@@ -54,79 +54,81 @@ export default function Home() {
   };
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template profile">
-        <div className="template-header">
-          <div className="back-option"></div>
-          <div className="main-header">
-            <h1>My Profile</h1>
-          </div>
-          <div></div>
-        </div>
-        <div className="user-profile">
-          <div className="profile">
-            <div className="user-icon">
-              {userData.display_pic == null && (
-                <img src="imgs/user.svg" alt="" />
-              )}
-              {userData.display_pic != null && (
-                <img
-                  src="https://www.shutterstock.com/image-illustration/generic-image-default-avatar-profile-260nw-1902153229.jpg"
-                  alt=""
-                  className="userImage"
-                />
-              )}
+      <div className="container-fluid">
+        <div className="template profile">
+          <div className="template-header">
+            <div className="back-option"></div>
+            <div className="main-header">
+              <h1>My Profile</h1>
             </div>
-            <div className="file">
-              <div className="imageUpload_area">
-                <label className="dropzone" htmlFor="dropzone-file">
-                  <div>
-                    <p>
-                      <span> Choose File</span> No file chosen
-                    </p>
-                  </div>
-                  <input
-                    id="dropzone-file"
-                    className="hidden"
-                    type="file"
-                    name="file"
-                    placeholder="Item Name"
-                    onChange={(e) => handleFileUpload(e)}
+            <div></div>
+          </div>
+          <div className="user-profile">
+            <div className="profile">
+              <div className="user-icon">
+                {userData.display_pic == null && (
+                  <img src="imgs/user.svg" alt="" />
+                )}
+                {userData.display_pic != null && (
+                  <img
+                    src="https://www.shutterstock.com/image-illustration/generic-image-default-avatar-profile-260nw-1902153229.jpg"
+                    alt=""
+                    className="userImage"
                   />
-                </label>
-                <div className="file-format">
-                  <p>JPG, GIF or PNG. Max size of 800k</p>
+                )}
+              </div>
+              <div className="file">
+                <div className="imageUpload_area">
+                  <label className="dropzone" htmlFor="dropzone-file">
+                    <div>
+                      <p>
+                        <span> Choose File</span> No file chosen
+                      </p>
+                    </div>
+                    <input
+                      id="dropzone-file"
+                      className="hidden"
+                      type="file"
+                      name="file"
+                      placeholder="Item Name"
+                      onChange={(e) => handleFileUpload(e)}
+                    />
+                  </label>
+                  <div className="file-format">
+                    <p>JPG, GIF or PNG. Max size of 800k</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="user-info">
+              <div className="name">
+                {" "}
+                <label htmlFor="username">Name</label>
+                <span id="username">{userData?.display_name}</span>
+              </div>
+              <div className="email">
+                {" "}
+                <label htmlFor="fullname"> Email Address</label>
+                <span id="fullname">{userData?.email}</span>
+              </div>
+
+              <div className="password">
+                <label htmlFor="password">Password</label>
+                <div className="passcode">
+                  <span id="password">*****</span>
+                  <button onClick={() => handleEdit()}>
+                    {" "}
+                    <Link href="changePassword">
+                      <img src="imgs/pencil.svg" alt="" />
+                    </Link>{" "}
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-          <div className="user-info">
-            <div className="name">
-              {" "}
-              <label htmlFor="username">Name</label>
-              <span id="username">{userData?.display_name}</span>
-            </div>
-            <div className="email">
-              {" "}
-              <label htmlFor="fullname"> Email Address</label>
-              <span id="fullname">{userData?.email}</span>
-            </div>
-
-            <div className="password">
-              <label htmlFor="password">Password</label>
-              <span id="password">*****</span>
-              <button onClick={() => handleEdit()}>
-                {" "}
-                <Link href="changePassword">
-                  <img src="imgs/pencil.svg" alt="" />
-                </Link>{" "}
-              </button>
-            </div>
-          </div>
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
     </AppLayout>
   );
 }

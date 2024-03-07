@@ -57,40 +57,40 @@ export default function Home() {
   };
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template scenariotype">
-        <h1>Create Scenario Type</h1>
-        <div className="table-responsive">
-          <div className="row scenario">
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="scenario"> Scenario Type</label>
-                <input
-                  type="text"
-                  id="scenario"
-                  name="scenariotype"
-                  required
-                  value={scenariotype}
-                  onChange={handleInput}
-                />
+      <div className="container-fluid">
+        <div className="template scenariotype">
+          <h1>Create Scenario Type</h1>
+          <div className="table-responsive">
+            <div className="row scenario">
+              <div className="col-md-6 mb-3">
+                <div className="form-content">
+                  <label htmlFor="scenario"> Scenario Type</label>
+                  <input
+                    type="text"
+                    id="scenario"
+                    name="scenariotype"
+                    required
+                    value={scenariotype}
+                    onChange={handleInput}
+                  />
+                </div>
+                {scenariotypeErr != "" && (
+                  <p className="alert-message">{scenariotypeErr}</p>
+                )}
               </div>
-              {scenariotypeErr != "" && (
-                <p className="alert-message">{scenariotypeErr}</p>
-              )}
-            </div>
 
-            <button
-              className="create-template"
-              onClick={() => handleCreateScenario()}
-            >
-              {" "}
-              Create
-            </button>
+              <button
+                className="create-template"
+                onClick={() => handleCreateScenario()}
+              >
+                {" "}
+                Create
+              </button>
+            </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
     </AppLayout>
   );
 }

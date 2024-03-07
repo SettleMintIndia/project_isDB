@@ -21,11 +21,11 @@ export default function Home() {
   const [confirmPwdErr, setConfirmPwdErr] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [marginTop, setMarginTop] = useState("-30px");
-  const [totalErrors, setTotalErrors] = useState([])
-  const[loading,setLoading]=useState(false)
+  const [marginTop, setMarginTop] = useState("10px");
+  const [totalErrors, setTotalErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleInput1 = (event:any) => {
+  const handleInput1 = (event: any) => {
     const { name, value } = event.target;
     if (name === "password") {
       setPassword(value);
@@ -34,7 +34,7 @@ export default function Home() {
     }
   };
 
-  const togglePasswordVisibility = (field:any) => {
+  const togglePasswordVisibility = (field: any) => {
     if (field === "password") {
       setShowPassword(!showPassword);
     } else if (field === "confirmPwd") {
@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   const validatePassword = (password: any) => {
-    var p = password
+    var p = password;
     var errors: any = [];
     if (p.length < 8) {
       errors.push("Your password must be at least 8 characters");
@@ -74,21 +74,20 @@ export default function Home() {
     console.log(errors);
     if (errors.length > 0) {
       //alert(errors.join("\n"));
-      setTotalErrors(errors)
+      setTotalErrors(errors);
       return false;
     } else {
-      setTotalErrors([])
+      setTotalErrors([]);
     }
     return true;
-  }
+  };
 
-  const handleReset=()=>{
+  const handleReset = () => {
     setName("");
     setusername("");
     setPassword("");
     setConfirmPwd("");
-
-  }
+  };
 
   const handleCreateAdmin = async () => {
     let error = 0;
@@ -117,21 +116,19 @@ export default function Home() {
       error = error + 1;
     } else {
       setPasswordErr("");
-      const data = validatePassword(password)
-      console.log(data)
+      const data = validatePassword(password);
+      console.log(data);
       if (data == true) {
-        setPasswordErr("")
+        setPasswordErr("");
       } else {
         error = error + 1;
-
       }
-
     }
     if (confirmPwd === "") {
       setConfirmPwdErr("Please Enter Confirm Password");
       error = error + 1;
     } else if (password != confirmPwd) {
-      console.log(password,confirmPwd)
+      console.log(password, confirmPwd);
       error = error + 1;
 
       setConfirmPwdErr("Password Mismatch");
@@ -168,135 +165,145 @@ export default function Home() {
 
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template createadmin">
-        <div className="template-header">
-          <div className="back-option"></div>
-          <div className="main-header">
-            <h1>Create Admin</h1>
+      <div className="container-fluid">
+        <div className="template createadmin">
+          <div className="template-header">
+            <div className="back-option"></div>
+            <div className="main-header">
+              <h1>Create Admin</h1>
+            </div>
+            <div></div>
           </div>
-          <div></div>
-        </div>
-        {loading==true && <Loader/>}
-        <div className="table-responsive">
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="user-name"> Name</label>
-                <input
-                  type="text"
-                  id="user-name"
-                  name="username"
-                  value={username}
-                  required
-                  onChange={handleInput}
-                />
-                {usernameErr != "" && (
-                  <p className="alert-message">{usernameErr}</p>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="name">Email Address</label>
-                <input
-                  type="email"
-                  id="name"
-                  name="name"
-                  required
-                  value={name}
-                  onChange={handleInput}
-                />
-                {nameErr != "" && <p className="alert-message">{nameErr}</p>}
-              </div>
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <div className="form-content password1">
-                <label htmlFor="password"> Password</label>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handleInput1}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility("password")}
-                  style={{
-                    position: "relative",
-                    bottom: "22px",
-                    left: "390px",
-                    transform: "translateY(-50%)",
-                    border: "none",
-                    textDecoration: "underline",
-                    fontSize: "12px",
-                    width: "fit-content",
-                  }}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-                {passwordErr != "" && (
-                  <p className="alert-message">{passwordErr}</p>
-                )}
-                <div className="passwordvalidation">
-                  <ul>
-                    {totalErrors.map((item: any) => (
-                      <li key={item} className="alert-message">* {item}</li>
-                    ))}
-                  </ul>
+          {loading == true && <Loader />}
+          <div className="table-responsive">
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <div className="form-content">
+                  <label htmlFor="user-name"> Name</label>
+                  <input
+                    type="text"
+                    id="user-name"
+                    name="username"
+                    value={username}
+                    required
+                    onChange={handleInput}
+                  />
+                  {usernameErr != "" && (
+                    <p className="alert-message">{usernameErr}</p>
+                  )}
                 </div>
               </div>
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content confirm">
-                <label htmlFor="password1 ">Confirm Password</label>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="password1"
-                  name="confirmPwd"
-                  value={confirmPwd}
-                  required
-                  onChange={handleInput1}
-                />
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility("confirmPwd")}
-                  style={{
-                    position: "relative",
-                    bottom: "22px",
-                    left: "390px",
-                    transform: "translateY(-50%)",
-                    border: "none",
-                    textDecoration: "underline",
-                    fontSize: "12px",
-                    width: "fit-content",
-                  }}
-                >
-                  {showConfirmPassword ? "Hide" : "Show"}
-                </button>
-                {confirmPwdErr != "" && (
-                  <p className="alert-message">{confirmPwdErr}</p>
-                )}
+              <div className="col-md-6 mb-3">
+                <div className="form-content">
+                  <label htmlFor="name">Email Address</label>
+                  <input
+                    type="email"
+                    id="name"
+                    name="name"
+                    required
+                    value={name}
+                    onChange={handleInput}
+                  />
+                  {nameErr != "" && <p className="alert-message">{nameErr}</p>}
+                </div>
               </div>
-            </div>
 
-            <div className="buttoncenter admin" style={{ marginTop }}>
-              <button
-                className="create-template"
-                onClick={() => handleCreateAdmin()}
-              >
-                Create Admin
-              </button>
-              <button className="reset" onClick={()=>handleReset()}>Reset</button>
+              <div className="col-md-6 mb-3">
+                <div className="form-content password1">
+                  <label htmlFor="password"> Password</label>
+                  <div
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      value={password}
+                      onChange={handleInput1}
+                      required
+                      style={{ paddingRight: "30px", width: "100%" }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility("password")}
+                      style={{
+                        position: "absolute",
+                        right: "5px",
+                        border: "none",
+                        textDecoration: "underline",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  {passwordErr != "" && (
+                    <p className="alert-message">{passwordErr}</p>
+                  )}
+                  <div className="passwordvalidation">
+                    <ul>
+                      {totalErrors.map((item: any) => (
+                        <li key={item} className="alert-message">
+                          * {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 mb-3">
+                <div className="form-content confirm">
+                  <label htmlFor="password1 ">Confirm Password</label>
+                  <div
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      id="password1"
+                      name="confirmPwd"
+                      value={confirmPwd}
+                      required
+                      onChange={handleInput1}
+                      style={{ paddingRight: "30px", width: "100%" }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility("confirmPwd")}
+                      style={{
+                        position: "absolute",
+                        right: "5px",
+                        border: "none",
+                        textDecoration: "underline",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {showConfirmPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  {confirmPwdErr != "" && (
+                    <p className="alert-message">{confirmPwdErr}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="buttoncenter admin" style={{ marginTop }}>
+                <button
+                  className="create-template"
+                  onClick={() => handleCreateAdmin()}
+                >
+                  Create Admin
+                </button>
+                <button className="reset" onClick={() => handleReset()}>
+                  Reset
+                </button>
+              </div>
             </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
     </AppLayout>
   );
 }

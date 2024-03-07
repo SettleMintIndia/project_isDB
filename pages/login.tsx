@@ -81,85 +81,91 @@ export default function Home() {
   };
   return (
     <>
+      <AppLayout>
+        <div className="container-fluid login">
+          <div className="row">
+            <div className="col-md-6 img">
+              <img src="imgs/login-bg.png" alt="" />
+            </div>
+            <div className="col-md-6 form">
+              <div className="form-container">
+                <div className="login-form">
+                  <h1>Sign In</h1>
+                  <div>
+                    <label htmlFor="username">Email Address</label>
+                    <input
+                      type="text"
+                      id="userEmail"
+                      name="userEmail"
+                      required
+                      onChange={handleInput}
+                      value={userEmail}
+                    />
+                    {userErr != "" && (
+                      <p className="alert-message">{userErr}</p>
+                    )}
 
-     <AppLayout>
-      <div className="container-fluid login">
-        <div className="row">
-          <div className="col-md-6 img">
-            <img src="imgs/login-bg.png" alt="" />
-          </div>
-          <div className="col-md-6 form">
-            <div className="form-container">
-              <div className="login-form">
-                <h1>Sign In</h1>
-                <div>
-                  <label htmlFor="username">Email Address</label>
-                  <input
-                    type="text"
-                    id="userEmail"
-                    name="userEmail"
-                    required
-                    onChange={handleInput}
-                    value={userEmail}
-                  />
-                  {userErr != "" && <p className="alert-message">{userErr}</p>}
+                    <label htmlFor="password">Password</label>
+                    <div
+                      style={{ position: "relative", display: "inline-block" }}
+                    >
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        required
+                        value={password}
+                        onChange={handleInput}
+                        style={{ paddingRight: "30px", width: "100%" }}
+                      />
+                      {passwordErr != "" && (
+                        <p className="alert-message">{passwordErr}</p>
+                      )}
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        style={{
+                          position: "absolute",
+                          top: "5px",
+                          right: "5px",
+                          border: "none",
+                          textDecoration: "underline",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
 
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    required
-                    value={password}
-                    onChange={handleInput}
-                  />
-                  {passwordErr != "" && (
-                    <p className="alert-message">{passwordErr}</p>
-                  )}
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    style={{
-                      position: "relative",
-                      bottom: "30px",
-                      left: "230px",
-                      transform: "translateY(-50%)",
-                      border: "none",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-
-                  {/* <span
+                    {/* <span
               className="show-password-icon"
               onClick={togglePasswordVisibility()}
             >
               &#128065;
             </span> */}
-                  <label id="checkbox">
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      name="keep_signed_in"
-                    />{" "}
-                    Keep me signed in.
-                  </label>
+                    <label id="checkbox">
+                      <input
+                        className="checkbox"
+                        type="checkbox"
+                        name="keep_signed_in"
+                      />{" "}
+                      Keep me signed in.
+                    </label>
 
-                  {/*                         <input className="signin-button" type="submit" value="SIGN IN" />
-                   */}
-                  <button
-                    className="signin-button"
-                    onClick={() => handleLogin()}
-                  >
-                    Sign In
-                  </button>
+                    {/*                         <input className="signin-button" type="submit" value="SIGN IN" />
+                     */}
+                    <button
+                      className="signin-button"
+                      onClick={() => handleLogin()}
+                    >
+                      Sign In
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </AppLayout>
     </>
   );

@@ -17,21 +17,25 @@ export default function Home() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordErr, setConfirmPasswordErr] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [marginTop, setMarginTop] = useState("-30px");
- 
-  const [totalErrors, setTotalErrors] = useState([])
+  const [marginTop, setMarginTop] = useState("10px");
 
-  const handleNewPasswordInput = (event:any) => {
+  const [totalErrors, setTotalErrors] = useState([]);
+
+  const handleNewPasswordInput = (event: any) => {
     setNewPassword(event.target.value);
   };
 
-  const handleConfirmPasswordInput = (event:any) => {
+  const handleConfirmPasswordInput = (event: any) => {
     setConfirmPassword(event.target.value);
   };
 
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword(!showNewPassword);
+  };
+  const toggleCurrentPasswordVisibility = () => {
+    setShowCurrentPassword(!showCurrentPassword);
   };
 
   const toggleConfirmPasswordVisibility = () => {
@@ -51,10 +55,9 @@ export default function Home() {
     if (name === "confirmPassword") {
       setConfirmPassword(value);
     }
-
-  }
+  };
   const validatePassword = (password: any) => {
-    var p = password
+    var p = password;
     var errors: any = [];
     if (p.length < 8) {
       errors.push("Your password must be at least 8 characters");
@@ -68,13 +71,13 @@ export default function Home() {
     console.log(errors);
     if (errors.length > 0) {
       //alert(errors.join("\n"));
-      setTotalErrors(errors)
+      setTotalErrors(errors);
       return false;
     } else {
-      setTotalErrors([])
+      setTotalErrors([]);
     }
     return true;
-  }
+  };
 
   const handleUpdatePassword = async () => {
     let error = 0;
@@ -89,13 +92,12 @@ export default function Home() {
       error = error + 1;
     } else {
       setNewPasswordErr("");
-      const data = validatePassword(newPassword)
-      console.log(data)
+      const data = validatePassword(newPassword);
+      console.log(data);
       if (data == true) {
-        setNewPasswordErr("")
+        setNewPasswordErr("");
       } else {
         error = error + 1;
-
       }
     }
     if (confirmPassword === "") {
@@ -112,37 +114,37 @@ export default function Home() {
 
     console.log(error);
     if (error == 0) {
-      const email = localStorage.getItem('useremail')
-      console.log("email", email)
-      let dummyemail = 'demo@isdb.com'
+      const email = localStorage.getItem("useremail");
+      console.log("email", email);
+      let dummyemail = "demo@isdb.com";
 
       let body = {
-        "email": dummyemail,
-        "old_password": currentPassword,
-        "new_password": newPassword
-      }
+        email: dummyemail,
+        old_password: currentPassword,
+        new_password: newPassword,
+      };
       const result = await API_Auth.updatePassword(body);
-      console.log(result)
+      console.log(result);
       if (result.status == 400) {
-        toast.error(result.error)
+        toast.error(result.error);
       } else {
-        toast.success(result.msg)
+        toast.success(result.msg);
         setTimeout(() => {
           router.push("/myprofile");
         }, 2000);
       }
     }
   };
-  const handleBack=()=>{
+  const handleBack = () => {
     router.back();
-  }
+  };
 
   return (
     <AppLayout>
       <div className="container-fluid">
         <div className="template edit-password">
           <div className="template-header">
-            <div className="back-option" onClick={()=>handleBack()}>
+            <div className="back-option" onClick={() => handleBack()}>
               <img src="imgs/left-arrow.svg" alt="" />
               <p>Back</p>
             </div>
@@ -153,16 +155,32 @@ export default function Home() {
           </div>
           <div className="row">
             <div className="col-md-6 mb-3">
-              <div className="form-content">
+              <div className="form-content current-password">
                 <label htmlFor="password1">Current Password</label>
-                <input
-                  type="password"
-                  id="password1"
-                  name="currentPassword"
-                  value={currentPassword}
-                  required
-                  onChange={handleInput}
-                />
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <input
+                    type="password"
+                    id="password1"
+                    name="currentPassword"
+                    value={currentPassword}
+                    required
+                    onChange={handleInput}
+                    style={{ paddingRight: "30px", width: "100%" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleCurrentPasswordVisibility}
+                    style={{
+                      position: "absolute",
+                      right: "5px",
+                      border: "none",
+                      textDecoration: "underline",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {showCurrentPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               </div>
               {currentPasswordErr != "" && (
                 <p className="alert-message">{currentPasswordErr}</p>
@@ -173,69 +191,73 @@ export default function Home() {
             <div className="col-md-6 mb-3">
               <div className="form-content password1">
                 <label htmlFor="password2">New Password</label>
-                <input
-                  type={showNewPassword ? "text" : "password"}
-                  id="password2"
-                  name="newPassword"
-                  required
-                  value={newPassword}
-                  onChange={handleNewPasswordInput}
-                />
-                <button
-                  type="button"
-                  onClick={toggleNewPasswordVisibility}
-                  style={{
-                    position: "relative",
-                    bottom: "22px",
-                    left: "390px",
-                    transform: "translateY(-50%)",
-                    border: "none",
-                    textDecoration: "underline",
-                    fontSize: "12px",
-                    width: "fit-content",
-                  }}
-                >
-                  {showNewPassword ? "Hide" : "Show"}
-                </button>
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    id="password2"
+                    name="newPassword"
+                    required
+                    value={newPassword}
+                    onChange={handleNewPasswordInput}
+                    style={{ paddingRight: "30px", width: "100%" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleNewPasswordVisibility}
+                    style={{
+                      position: "absolute",
+                      right: "5px",
+                      border: "none",
+                      textDecoration: "underline",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {showNewPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+
                 {newPasswordErr != "" && (
                   <p className="alert-message">{newPasswordErr}</p>
                 )}
               </div>
               <div className="passwordvalidation">
-                  <ul>
-                    {totalErrors.map((item: any) => (
-                      <li key={item} className="alert-message">* {item}</li>
-                    ))}
-                  </ul>
-                </div>
+                <ul>
+                  {totalErrors.map((item: any) => (
+                    <li key={item} className="alert-message">
+                      * {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
             <div className="col-md-6 mb-3">
               <div className="form-content confirm">
                 <label htmlFor="password3">Confirm New Password</label>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="password3"
-                  name="confirmPassword"
-                  required
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordInput}
-                />
-                <button
-                  type="button"
-                  onClick={toggleConfirmPasswordVisibility}
-                  style={{
-                    position: "relative",
-                    bottom: "22px",
-                    left: "390px",
-                    transform: "translateY(-50%)",
-                    border: "none",
-                    textDecoration: "underline",
-                    fontSize: "12px",
-                    width: "fit-content",
-                  }}
-                >
-                  {showConfirmPassword ? "Hide" : "Show"}
-                </button>
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="password3"
+                    name="confirmPassword"
+                    required
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordInput}
+                    style={{ paddingRight: "30px", width: "100%" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleConfirmPasswordVisibility}
+                    style={{
+                      position: "absolute",
+                      right: "5px",
+                      border: "none",
+                      textDecoration: "underline",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+
                 {confirmPasswordErr != "" && (
                   <p className="alert-message">{confirmPasswordErr}</p>
                 )}
@@ -248,7 +270,9 @@ export default function Home() {
               >
                 Save
               </button>
-              <button className="cancel" onClick={()=>handleBack()}>Cancel</button>
+              <button className="cancel" onClick={() => handleBack()}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

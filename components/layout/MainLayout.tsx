@@ -19,7 +19,7 @@ const MainLayout = ({ children }: LayoutProps) => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
-  const [loginKey, setLoginKey] = useState(false)
+  const [loginKey, setLoginKey] = useState(false);
 
   useEffect(() => {
     let admin_id = 1;
@@ -49,55 +49,54 @@ const MainLayout = ({ children }: LayoutProps) => {
     setTotalNotifications(admin_notifications.notifications);
   };
 
-
   const handleLogout = () => {
     localStorage.clear();
     router.push("/");
   };
 
   const handleLogin = () => {
-    router.push("/login")
-  }
+    router.push("/login");
+  };
   return (
     <>
       {loginKey == false ? (
-        <><div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
-          {/* <div className="nav-container"> */}
-          <div className="nav-logo">
-            <Link href="/">
-              <img src="/imgs/isdb-logo-layout.png" alt="" />
-            </Link>
-          </div>
-          <div className="navhead-links">
-            <ul>
-              <li>
-                <a href="homepage">
-                  How it works
-                </a>
-              </li>
-              <li>
-                <a href="faqs">
-                  FAQs
-                </a>
-              </li>
-              <li>
-                <a href="works">
-                  Contact us
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div className="nav-user"
-            onClick={() => handleLogin()}
+        <>
+          {/* <div
+            className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}
+            
+          > */}
+          <div
+            className="nav-container"
+            style={{ position: "fixed", width: "96%", margin: "32px" }}
           >
-            <div className="user">
-              <div className="username">
-                <h4 style={{ textAlign: 'center' }}>Login</h4>
+            <div className="nav-logo">
+              <Link href="/">
+                <img src="/imgs/isdb-logo-layout.png" alt="" />
+              </Link>
+            </div>
+            <div className="navhead-links">
+              <ul>
+                <li>
+                  <a href="homepage">How it works</a>
+                </li>
+                <li>
+                  <a href="faqs">FAQs</a>
+                </li>
+                <li>
+                  <a href="works">Contact us</a>
+                </li>
+              </ul>
+            </div>
+            <div className="nav-user landing" onClick={() => handleLogin()}>
+              <div className="user">
+                <div className="username">
+                  <h4 style={{ textAlign: "center" }}>Sign In</h4>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        </>) : (
+        </>
+      ) : (
         <>
           <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
             <div className="nav-logo">
@@ -142,7 +141,6 @@ const MainLayout = ({ children }: LayoutProps) => {
                 <div className="notification-heading">
                   <h4>New Message</h4>
                 </div>
-
 
                 {totalNotifications.map((item: any) => (
                   <div className="notification-details">
@@ -219,11 +217,9 @@ const MainLayout = ({ children }: LayoutProps) => {
             </div>
           </div>
         </>
-      )
-      }
-     
+      )}
+      <main className="render-page">{children}</main>
     </>
-
   );
 };
 
