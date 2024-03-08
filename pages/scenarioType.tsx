@@ -12,6 +12,7 @@ export default function Home() {
   const router = useRouter();
   const [scenariotype, setscenariotype] = useState("");
   const [scenariotypeErr, setscenariotypeErr] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   const handleLogin = () => {
     router.push("/scenarioType");
@@ -37,9 +38,13 @@ export default function Home() {
         sname: scenariotype,
       };
 
+      setDisableSubmit(true);
+
       const result_exist = await API_Auth.getScenarioExists(scenariotype);
       console.log(result_exist.exists);
       if (result_exist.exists == true) {
+        setDisableSubmit(false);
+
         toast.error("Scenario already Exists");
       } else {
         const result = await API_Auth.createScenario(body);

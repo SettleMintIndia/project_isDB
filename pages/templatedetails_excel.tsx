@@ -11,12 +11,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import API_Auth from "./api/API_Auth";
 import moment from "moment";
 import AppLayout from "@/components/layout/AppLayout";
+import * as React from 'react';
+import { PDFExport } from '@progress/kendo-react-pdf'
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 export default function Home() {
   const router = useRouter();
-  const [tempname1, setTempName1] = useState(router.query.temp_name1);
-  const [tempname2, setTempName2] = useState(router.query.temp_name2);
-  const [tempname3, setTempName3] = useState(router.query.temp_name3);
+  const pdfExportComponent = React.useRef<PDFExport>(null);
+
+
+  const [tempname1, setTempName1] = useState(router.query.temp_name1)
+  const [tempname2, setTempName2] = useState(router.query.temp_name2)
+  const [tempname3, setTempName3] = useState(router.query.temp_name3)
   const [tempData1, setTempData1] = useState({
     limit_order_lower_bound: "",
     limit_order_upper_bound: "",
@@ -110,8 +117,10 @@ export default function Home() {
     };
     const result = await API_Auth.getAllTemplates(body);
     console.log("result1", result);
-    setTempData1(result.templates[0]);
-  };
+    setTempData1(result.templates[0])
+    
+
+  }
   const getTemplate2 = async (totalTempName: any) => {
     // const result=API_Auth.getTemplateDetails(totalTempName);
 
@@ -127,8 +136,9 @@ export default function Home() {
     };
     const result = await API_Auth.getAllTemplates(body);
     console.log("result2", result);
-    settempData2(result.templates[0]);
-  };
+    settempData2(result.templates[0])
+   
+  }
   const getTemplate3 = async (totalTempName: any) => {
     // const result=API_Auth.getTemplateDetails(totalTempName);
 
@@ -144,11 +154,314 @@ export default function Home() {
     };
     const result = await API_Auth.getAllTemplates(body);
     console.log("result3", result);
-    settempData3(result.templates[0]);
-  };
+    settempData3(result.templates[0])
+    
+
+  }
   const handleBack = () => {
     router.back();
   };
+  const handleDownloadPDF = () => {
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+  }
+
+  const handleDownloadExcel = () => {
+     let totalResult:any[]=[];
+     totalResult.push(tempData1,tempData2,tempData3);
+    console.log(totalResult)
+  for(var i=0 ;i<totalResult.length ;i ++){
+      const date = moment(totalResult[i].created_timestamp).format("MM/DD/YYYY h:mm:ss A")
+      totalResult[i].created_timestamp=date;
+
+    }
+    console.log("formattedData",totalResult)
+
+
+    const wb = XLSX.utils.book_new();
+
+    // Create a worksheet
+    const ws = XLSX.utils.json_to_sheet(totalResult);
+
+    // Convert the worksheet to an array of arrays
+    const aoa = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+    // Extract unique keys (column names)
+    const keys = Array.from(new Set(aoa[0]));
+
+    console.log("keys",keys);
+
+
+    // Create a new worksheet with the desired format
+    const newWs = keys.map((key, index) => [key, ...aoa.slice(1).map(row => row[index])]);
+    console.log("newWs",newWs);
+
+
+    // Create a new workbook
+    const newWsName = 'Template';
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(newWs), newWsName);
+
+    /* simulation price */
+
+    const withStabilization = [
+      { temp_name: 'Bubble1', mean: 12, median: 10, deviation: 19, interval: 10 },
+      { temp_name: 'Bubble2', mean: 10, median: 20, deviation: 10, interval: 20 },
+      { temp_name: 'Bubble3', mean: 19, median: 19, deviation: 29, interval: 20 },
+    ];
+
+    const withoutStabilization = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    // Create combined array with headers
+    const combinedData = [
+      ['', 'With Stabilization', '', '', '', '', '', '', 'Without Stabilization', '', ''],
+      ['Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval', '', '', '', 'Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval'],
+    ];
+
+
+
+    // Merge both datasets
+    for (let i = 0; i < withStabilization.length; i++) {
+      const withStabilizationItem = withStabilization[i];
+      const withoutStabilizationItem = withoutStabilization[i];
+      console.log("withStabilizationItem", withStabilizationItem, "withoutStabilizationItem", withoutStabilizationItem)
+      combinedData.push([
+        withStabilizationItem.temp_name,
+        withStabilizationItem.mean.toString(),
+        withStabilizationItem.median.toString(),
+        withStabilizationItem.deviation.toString(),
+        withStabilizationItem.interval.toString(),
+        '',
+        '',
+        '',
+        withoutStabilizationItem.temp_name.toString(),
+        withoutStabilizationItem.mean.toString(),
+        withoutStabilizationItem.median.toString(),
+        withoutStabilizationItem.deviation.toString(),
+        withoutStabilizationItem.interval.toString(),
+
+      ]);
+      console.log(combinedData);
+    }
+
+    // Create a new worksheet with the desired format
+    const newWsData = XLSX.utils.aoa_to_sheet(combinedData);
+
+    // Create a new workbook
+    const wsName = 'Price';
+
+    XLSX.utils.book_append_sheet(wb, newWsData, wsName);
+
+    /* quantity */
+
+
+     const withStabilizationQuantity = [
+      { temp_name: 'Bubble1', mean: 112, median: 100, deviation: 199, interval: 120 },
+      { temp_name: 'Bubble2', mean: 10, median: 20, deviation: 10, interval: 20 },
+      { temp_name: 'Bubble3', mean: 19, median: 19, deviation: 29, interval: 20 },
+    ];
+
+    const withoutStabilizationQuantity = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    // Create combined array with headers
+    const combinedDataQuantity = [
+      ['', 'With Stabilization', '', '', '', '', '', '', 'Without Stabilization', '', ''],
+      ['Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval', '', '', '', 'Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval'],
+    ];
+
+
+
+    // Merge both datasets
+    for (let i = 0; i < withStabilizationQuantity.length; i++) {
+      const withStabilizationItem = withStabilizationQuantity[i];
+      const withoutStabilizationItem = withoutStabilizationQuantity[i];
+      console.log("withStabilizationItemQt", withStabilizationItem, "withoutStabilizationItemQt", withoutStabilizationItem)
+      combinedDataQuantity.push([
+        withStabilizationItem.temp_name,
+        withStabilizationItem.mean.toString(),
+        withStabilizationItem.median.toString(),
+        withStabilizationItem.deviation.toString(),
+        withStabilizationItem.interval.toString(),
+        '',
+        '',
+        '',
+        withoutStabilizationItem.temp_name.toString(),
+        withoutStabilizationItem.mean.toString(),
+        withoutStabilizationItem.median.toString(),
+        withoutStabilizationItem.deviation.toString(),
+        withoutStabilizationItem.interval.toString(),
+
+      ]);
+      console.log(combinedDataQuantity);
+    }
+
+    // Create a new worksheet with the desired format
+    const newWsQuantityData = XLSX.utils.aoa_to_sheet(combinedDataQuantity);
+
+    // Create a new workbook
+    const wsNameQuantity = 'Quanity';
+
+    XLSX.utils.book_append_sheet(wb, newWsQuantityData, wsNameQuantity);
+
+
+
+     /* volume */
+
+
+     const withStabilizationVolume = [
+      { temp_name: 'Bubble1', mean: 112, median: 100, deviation: 199, interval: 120 },
+      { temp_name: 'Bubble2', mean: 10, median: 20, deviation: 10, interval: 20 },
+      { temp_name: 'Bubble3', mean: 19, median: 19, deviation: 29, interval: 20 },
+    ];
+
+    const withoutStabilizationVolume = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    // Create combined array with headers
+    const combinedDataVolume = [
+      ['', 'With Stabilization', '', '', '', '', '', '', 'Without Stabilization', '', ''],
+      ['Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval', '', '', '', 'Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval'],
+    ];
+
+
+
+    // Merge both datasets
+    for (let i = 0; i < withStabilizationVolume.length; i++) {
+      const withStabilizationItem = withStabilizationVolume[i];
+      const withoutStabilizationItem = withoutStabilizationVolume[i];
+      console.log("withStabilizationItemQt", withStabilizationItem, "withoutStabilizationItemQt", withoutStabilizationItem)
+      combinedDataVolume.push([
+        withStabilizationItem.temp_name,
+        withStabilizationItem.mean.toString(),
+        withStabilizationItem.median.toString(),
+        withStabilizationItem.deviation.toString(),
+        withStabilizationItem.interval.toString(),
+        '',
+        '',
+        '',
+        withoutStabilizationItem.temp_name.toString(),
+        withoutStabilizationItem.mean.toString(),
+        withoutStabilizationItem.median.toString(),
+        withoutStabilizationItem.deviation.toString(),
+        withoutStabilizationItem.interval.toString(),
+
+      ]);
+      console.log(combinedDataVolume);
+    }
+
+    // Create a new worksheet with the desired format
+    const newWsVolumeData = XLSX.utils.aoa_to_sheet(combinedDataVolume);
+
+    // Create a new workbook
+    const wsNameVolume= 'Volume';
+
+    XLSX.utils.book_append_sheet(wb, newWsVolumeData, wsNameVolume);
+
+    /* Stablization Fund */
+
+
+    const withStabilizationCash = [
+      { temp_name: 'Bubble1', mean: 112, median: 100, deviation: 199, interval: 120 },
+      { temp_name: 'Bubble2', mean: 10, median: 20, deviation: 10, interval: 20 },
+      { temp_name: 'Bubble3', mean: 19, median: 19, deviation: 29, interval: 20 },
+    ];
+
+    const withStabilizationAssetQuantity = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    const withStabilizationTotalAssets = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    const withStabilizationAssetTotalVAssets = [
+      { temp_name: 'Bubble1', mean: 121, median: 101, deviation: 119, interval: 10 },
+      { temp_name: 'Bubble2', mean: 110, median: 210, deviation: 110, interval: 10 },
+      { temp_name: 'Bubble3', mean: 119, median: 119, deviation: 219, interval: 10 },
+    ];
+
+    // Create combined array with headers
+    const combinedStablization = [
+      ['', 'Cash', '', '', '', '','','Assets(Quantity)', '', '','', '', '','Total Assets ($)','','','','', '', 'TotalAssets/v'],
+      ['Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval', '', ,'Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval',
+      '','Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval','','Template Name', 'Mean', 'Median', 'Standard deviation', '10%-90% interval']
+      
+    ];
+
+
+
+    // Merge both datasets
+    for (let i = 0; i < withStabilizationCash.length; i++) {
+      const withStabilizationCashItem = withStabilizationCash[i];
+      const withStabilizationAssetItem = withStabilizationAssetQuantity[i];
+
+      const withStabilizationtotalassetItem = withStabilizationTotalAssets[i];
+      const withStabilizationtotalassetVItem = withStabilizationAssetTotalVAssets[i];
+
+
+      combinedStablization.push([
+        withStabilizationCashItem.temp_name,
+        withStabilizationCashItem.mean.toString(),
+        withStabilizationCashItem.median.toString(),
+        withStabilizationCashItem.deviation.toString(),
+        withStabilizationCashItem.interval.toString(),
+        '',
+        '',
+        withStabilizationAssetItem.temp_name.toString(),
+        withStabilizationAssetItem.mean.toString(),
+        withStabilizationAssetItem.median.toString(),
+        withStabilizationAssetItem.deviation.toString(),
+        withStabilizationAssetItem.interval.toString(),
+        '',
+        withStabilizationtotalassetItem.temp_name.toString(),
+        withStabilizationtotalassetItem.mean.toString(),
+        withStabilizationtotalassetItem.median.toString(),
+        withStabilizationtotalassetItem.deviation.toString(),
+        withStabilizationtotalassetItem.interval.toString(),
+        '',
+        withStabilizationtotalassetVItem.temp_name.toString(),
+        withStabilizationtotalassetVItem.mean.toString(),
+        withStabilizationtotalassetVItem.median.toString(),
+        withStabilizationtotalassetVItem.deviation.toString(),
+        withStabilizationtotalassetVItem.interval.toString(),
+      ]);
+      console.log(combinedDataVolume);
+    }
+
+    // Create a new worksheet with the desired format
+    const newStablization = XLSX.utils.aoa_to_sheet(combinedStablization);
+
+    // Create a new workbook
+    const wsstablization= 'Stablization Fund';
+
+    XLSX.utils.book_append_sheet(wb, newStablization, wsstablization);
+
+    /* Stablization Fund */
+
+
+
+
+    // Save the workbook to a file
+    XLSX.writeFile(wb, 'CompareTemplates.xlsx');
+
+
+  }
+
   return (
     <AppLayout>
       <div className="container-fluid">

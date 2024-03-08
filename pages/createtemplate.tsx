@@ -54,7 +54,11 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
-  const { loginuseremail, setloginuseremail } = useContext(UserContext);
+  const {
+    loginuseremail, setloginuseremail
+  } = useContext(UserContext);
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
   useEffect(() => {
     getScenarios();
     getDistributions();
@@ -321,15 +325,23 @@ export default function Home() {
       } else if (Number(upperbound) > 1) {
         toast.error("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1");
-      } else {
-        const template_exist = await API_Auth.getTemplateExists(templatename);
-        console.log("template_exist", template_exist);
+        toast.error("lower lmt order price variance should be greater than 1")
+
+
+      }
+      else {
+
+
+        const template_exist = await API_Auth.getTemplateExists(templatename)
+        console.log("template_exist", template_exist)
 
         if (template_exist.name_available == false) {
           toast.error("Template Name Already Exists");
         } else {
-          const data = await API_Auth.createTemplate(body);
+
+        //  setDisableSubmit(true);
+
+          const data = await API_Auth.createTemplate(body)
           console.log(data);
           if ((data.error! = "" || data.error == undefined)) {
             console.log("hello");
@@ -340,6 +352,9 @@ export default function Home() {
           } else {
             console.log("Hi", data.error.error);
             toast.error("Duplicate Entries ");
+           // setDisableSubmit(false);
+
+
           }
         }
       }

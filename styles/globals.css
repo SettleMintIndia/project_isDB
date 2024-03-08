@@ -2064,10 +2064,10 @@ label {
 
 .iterationbutton {
   position: absolute;
-  right: 50px;
-  top: 200px;
+  right: 79px;
   width: 100px;
   height: 30px;
+  border-radius: 20px;
 }
 
 .scrollbutton {
@@ -2102,7 +2102,7 @@ label {
   display: flex;
   align-items: center;
   gap: 5px;
-  background: #ededed;
+  background:white;
   border: 1px solid #6f6d6d;
   border-radius: 21px;
   width: 285px;
@@ -2566,6 +2566,34 @@ label {
 }
 
 /* kavya */
+.template .searchScenario {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #6f6d6d;
+  border-radius: 21px;
+  width: 200px;
+  height: 42px;
+  padding-left: 15px;
+  font-size: 14px;
+  justify-content: space-between;
+  padding-right: 2px;
+  
+}
+
+.template .searchScenario select {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.template .searchScenarioArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
 .navhead-links {
   padding: 10px;

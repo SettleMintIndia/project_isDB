@@ -26,7 +26,7 @@ const AppLayout = ({ children }: LayoutProps) => {
     const data = localStorage.getItem("useremail");
     console.log("email", loginuseremail);
 
-    const handleScroll = () => {
+   /*  const handleScroll = () => {
       console.log(window.scrollY);
       if (window.scrollY >= 100) {
         setIsNavFixed(true);
@@ -39,7 +39,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-    };
+    }; */
   }, [email]);
 
   const getNotifications = async (id: any) => {

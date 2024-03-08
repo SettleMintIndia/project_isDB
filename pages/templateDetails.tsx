@@ -19,10 +19,17 @@ import Loader from "@/components/layout/Loader";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import AppLayout from "@/components/layout/AppLayout";
+import * as React from 'react';
+import { PDFExport } from '@progress/kendo-react-pdf'
+
 export default function templateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
+
+  const pdfExportComponent = React.useRef<PDFExport>(null);
+  const [mounted, setMounted] = useState(false);
+
 
   const [templateData, setTemplateData] = useState([
     {
@@ -46,6 +53,8 @@ export default function templateDetails() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [viewData, setViewData] = useState({
+    limit_order_upper_bound: '',
+    limit_order_lower_bound: '',
     temp_name: "",
     created_timestamp: "",
     scenario_name: "",
@@ -70,6 +79,8 @@ export default function templateDetails() {
 
   const [tempname, setTempName] = useState("");
   useEffect(() => {
+    setMounted(true);
+
     handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, 1);
     getScenarios();
   }, []);
@@ -275,30 +286,34 @@ export default function templateDetails() {
 
   } */
   const handleDownloadPDF = () => {
-    router.push({
-      pathname: "/templatepdf",
-      query: { temp_name: viewData.temp_name },
-    });
-  };
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+  }
   const handleDownloadExel = () => {
-    console.log(viewData);
-    let finalData = [];
-    let finaldata = finalData.push(viewData);
+    let finalData: any[] = [];
+    Object.keys(viewData).forEach(function (key) {
+      var value = viewData[key];
+      console.log("key", key)
+      var obj;
+      if (key == "created_timestamp") {
+        obj = { 'key': key, 'Value': moment(value).format("MM/DD/YYYY h:mm:ss A") };
+      } else {
+        obj = { 'key': key, 'Value': value };
+      }
+      finalData.push(obj);
+    });
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
     const fileName = viewData.temp_name;
-
     const ws = XLSX.utils.json_to_sheet(finalData);
-
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-
     const data = new Blob([excelBuffer], { type: fileType });
-
     FileSaver.saveAs(data, fileName + fileExtension);
   };
+
   const [activeButton, setActiveButton] = useState("Static");
 
   const handleButtonClick = async (data: any) => {
@@ -335,7 +350,7 @@ export default function templateDetails() {
     setCurrentPage(pageCount - 1);
   };
 
-  return (
+  if (mounted) return (
     <AppLayout>
       <div className="container-fluid">
         <div className="template details">
@@ -363,11 +378,6 @@ export default function templateDetails() {
                   setTabIndex(tabIndex)
                 }
               >
-                {/*  <TabList>
-                <Tab>My Template</Tab>
-                <Tab>Other Templates</Tab>
-              </TabList> */}
-
                 <TabPanel>
                   <div className="filter">
                     <label htmlFor="filterBy">Filter by:</label>
@@ -385,33 +395,33 @@ export default function templateDetails() {
                             </Tab>
                             {/* <Tab>Crash</Tab>
                           <Tab>Bubble</Tab> */}
-                            <select
-                              name="scenarioType"
-                              id="type"
-                              value={s_type}
-                              onChange={handleInput}
-                              style={{ width: "200px" }}
-                            >
-                              <option value="">Select Scenario Type</option>
-                              {finalScenarios.map((item) => (
-                                <option
-                                  key={item?.scenario_name}
-                                  value={item?.scenario_name}
+                            <div className="searchScenario">
+                              <div className="searchScenarioArea options">
+                                <select
+                                  name="scenarioType"
+                                  id="type"
+                                  value={s_type}
+                                  onChange={handleInput}
                                 >
-                                  {item?.scenario_name}
-                                </option>
-                              ))}
-                            </select>
+                                  <option value="">Select Scenario Type</option>
+                                  {finalScenarios.map((item) => (
+                                    <option
+                                      key={item?.scenario_name}
+                                      value={item?.scenario_name}
+                                    >
+                                      {item?.scenario_name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
                           </TabList>{" "}
                         </Tabs>
                       </div>
                     </div>
                     <div className="searchArea">
                       <div className="searchFilter options">
-                        {/* <select name="filter" id="searchtype">
-                        <option value="template">Template</option>
-                        <option value="creator">Creator</option>
-                      </select> */}
+                      
                         <input
                           type="text"
                           placeholder="Search by template name"
@@ -679,11 +689,11 @@ export default function templateDetails() {
                         </tr>
                         <tr>
                           <td>Limit Order Upper Bound</td>
-                          <td>0.95</td>
+                          <td>{viewData.limit_order_upper_bound}</td>
                         </tr>
                         <tr>
                           <td>Limit Order Lower Bound</td>
-                          <td>1.05</td>
+                          <td>{viewData.limit_order_lower_bound}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -707,6 +717,34 @@ export default function templateDetails() {
                         </tr>
                       </tbody>
                     </table>
+                    {viewData.distribution == "normal" && <table className="table">
+                      <tbody>
+                        <tr>
+                          <td>Standard Deviation Price Buy</td>
+                          <td>{viewData.std_dev_price_buy}</td>
+                        </tr>
+                        <tr>
+                          <td>Standard Deviation Price Sell</td>
+                          <td>{viewData.std_dev_price_sell}</td>
+                        </tr>
+                        <tr>
+                          <td>Standard Deviation Quantity</td>
+                          <td>{viewData.std_dev_quant}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Buy</td>
+                          <td>{viewData.mean_price_buy}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Sell</td>
+                          <td>{viewData.mean_price_sell}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Quantity</td>
+                          <td>{viewData.mean_quant}</td>
+                        </tr>
+                      </tbody>
+                    </table>}
 
                     <table className="table">
                       <tbody>
@@ -834,8 +872,126 @@ export default function templateDetails() {
         </div>
         <ToastContainer />
 
-        <div className="pdfclass" style={{ display: "none" }}>
-          <p>Hafjksd'sdsj;akfdfkl</p>
+       
+      </div>
+      <div>
+        <div style={{ position: "absolute", left: "-1000px", top: 0 }}>
+          <PDFExport
+            paperSize="A3"
+            margin="1cm"
+            landscape
+            fileName={viewData.temp_name + ".pdf"}
+            ref={pdfExportComponent}
+          >
+            <div >
+              <div className="container-fluid pdf mt-2">
+                <div className="header">
+                  <div className="left-head">
+                    <img src="/imgs/isdb-logo-signin.svg" className="isDB-logo" alt="" />
+                  </div>
+                  <div className="right-head">
+                    <div className="pdf-title">{viewData.temp_name}</div>
+                    <div className="pdf info">
+                      <div className="pdf-time">
+                        <label htmlFor="">Template Created On </label>
+                        <span> {moment(viewData.created_timestamp).format(
+                          "MM/DD/YYYY h:mm:ss A"
+                        )}</span>
+                      </div>
+                      <div className="type">
+                        <label htmlFor="">Scenario Type </label>
+                        <span>{viewData.scenario_name}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pdf-section">
+                  <div className="pdf-name">{viewData.temp_name}</div>
+                  <div className="pdf-data">
+                    <div className="modal-details">
+                      <div className="details-section">
+                        <div className="template-details">
+                          <table className="table">
+                            <tbody>
+                              <tr>
+                                <td>Initial Market Price</td>
+                                <td>{viewData.initial_mkt_price}</td>
+                              </tr>
+                              <tr>
+                                <td>Price Variance Limit</td>
+                                <td>{viewData.price_var}</td>
+                              </tr>
+                              <tr>
+                                <td>Base Quantity</td>
+                                <td>{viewData.base_quant}</td>
+                              </tr>
+                              <tr>
+                                <td>Quantity Variance Limit</td>
+                                <td>{viewData.quant_var}</td>
+                              </tr>
+                              <tr>
+                                <td>Limit Order Upper Bound</td>
+                                <td>{viewData.limit_order_upper_bound}</td>
+                              </tr>
+                              <tr>
+                                <td>Limit Order Lower Bound</td>
+                                <td>{viewData.limit_order_lower_bound}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <table className="table">
+                            <tbody>
+                              <tr>
+                                <td>Alpha 0</td>
+                                <td>{viewData.alpha0}</td>
+                              </tr>
+                              <tr>
+                                <td>Alpha 1</td>
+                                <td>{viewData.alpha1}</td>
+                              </tr>
+                              <tr>
+                                <td>Theta 0</td>
+                                <td>{viewData.theta0}</td>
+                              </tr>
+                              <tr>
+                                <td>Theta 1</td>
+                                <td>{viewData.theta1}</td>
+                              </tr>
+                              <tr>
+                                <td>Distribution</td>
+                                <td>{viewData.distribution}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div className="right-section">
+                            {/* <table className="table">
+                              <tbody>
+                                <tr>
+                                  <td>Distribution</td>
+                                  <td>{viewData.distribution}</td>
+                                </tr>
+                              </tbody>
+                            </table> */}
+                            <table className="independant-table">
+                              <tr>
+                                <td>Visibility</td>
+                                {viewData.is_public == 1 && <td>Public</td>}
+                                {viewData.is_public == 0 && <td>Private</td>}{" "}
+                              </tr>
+                            </table>
+                            <div className="modal-comment">
+                              <label htmlFor="comment">Comment</label>
+                              <p>{viewData.comments}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </PDFExport>
         </div>
       </div>
     </AppLayout>

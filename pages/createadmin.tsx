@@ -146,6 +146,8 @@ export default function Home() {
       };
       console.log(body);
       setLoading(true);
+      //setDisableSubmit(true);
+
 
       const result = await API_Auth.createAdmin(body);
       console.log("result", result, result.msg);
@@ -159,6 +161,8 @@ export default function Home() {
         }, 2000);
       } else {
         toast.error(result.msg);
+        //setDisableSubmit(false);
+
       }
     }
   };

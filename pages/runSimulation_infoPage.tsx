@@ -14,9 +14,14 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import { UserContext } from "./context";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
+import CandleStickSimulation from "./CandleStickSimulation";
+import BarGraph from "./BarGraph";
+
 
 export default function Home() {
   const router = useRouter();
+  const[runLoading,setRunLoading]=useState(false)
 
   const [tabIndex, setTabIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -103,9 +108,37 @@ export default function Home() {
   const [type, setType] = useState("price");
 
   const { loginexid, setloginexid } = useContext(UserContext);
+  const [orderWsbuy, setorderWsbuy] = useState([{
+    quantity: '', price: ''
 
-  const [orderWs, setorderWs] = useState([]);
-  const [orderNs, setorderNs] = useState([]);
+  }]);
+  const [orderWssell, setorderWssell] = useState([{
+    quantity: '', price: ''
+
+  }]);
+
+  const [orderNsbuy, setorderNsbuy] = useState([{
+    quantity: '', price: ''
+
+  }]);
+  const [orderNssell, setorderNssell] = useState([{
+    quantity: '', price: ''
+
+  }]);
+
+ const[loading,setLoading]=useState(false)
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const [graphDataWsIteration, setgraphDataWsIteration] = useState([])
+  const [graphDataWsRound, setgraphDataWsRound] = useState([])
+  const [graphDataNsIteration, setgraphDataNsIteration] = useState([])
+  const [graphDataNsRound, setgraphDataNsRound] = useState([])
+  const [simulationQuantityData, setSimulationQuantityData] = useState([])
+  const [simulationVolumeData, setSimulationVolumeData] = useState([])
+
+  const [nsimulationQuantityData, setNSimulationQuantityData] = useState([])
+  const [nsimulationVolumeData, setNSimulationVolumeData] = useState([])
+  const [tabName, setTabName] = useState(0);
+  const [stablization, setStablization] = useState(0)
 
   useEffect(() => {
     console.log(totalTempName);
@@ -113,7 +146,9 @@ export default function Home() {
     getTemplateDetails(totalTempName);
     getDistributions();
     console.log(tabIndex);
+    //let executionId = 18;
     console.log("executionId", executionId);
+
     if (tabIndex == 1) {
       setSIteration(1);
       setSRound(1);
@@ -136,40 +171,105 @@ export default function Home() {
       getTradeHistoryNS(executionId, 1, 1);
     }
     if (tabIndex == 5) {
-      getSimulationResultDetails(executionId);
+
+      console.log("tab-------------------", tabName)
+      if (tabName === 0) {
+        getSimulationResultDetails(executionId);
+      }
+      if (tabName === 1) {
+        getSimulationVolumeResultDetails(executionId);
+      }
+      if (tabName === 2) {
+        getSimulationQuantityResultDetails(executionId);
+      }
     }
 
     if (tabIndex == 6) {
       getStablizationFund(executionId);
     }
     console.log("tabIndex", tabIndex);
-  }, [totalTempName, tabIndex, executionId]);
+  }, [totalTempName, tabIndex, executionId, tabName, stablization]);
 
   const getStablizationFund = async (id: any) => {
+    setLoading(true)
+
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
+    setLoading(false)
+
   };
   const getSimulationResultDetails = async (id: any) => {
-    const result = await API_Auth.getSimulationResult(id, type);
+    setLoading(true)
+    const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
+
+    setgraphDataWsIteration(result.graphDataWS.byiter);
+    setgraphDataWsRound(result.graphDataWS.byround);
+    setgraphDataNsIteration(result.graphDataNS.byiter)
+    setgraphDataNsRound(result.graphDataNS.byround)
+    setLoading(false)
+
+  };
+  const getSimulationQuantityResultDetails = async (executionId: any) => {
+    setLoading(true)
+    const result = await API_Auth.getSimulationResult(executionId, "quantity");
+    console.log("quantityresult", result);
+    console.log("quantity--------------------------->")
+
+    setSimulationQuantityData(result.graphDataWS[0])
+    setNSimulationQuantityData(result.graphDataNS[0])
+    setLoading(false)
+
+
   };
 
+  const getSimulationVolumeResultDetails = async (executionId: any) => {
+    setLoading(true)
+    const result = await API_Auth.getSimulationResult(executionId, "volume");
+    console.log("volumeresult", result);
+    console.log("volume--------------------------->")
+    setSimulationVolumeData(result.graphDataWS[0])
+    setNSimulationVolumeData(result.graphDataNS[0])
+
+    setLoading(false)
+
+
+
+
+
+  };
+
+
   const getOrderBook = async (id: any, siteration: any, sround: any) => {
+    setLoading(true)
+
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
-    setorderNs(result.ordersNS);
-    setorderWs(result.ordersWS);
+    setLoading(false)
+
+    setorderWsbuy(result.ordersWSBuy);
+    setorderWssell(result.ordersWSSell)
+    setorderNsbuy(result.ordersNSBuy);
+    setorderNssell(result.ordersNSSell)
+
+
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
+    setLoading(true)
+
     const result = await API_Auth.getTradeHistoryWithStablization(
       id,
       siteration,
       sround
     );
     console.log("tadingws", result.trade, result);
+    setLoading(false)
+
     setTradeHistoryWS(result.trades);
   };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
+    setLoading(true)
+
     const result = await API_Auth.getTradeHistoryWithoutStablization(
       id,
       siteration,
@@ -177,6 +277,8 @@ export default function Home() {
     );
     console.log("tadingns", result.trade);
     setTradeHistoryNS(result.trade);
+    setLoading(false)
+
   };
   const getDistributions = async () => {
     const result = await API_Auth.getDistributions();
@@ -563,6 +665,7 @@ export default function Home() {
     }
   };
   const handleRunSimulation = async () => {
+    setTabIndex(0);
     let error = 0;
     if (iterations == "") {
       error = error + 1;
@@ -585,10 +688,18 @@ export default function Home() {
     if (ordersVar == "") {
       error = error + 1;
       setordersVarErr("Please Enter Order Variance");
-    } else {
+    }
+    else if(Number(ordersVar) >1 ) {
+      error = error + 1;
+
+      setordersVarErr("order variance should be less than 1") ;   
+    }else{
       setordersVarErr("");
+
     }
     if (error == 0) {
+     // setDisableSubmit(true)
+     setRunLoading(true)
       let body = {
         temp_name: templatename,
         nb_rounds: Number(rounds),
@@ -600,14 +711,22 @@ export default function Home() {
       };
       const result = await API_Auth.runSimulation(body);
       console.log(result);
+      setRunLoading(false)
+
       if (result.status == 400) {
-        toast.error(result.error);
+        toast.error(result.msg);
+        setDisableSubmit(false)
+
       } else {
         console.log(result.exe);
+        toast.success("Execution done successfully");
+
+
         setExecutionId(result.exe);
       }
     }
   };
+
 
   const handleSearch = () => {
     let error = 0;
@@ -633,26 +752,45 @@ export default function Home() {
 
     if (error == 0) {
       if (tabIndex == 1) {
-        getOrderBook(executionId, siteration, sround);
+        setSIteration(1);
+        setSRound(1);
+        getOrderBook(executionId, 1, 1);
       }
       if (tabIndex == 2) {
-        getOrderBook(executionId, siteration, sround);
+        setSIteration(1);
+        setSRound(1);
+        getOrderBook(executionId, 1, 1);
       }
 
       if (tabIndex == 3) {
-        getTradeHistoryWS(executionId, siteration, sround);
+        setSIteration(1);
+        setSRound(1);
+        getTradeHistoryWS(executionId, 1, 1);
       }
       if (tabIndex == 4) {
-        getTradeHistoryNS(executionId, siteration, sround);
+        setSIteration(1);
+        setSRound(1);
+        getTradeHistoryNS(executionId, 1, 1);
       }
       if (tabIndex == 5) {
-        getSimulationResultDetails(executionId);
+
+        console.log("tab-------------------", tabName)
+        if (tabName === 0) {
+          getSimulationResultDetails(executionId);
+        }
+        if (tabName === 1) {
+          getSimulationVolumeResultDetails(executionId);
+        }
+        if (tabName === 2) {
+          getSimulationQuantityResultDetails(executionId);
+        }
       }
 
       if (tabIndex == 6) {
         getStablizationFund(executionId);
       }
       console.log("tabIndex", tabIndex);
+
     }
   };
 
@@ -1259,6 +1397,7 @@ export default function Home() {
                           ></textarea>
                         </div>
                       </div>
+                      {runLoading==true && <Loader></Loader>}
                       <div className="modal-buttons">
                         <button
                           className="run-simulation"
@@ -1560,6 +1699,8 @@ export default function Home() {
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
+                            {loading == true && <Loader />}
+
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -1569,7 +1710,7 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  <tbody className="scrollable">
+                                  {/*   <tbody className="scrollable">
                                     <tr>
                                       <td>153</td>
                                       <td>8.94</td>
@@ -1581,8 +1722,28 @@ export default function Home() {
                                     <tr>
                                       <td>153</td>
                                       <td>8.94</td>
+                                    </tr>
+                                  </tbody> */}
+
+                                  {orderWsbuy.length == 0 && <tbody>
+                                    <tr >
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">No Data Found</p>
+                                      </td>
                                     </tr>
                                   </tbody>
+                                  }
+                                  <tbody className="scrollable">
+                                    {orderWsbuy.map((data) => (
+                                      <tr>
+                                        <td>{data.quantity}</td>
+                                        <td>{data.price}</td>
+
+
+                                      </tr>
+                                    ))}
+                                  </tbody>
+
                                 </table>{" "}
                               </div>
                             </div>
@@ -1593,6 +1754,7 @@ export default function Home() {
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
+                            {loading==true && <Loader/>}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -1602,7 +1764,7 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  <tbody className="scrollable">
+                                {/*   <tbody className="scrollable">
                                     <tr>
                                       <td>9.87</td>
                                       <td>54</td>
@@ -1614,8 +1776,27 @@ export default function Home() {
                                     <tr>
                                       <td>9.87</td>
                                       <td>54</td>
+                                    </tr>
+                                  </tbody> */}
+                                   {orderWssell.length == 0 && <tbody>
+                                    <tr >
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">No Data Found</p>
+                                      </td>
                                     </tr>
                                   </tbody>
+                                  }
+                                  <tbody className="scrollable">
+                                    {orderWssell.map((data) => (
+                                      <tr>
+                                        <td>{data.quantity}</td>
+                                        <td>{data.price}</td>
+
+
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                              
                                 </table>
                               </div>
                             </div>
@@ -1671,37 +1852,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/next-arrow.svg"
+                                          alt=""
+                                          onClick={() =>
+                                            handleIncrementIteration()
+                                          }
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-paging-gray.svg"
+                                          alt=""
+                                        />
+                                      )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrow.svg"
+                                          alt=""
+                                          onClick={() => handleLastIteration()}
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrowg.svg"
+                                          alt=""
+                                        />
+                                      )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -1955,6 +2136,7 @@ export default function Home() {
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
+                            {loading==true && <Loader/>}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -1964,20 +2146,25 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>153</td>
-                                      <td>8.94</td>
-                                    </tr>
-                                    <tr>
-                                      <td>153</td>
-                                      <td>8.94</td>
-                                    </tr>
-                                    <tr>
-                                      <td>153</td>
-                                      <td>8.94</td>
+                                  {orderNsbuy.length == 0 && <tbody>
+                                    <tr >
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">No Data Found</p>
+                                      </td>
                                     </tr>
                                   </tbody>
+                                  }
+                                  <tbody>
+                                    {orderNsbuy.map((data) => (
+                                      <tr>
+                                        <td>{data.quantity}</td>
+                                        <td>{data.price}</td>
+
+
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                               
                                 </table>{" "}
                               </div>
                             </div>
@@ -1997,19 +2184,23 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
+                                  {orderNssell.length == 0 && <tbody>
+                                    <tr >
+                                      <td colSpan={12}>
+                                        <p className="no_Data_table">No Data Found</p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                  }
                                   <tbody>
-                                    <tr>
-                                      <td>9.87</td>
-                                      <td>54</td>
-                                    </tr>
-                                    <tr>
-                                      <td>9.87</td>
-                                      <td>54</td>
-                                    </tr>
-                                    <tr>
-                                      <td>9.87</td>
-                                      <td>54</td>
-                                    </tr>
+                                    {orderNssell.map((data) => (
+                                      <tr>
+                                        <td>{data.quantity}</td>
+                                        <td>{data.price}</td>
+
+
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -2066,37 +2257,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/next-arrow.svg"
+                                          alt=""
+                                          onClick={() =>
+                                            handleIncrementIteration()
+                                          }
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-paging-gray.svg"
+                                          alt=""
+                                        />
+                                      )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrow.svg"
+                                          alt=""
+                                          onClick={() => handleLastIteration()}
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrowg.svg"
+                                          alt=""
+                                        />
+                                      )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -2375,6 +2566,7 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
+                                  {loading==true && <Loader/>}
                                   {tradeHistoryWS.length == 0 && (
                                     <tbody>
                                       <tr>
@@ -2741,6 +2933,7 @@ export default function Home() {
                               </button>
                             </div>
                           </div>
+                          {loading==true && <Loader/>}
                           <div className="ns-table">
                             <div className="table-responsive">
                               <div className="table-content">
@@ -2937,7 +3130,7 @@ export default function Home() {
                           </div>
                         </div>
                       </TabPanel>
-                      <TabPanel className="simulation-result">
+                     {/*  <TabPanel className="simulation-result">
                         <div className="simulation">
                           <div className="tabs">
                             {" "}
@@ -3108,6 +3301,409 @@ export default function Home() {
                               </TabPanel>
                             </Tabs>
                           </div>
+                        </div>
+                      </TabPanel> */}
+                          <TabPanel className="simulation-result">
+                        <div className="simulation">
+                          <div className="tabs">
+                            <Tabs
+                              selectedIndex={stablization}
+                              onSelect={(stablization: SetStateAction<number>) =>
+                                setStablization(stablization)
+                              } >
+                              <TabList>
+                                <Tab>Stabilization</Tab>
+                                <Tab>Without Stablization</Tab>
+                              </TabList>{" "}
+
+                              <TabPanel>
+                                <div className="tabs">
+                                  {" "}
+                                  <Tabs
+                                    selectedIndex={tabName}
+                                    onSelect={(tabName: SetStateAction<number>) =>
+                                      setTabName(tabName)
+                                    }>
+                                    <TabList>
+                                      <Tab>Price</Tab>
+                                      <Tab>Volume</Tab>
+                                      <Tab>Quantity</Tab>
+                                    </TabList>{" "}
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {graphDataWsIteration.length != 0 && graphDataWsRound.length != 0 && <CandleStickSimulation
+                                        iteration={graphDataWsIteration}
+                                        round={graphDataWsRound} 
+                                        noofiterations={iterations}
+                                        noofrounds={rounds}/>
+                                      }
+                                      <div className="simulation-graph">
+                                        MARKET PRICE UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>{" "}
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {simulationVolumeData.length != 0 && <BarGraph
+                                        bardata={simulationVolumeData}
+                                        type={"volume"} />
+                                      }
+                                      <div className="simulation-graph">
+                                        VOLUME UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {simulationQuantityData.length != 0 && <BarGraph
+                                        bardata={simulationQuantityData}
+                                        type={"quantity"} />
+                                      }
+                                      <div className="simulation-graph">
+                                        QUANTITY UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                  </Tabs>
+                                </div>
+                              </TabPanel>
+                              {/*  */}
+                              <TabPanel>
+                                <div className="tabs">
+                                  {" "}
+                                  <Tabs
+                                    selectedIndex={tabName}
+                                    onSelect={(tabName: SetStateAction<number>) =>
+                                      setTabName(tabName)
+                                    }>
+                                    <TabList>
+                                      <Tab>Price</Tab>
+                                      <Tab>Volume</Tab>
+                                      <Tab>Quantity</Tab>
+                                    </TabList>{" "}
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {graphDataNsIteration.length != 0 && graphDataNsRound.length != 0 && <CandleStickSimulation
+                                        iteration={graphDataNsIteration}
+                                        round={graphDataNsRound}
+                                        noofiterations={iterations}
+                                        noofrounds={rounds}/>
+                                      }
+                                      <div className="simulation-graph">
+                                        MARKET PRICE UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>{" "}
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {nsimulationVolumeData.length != 0 && <BarGraph
+                                        bardata={nsimulationVolumeData}
+                                        type={"volume"} />
+                                      }
+                                      <div className="simulation-graph">
+                                        VOLUME UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                    <TabPanel>
+                                      {" "}
+
+                                      {loading == true && <Loader />}
+
+                                      {nsimulationQuantityData.length != 0 && <BarGraph
+                                        bardata={nsimulationQuantityData}
+                                        type={"quantity"} />
+                                      }
+                                      <div className="simulation-graph">
+                                        QUANTITY UPDATES
+                                      </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">Mean</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">Median</th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>105.77</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>55.01</td>
+                                                  <td>615.00</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TabPanel>
+                                  </Tabs>
+                                </div>
+                              </TabPanel>
+                            </Tabs>
+                          </div>
+
                         </div>
                       </TabPanel>
                       <TabPanel className="stabilization-fund">

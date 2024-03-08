@@ -48,7 +48,7 @@ export default function Home() {
     const result = await API_Auth.uploadUserImage(body);
     console.log(result);
     if (result.status == 200) {
-      toast.success("Image Uploade Successfully");
+      toast.success("Image Upload Successfully");
       getAdminInfo(dummyemail);
     }
   };

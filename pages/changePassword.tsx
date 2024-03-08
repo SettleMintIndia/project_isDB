@@ -20,8 +20,10 @@ export default function Home() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [marginTop, setMarginTop] = useState("10px");
+ 
+  const [totalErrors, setTotalErrors] = useState([])
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
-  const [totalErrors, setTotalErrors] = useState([]);
 
   const handleNewPasswordInput = (event: any) => {
     setNewPassword(event.target.value);
@@ -119,14 +121,18 @@ export default function Home() {
       let dummyemail = "demo@isdb.com";
 
       let body = {
-        email: dummyemail,
-        old_password: currentPassword,
-        new_password: newPassword,
-      };
+        "email": dummyemail,
+        "old_password": currentPassword,
+        "new_password": newPassword
+      }
+      setDisableSubmit(true);
+
       const result = await API_Auth.updatePassword(body);
       console.log(result);
       if (result.status == 400) {
-        toast.error(result.error);
+        toast.error(result.error)
+        setDisableSubmit(false);
+
       } else {
         toast.success(result.msg);
         setTimeout(() => {
@@ -267,6 +273,7 @@ export default function Home() {
               <button
                 className="create-template"
                 onClick={handleUpdatePassword}
+                disabled={disableSubmit}
               >
                 Save
               </button>

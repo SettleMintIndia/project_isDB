@@ -68,6 +68,8 @@ export default function Home() {
 
   const [finalComments, setfinalComments] = useState("");
   const [finalCommentsErr, setfinalCommentsErr] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
 
   useEffect(() => {
     console.log(totalTempName);
@@ -395,7 +397,7 @@ export default function Home() {
       setfinalCommentsErr("");
     }
     if (error == 0) {
-      let body = {
+      let finalbody = {
         "temp_name": newtemplateName,
         "scenario_name": scenarioType,
         "initial_mkt_price": Number(inititalmarketprice),
@@ -416,11 +418,11 @@ export default function Home() {
         "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
         "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
         "admin_id": 2,
-        "limit_order_upper_bound": upperbound,
-        "limit_order_lower_bound": lowerbound
+        "limit_order_upper_bound": Number(upperbound),
+        "limit_order_lower_bound": Number(lowerbound)
 
       }
-      console.log(body);
+      console.log("finalbody",finalbody);
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
         setFinalErr("price or quant variance should be less than 1")
       } else if (Number(upperbound) > 1) {
@@ -431,6 +433,9 @@ export default function Home() {
 
 
       } else {
+        setDisableSubmit(true);
+        console.log("finalbody",finalbody);
+
         const template_exist = await API_Auth.getTemplateExists(newtemplateName)
         console.log("template_exist", template_exist)
         if (template_exist.name_available == false) {
@@ -438,16 +443,17 @@ export default function Home() {
         }
         else {
           setFinalErr("")
-          const data = await API_Auth.createTemplate(body)
-          console.log(data);
+          const data = await API_Auth.createTemplate(finalbody)
+          console.log("result",data);
           if (data.error! = '' || data.error == undefined) {
-            console.log("hello")
             toast.success("Template Created Successfully")
             setTimeout(() => {
               router.push("/templateDetails")
             }, 2000);
 
           } else {
+            setDisableSubmit(false);
+
             setFinalErr("Duplicate Entries Exists");
 
           }
@@ -903,6 +909,7 @@ export default function Home() {
                   className="create-template"
                   btn-close-black
                   onClick={() => handleSaveTemplate()}
+                  disabled={disableSubmit}
                 >
                   Save Changes
                 </button>
@@ -937,6 +944,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
     </AppLayout>
   );

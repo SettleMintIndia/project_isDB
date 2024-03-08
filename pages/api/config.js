@@ -25,7 +25,7 @@ const GET_ORDERDETAILS=base_url+"getOrdersForExecution"
 const GET_TRADEHISTORYWS=base_url+"tradeHistoryWS"
 const GET_TRADEHISTORYNS=base_url+"tradeHistoryNS"
 const GET_STABLIZATION_FUND=base_url+"getStabilizationFund"
-const GET_SIMULATIONRESULT=base_url+"simulationResult"
+const GET_SIMULATIONRESULT=base_url+"getSimulationResult"
 
 const GET_NOTIFICATIONS=base_url+"getNotifications"
 

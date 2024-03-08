@@ -15,6 +15,7 @@ import ReactPaginate from "react-paginate";
 import Loader from "@/components/layout/Loader";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
+import * as XLSX from "xlsx";
 
 export default function Home() {
   const router = useRouter();
@@ -76,6 +77,7 @@ export default function Home() {
       dateto: toDate,
       resultPerPage: perPage,
       pgNo: pageNo,
+      execution_id: "",
     };
     setLoading(true)
     const result = await API_Auth.getSimulationHistory(body);
@@ -85,6 +87,7 @@ export default function Home() {
       setTemplateData(result.simulations);
       setTotalCount(result.count);
       setPageCount(Math.ceil(result.count / perPage));
+      console.log(Math.ceil(result.count / perPage))
     }
   };
   const viewDetails = (data: any) => {
@@ -305,213 +308,325 @@ export default function Home() {
       fromDate,
       toDate,
       perPage,
-      pageCount)   
-       setCurrentPage(pageCount - 1)
+      pageCount)
+    setCurrentPage(pageCount - 1)
+
+
+  }
+
+  const handleDownloadExcel = async (data: any) => {
+    console.log(data);
+
+    let body = {
+      temp_name: data.temp_name,
+      admin_id: "",
+      scenario: "",
+      datefrom: "",
+      dateto: "",
+      resultPerPage: 1,
+      pgNo: 1,
+      showPrivate: true,
+    };
+
+    console.log(body);
+    const result = await API_Auth.getAllTemplates(body);
+
+    console.log("result", result);
+    console.log(result.templates[0]);
+    var keydata = result.templates[0];
+    keydata['Iteartions'] = data.iterations;
+    keydata['Orders'] = data.nb_orders
+    keydata['rounds'] = data.nb_rounds
+    keydata['oder variance'] = data.nb_orders_var;
+    keydata['created_timestamp'] = moment(keydata.created_timestamp).format("MM/DD/YYYY h:mm:ss A")
+    let finalData: any[] = [];
+
+    const wb = XLSX.utils.book_new();
+
+    Object.keys(keydata).forEach(function (key) {
+      var value = keydata[key];
+      let obj = { 'key': key, 'Value': value };
+      finalData.push(obj);
+    });
+    console.log("finalData", finalData)
+
+    const tempData = XLSX.utils.json_to_sheet(finalData);
+    XLSX.utils.book_append_sheet(wb, tempData, 'Template');
+
+
+
+
+    /*  price*/
+
+    const withStabilizationData = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withoutStabilizationData = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+
+    const wsData = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationData).forEach((key) => {
+      wsData.push([key, withStabilizationData[key], withoutStabilizationData[key]]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Price');
+    /* volume */
+
+    const withStabilizationDataVOlume = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withoutStabilizationDataVolume = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+
+    const wsDataVolume = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationDataVOlume).forEach((key) => {
+      wsDataVolume.push([key, withStabilizationDataVOlume[key], withoutStabilizationDataVolume[key]]);
+    });
+
+    const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
+    XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
+
+
+
+
+
+
+    /* Quantity */
+
+    const withStabilizationDataQty = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withoutStabilizationDataQty = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+
+    const wsDataQty = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationDataQty).forEach((key) => {
+      wsDataQty.push([key, withStabilizationDataQty[key], withoutStabilizationDataQty[key]]);
+    });
+
+    const wsQty = XLSX.utils.aoa_to_sheet(wsDataQty);
+    XLSX.utils.book_append_sheet(wb, wsQty, 'Quantity');
+
+    /* stablizationfund */
+
+    const withCash = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
+    const withArrayQuantity = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
+    const withTotalAssetV = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
+    const withTotalAssetDollar = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
+
+
+    const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset/v', 'Total Asset $']];
+    Object.keys(withCash).forEach((key) => {
+      wsDataStablization.push([key, withCash[key], withArrayQuantity[key], withTotalAssetV[key], withTotalAssetDollar[key]]);
+    });
+
+    const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
+    XLSX.utils.book_append_sheet(wb, wssdata, 'Stablization');
+
+
+
+
+    XLSX.writeFile(wb, 'Report.xlsx');
+
+
 
 
   }
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template details">
-        <div className="template-header">
-          <div className="back-option"></div>
-          <div className="main-header">
-            <h1>Simulation History</h1>
+      <div className="container-fluid">
+        <div className="template details">
+          <div className="template-header">
+            <div className="back-option"></div>
+            <div className="main-header">
+              <h1>Simulation History</h1>
 
-            {/* <p>({totalCount} )</p> */}
+              {/* <p>({totalCount} )</p> */}
+            </div>
+            <div className="head"></div>
           </div>
-          <div className="head"></div>
-        </div>
 
-        <div className="compare-banner">
-          <label htmlFor="">Compare Templates :</label>
-          {dataRecords.map((item: any) => (
-            <button className="templatename">
-              {item.temp_name} <img src="imgs/close-black.svg" alt="" onClick={() => handleClose(item.exe_id)} />
-            </button>
-          ))}
+          <div className="compare-banner">
+            <label htmlFor="">Compare Templates :</label>
+            {dataRecords.map((item: any) => (
+              <button className="templatename">
+                {item.temp_name} <img src="imgs/close-black.svg" alt="" onClick={() => handleClose(item.exe_id)} />
+              </button>
+            ))}
 
-          {/*  <button className="templatename">
+            {/*  <button className="templatename">
             Template1 <img src="imgs/close-black.svg" alt="" />
           </button> */}
 
-          <button className="compare-button">
-            <a onClick={() => handleCompareClick()}>Compare Templates</a>
-          </button>
-          <button className="clear" onClick={() => handleClear()}>Clear All</button>
-        </div>
-        <div className="template-type">
-          <div className="tabs">
-            <div className="filter">
-              <label htmlFor="filterBy">Filter by:</label>
-              <span>Scenario Type</span>
-            </div>
-
-            <div className="filterArea">
-              <div className="filterLeft">
-                <div className="tabs">
-                  {" "}
-                  <Tabs>
-                    <TabList>
-                      <Tab>All</Tab>
-                      <Tab>Crash</Tab>
-                      <Tab>Bubble</Tab>
-                    </TabList>{" "}
-                  </Tabs>
-                </div>
+            <button className="compare-button">
+              <a onClick={() => handleCompareClick()}>Compare Templates</a>
+            </button>
+            <button className="clear" onClick={() => handleClear()}>Clear All</button>
+          </div>
+          <div className="template-type">
+            <div className="tabs">
+              <div className="filter">
+                <label htmlFor="filterBy">Filter by:</label>
+                <span>Scenario Type</span>
               </div>
-              <div className="searchArea">
-                <div className="searchFilter options">
-                  {/* <select name="filter" id="searchtype">
+
+              <div className="filterArea">
+                <div className="filterLeft">
+                  <div className="tabs">
+                    {" "}
+                    <Tabs>
+                      <TabList>
+                        <Tab>All</Tab>
+                        <Tab>Crash</Tab>
+                        <Tab>Bubble</Tab>
+                      </TabList>{" "}
+                    </Tabs>
+                  </div>
+                </div>
+                <div className="searchArea">
+                  <div className="searchFilter options">
+                    {/* <select name="filter" id="searchtype">
                         <option value="template">Template</option>
                         <option value="creator">Creator</option>
                       </select> */}
-                  <input
-                    type="text"
-                    placeholder="Search by template name"
-                    onChange={handleInput}
-                    value={tempname}
-                    name="tempname"
-                  />
-                  <div className="search-icon">
-                    <img src="imgs/search-icon.svg" alt="" />
+                    <input
+                      type="text"
+                      placeholder="Search by template name"
+                      onChange={handleInput}
+                      value={tempname}
+                      name="tempname"
+                    />
+                    <div className="search-icon">
+                      <img src="imgs/search-icon.svg" alt="" />
+                    </div>
                   </div>
-                </div>
-                {/*   <div className="calendar">
+                  {/*   <div className="calendar">
                   <img src="imgs/calendar.svg" alt="" />
                   <select name="" id="calendar">
                     <option value="">From-to</option>
                   </select>
                 </div> */}
-                <div className="dateFilter">
-                  <input
-                    type="date"
-                    name="fromDate"
-                    value={fromDate}
-                    onChange={handleInput}
-                    placeholder="Start Date"
-                  />
+                  <div className="dateFilter">
+                    <input
+                      type="date"
+                      name="fromDate"
+                      value={fromDate}
+                      onChange={handleInput}
+                      placeholder="Start Date"
+                    />
 
-                  <input
-                    type="date"
-                    name="toDate"
-                    value={toDate}
-                    onChange={handleInput}
-                    placeholder="End Date"
-                  />
+                    <input
+                      type="date"
+                      name="toDate"
+                      value={toDate}
+                      onChange={handleInput}
+                      placeholder="End Date"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {loading == true && <Loader />}
+              <div className=" table-responsive">
+                <div className="template-content">
+                  <table className="table" style={{ borderSpacing: 0 }}>
+                    <thead>
+                      <tr>
+                        <th>Compare Templates</th>
+                        <th>Scenario Type</th>
+                        <th>Template Name</th>
+                        <th>Visibility</th>
+                        <th>Simulation Date</th>
+                        <th>Execution Details</th>
+                        <th>
+                          <img src=" imgs/download-white.svg" alt="" /> Download
+                          Report
+                        </th>
+                      </tr>
+                    </thead>
+                    {templateData.length == 0 && <tbody>
+                      <tr >
+                        <td colSpan={12}>
+                          <p className="no_Data_table">No Data Found</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                    }
+                    <tbody>
+                      {templateData.map((data) => (
+                        <tr key={data.exe_id}>
+                          <td id="checkbox">
+                            {" "}
+                            <input type="checkbox" className="checkbox"
+                              checked={selectedRecords.includes(data.exe_id)}
+                              onChange={() => handleCheckboxChange(data.exe_id)} />
+                          </td>
+                          <td>{data.scenario_name}</td>
+                          <td>{data.temp_name}</td>
+                          <td id="privacy">
+                            <div className="btn-group privacy">
+                              <button
+                                className={
+                                  data.is_public === 1 ? "btn active" : "btn"
+                                }
+                                onClick={() => handleButtonClick(data)}
+                              >
+                                Public
+                              </button>
+                              <button
+                                className={
+                                  data.is_public === 0 ? "btn active" : "btn"
+                                }
+                                onClick={() => handleButtonClick(data)}
+                              >
+                                Private
+                              </button>
+                            </div>
+                          </td>
+                          <td>
+                            {moment(data.created_timestamp).format(
+                              "MM/DD/YYYY h:mm:ss A"
+                            )}
+                          </td>
+
+                          <td
+                            className="actions execution
+                  "
+                          >
+                            <a>
+                              <button
+                                className="details-button"
+                                onClick={() => viewDetails(data)}
+                              >
+                                View Details
+                              </button>
+                            </a>
+                          </td>
+                          <td id="file">
+                            <Link href="templatepdf">PDF</Link>
+                            <a onClick={() => handleDownloadExcel(data)}>EXCEL</a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
-
-            {loading == true && <Loader />}
-            <div className=" table-responsive">
-              <div className="template-content">
-                <table className="table" style={{ borderSpacing: 0 }}>
-                  <thead>
-                    <tr>
-                      <th>Compare Templates</th>
-                      <th>Scenario Type</th>
-                      <th>Template Name</th>
-                      <th>Visibility</th>
-                      <th>Simulation Date</th>
-                      <th>Execution Details</th>
-                      <th>
-                        <img src=" imgs/download-white.svg" alt="" /> Download
-                        Report
-                      </th>
-                    </tr>
-                  </thead>
-                  {templateData.length == 0 && <tbody>
-                    <tr >
-                      <td colSpan={12}>
-                        <p className="no_Data_table">No Data Found</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                  }
-                  <tbody>
-                    {templateData.map((data) => (
-                      <tr key={data.exe_id}>
-                        <td id="checkbox">
-                          {" "}
-                          <input type="checkbox" className="checkbox"
-                            checked={selectedRecords.includes(data.exe_id)}
-                            onChange={() => handleCheckboxChange(data.exe_id)} />
-                        </td>
-                        <td>{data.scenario_name}</td>
-                        <td>{data.temp_name}</td>
-                        <td id="privacy">
-                          <div className="btn-group privacy">
-                            <button
-                              className={
-                                data.is_public === 1 ? "btn active" : "btn"
-                              }
-                              onClick={() => handleButtonClick(data)}
-                            >
-                              Public
-                            </button>
-                            <button
-                              className={
-                                data.is_public === 0 ? "btn active" : "btn"
-                              }
-                              onClick={() => handleButtonClick(data)}
-                            >
-                              Private
-                            </button>
-                          </div>
-                        </td>
-                        <td>
-                          {moment(data.created_timestamp).format(
-                            "MM/DD/YYYY h:mm:ss A"
-                          )}
-                        </td>
-
-                        <td
-                          className="actions execution
-                  "
-                        >
-                          <a>
-                            <button
-                              className="details-button"
-                              onClick={() => viewDetails(data)}
-                            >
-                              View Details
-                            </button>
-                          </a>
-                        </td>
-                        <td id="file">
-                          <Link href="pdf">PDF</Link>
-                          <Link href="templatedetails_excel">EXCEL</Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          </div>
+          {templateData.length != 0 && <div className="pagging-area mt-2">
+            <div className="toolbar">
+              <label htmlFor="">Results per page :</label>
+              <div className="tooldrop">
+                <select name="" id="">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                </select>
               </div>
+              <span>of {totalCount}</span>
             </div>
-          </div>
-        </div>
-        <div className="pagging-area mt-2">
-          <div className="toolbar">
-            <label htmlFor="">Results per page :</label>
-            <div className="tooldrop">
-              <select name="" id="">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-            <span>of {totalCount}</span>
-          </div>
-          <div className="paging-list">
-            {currentPage == 0 && <div className="leftaction disable-pointer" >
-              <img src="imgs/left-doublearrowg.svg" alt="" />
-            </div>}
-            {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
-              <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>}
-            {/*   <div className="leftaction-single">
+            <div className="paging-list">
+              {currentPage == 0 && <div className="leftaction disable-pointer" >
+                <img src="imgs/left-doublearrowg.svg" alt="" />
+              </div>}
+              {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
+                <img src="imgs/left-doublearrow.svg" alt="" />
+              </div>}
+              {/*   <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
@@ -523,34 +638,35 @@ export default function Home() {
             <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
             </div> */}
-            <ReactPaginate
-              previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
-              nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
-              breakLabel={"..."}
-              breakClassName={"break-me"}
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              forcePage={currentPage}
-              disabledClassName="disabled"
-              disableInitialCallback
-            />
-             {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
-              <img src="imgs/right-doublearrow.svg" alt="" />
+              <ReactPaginate
+                previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+                nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
+                breakLabel={"..."}
+                breakClassName={"break-me"}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                forcePage={currentPage}
+                disabledClassName="disabled"
+                disableInitialCallback
+              />
+              {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
+                <img src="imgs/right-doublearrow.svg" alt="" />
+              </div>
+              }
+              {currentPage == pageCount - 1 && <div className="rightaction" >
+                <img src="imgs/right-doublearrowg.svg" alt="" />
+              </div>
+              }
             </div>
-            }
-             {currentPage == pageCount - 1 && <div className="rightaction" >
-              <img src="imgs/right-doublearrowg.svg" alt="" />
-            </div>
-            }
           </div>
+          }
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
     </AppLayout>
   );
 }
