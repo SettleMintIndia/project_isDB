@@ -24,6 +24,7 @@ export default function Home() {
   const [marginTop, setMarginTop] = useState("10px");
   const [totalErrors, setTotalErrors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const[disabledSubmit,setDisableSubmit]=useState(false)
 
   const handleInput1 = (event: any) => {
     const { name, value } = event.target;
@@ -146,7 +147,7 @@ export default function Home() {
       };
       console.log(body);
       setLoading(true);
-      //setDisableSubmit(true);
+      setDisableSubmit(true);
 
 
       const result = await API_Auth.createAdmin(body);
@@ -161,7 +162,7 @@ export default function Home() {
         }, 2000);
       } else {
         toast.error(result.msg);
-        //setDisableSubmit(false);
+        setDisableSubmit(false);
 
       }
     }
@@ -296,6 +297,7 @@ export default function Home() {
                 <button
                   className="create-template"
                   onClick={() => handleCreateAdmin()}
+                  disabled={disabledSubmit}
                 >
                   Create Admin
                 </button>
