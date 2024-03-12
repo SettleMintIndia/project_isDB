@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "./context";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
 
 export default function Home() {
   const router = useRouter();
@@ -54,16 +55,26 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
+  const [userId, setUserId] = useState('')
   const {
     loginuseremail, setloginuseremail
   } = useContext(UserContext);
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getScenarios();
     getDistributions();
-    console.log("email", loginuseremail);
+    let email = localStorage.getItem('useremail')
+    console.log("email");
+    getEmailInfo(email)
   }, []);
+
+  const getEmailInfo = async (email: any) => {
+    const result = await API_Auth.getAdminInformation(email);
+    console.log(result);
+    setUserId(result.id)
+  }
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -314,7 +325,7 @@ export default function Home() {
           distribution == "poisson" || distribution == "normal"
             ? Number(meanqty)
             : 0,
-        admin_id: 2,
+        admin_id: userId,
         limit_order_upper_bound: upperbound,
         limit_order_lower_bound: lowerbound,
       };
@@ -326,35 +337,42 @@ export default function Home() {
         toast.error("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
         toast.error("lower lmt order price variance should be greater than 1")
-
-
       }
       else {
-
-
         const template_exist = await API_Auth.getTemplateExists(templatename)
         console.log("template_exist", template_exist)
 
         if (template_exist.name_available == false) {
           toast.error("Template Name Already Exists");
         } else {
-
-        //  setDisableSubmit(true);
-
+          setLoading(true)
+          setDisableSubmit(true);
           const data = await API_Auth.createTemplate(body)
           console.log(data);
+          setLoading(false)
+
           if ((data.error! = "" || data.error == undefined)) {
             console.log("hello");
             toast.success("Template Created Successfully");
-            setTimeout(() => {
-              router.push("/templateDetails");
-            }, 2000);
+
+            const superadminkey = localStorage.getItem("superadmin");
+            console.log("superadmin", superadminkey);
+            if (superadminkey == "superadmin") {
+
+              setTimeout(() => {
+
+                router.push("/templateDetails");
+              }, 2000);
+            } else {
+              setTimeout(() => {
+
+                router.push("/runSimulation");
+              }, 2000);
+            }
           } else {
             console.log("Hi", data.error.error);
             toast.error("Duplicate Entries ");
-           // setDisableSubmit(false);
-
-
+            setDisableSubmit(false);
           }
         }
       }
@@ -402,7 +420,6 @@ export default function Home() {
               <div className="col-md-6 mb-3">
                 <div className="form-content">
                   <label htmlFor="type">Scenario Type*</label>
-                  <div className="select-wrapper">
                     <select
                       name="scenarioType"
                       id="type"
@@ -419,7 +436,6 @@ export default function Home() {
                         </option>
                       ))}
                     </select>
-                  </div>
 
                   {scenarioTypeErr != "" && (
                     <p className="alert-message">{scenarioTypeErr}</p>
@@ -812,10 +828,12 @@ export default function Home() {
                 )}
               </div>
             </div>
+            {loading == true && <Loader />}
             <div className="buttoncenter">
               <button
                 className="create-template"
                 onClick={() => handleCreateTemplate()}
+                disabled={disableSubmit}
               >
                 Create Template{" "}
               </button>

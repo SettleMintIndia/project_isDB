@@ -16,13 +16,16 @@ import Loader from "@/components/layout/Loader";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import * as XLSX from "xlsx";
+import * as React from 'react';
+import { PDFExport } from '@progress/kendo-react-pdf'
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
   const [selectedRecords, setSelectedRecords] = useState([]);
-  const [dataRecords, setDataRecords] = useState([]);
+  const [dataRecords, setDataRecords] = useState([])
+  const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
 
   const [templateData, setTemplateData] = useState([
     {
@@ -46,9 +49,94 @@ export default function Home() {
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [viewData, setViewData] = useState({});
+  const [viewData, setViewData] = useState({
+    limit_order_upper_bound: '',
+    limit_order_lower_bound: '',
+    temp_name: "",
+    created_timestamp: "",
+    scenario_name: "",
+    initial_mkt_price: "",
+    price_var: "",
+    base_quant: "",
+    quant_var: "",
+    alpha0: "",
+    alpha1: "",
+    theta0: "",
+    theta1: "",
+    std_dev_price_buy: "",
+    std_dev_price_sell: "",
+    std_dev_quant: "",
+    mean_quant: "",
+    distribution: "",
+    comments: "",
+    mean_price_buy: "",
+    mean_price_sell: "",
+    is_public: 1,
+    Iteartions: "",
+    Orders: "",
+    rounds: "",
+    oder_variance: "",
+
+
+  }); const pdfExportComponent = React.useRef<PDFExport>(null);
+  const [mounted, setMounted] = useState(false);
+  const [count, setCount] = useState(0)
+
+  const [meanPriceSimulation, setMeanPriceSimulation] = useState({
+    inter_10_price_ns: 0, inter_10_price_ws: 0,
+    inter_90_price_ns: 0, inter_90_price_ws: 0,
+    max_price_ns: 0, max_price_ws: 0,
+    mean_price_ns: 0, mean_price_ws: 0,
+    median_price_ns: 0, median_price_ws: 0,
+    min_price_ns: 0, min_price_ws: 0,
+    std_price_ns: 0, std_price_ws: 0
+  })
+  const [meanVolumeSimulation, setMeanVolumeSimulation] = useState({
+    inter_10_amt_ns: 0, inter_10_amt_ws: 0,
+    inter_90_amt_ns: 0, inter_90_amt_ws: 0,
+    max_amt_ns: 0, max_amt_ws: 0,
+    mean_amt_ns: 0, mean_amt_ws: 0,
+    median_amt_ns: 0, median_amt_ws: 0,
+    min_amt_ns: 0, min_amt_ws: 0,
+    std_amt_ns: 0, std_amt_ws: 0
+  })
+
+  const [meanQuantitySimulation, setMeanQuantitySimulation] = useState({
+    inter_10_quant_ns: 0, inter_10_quant_ws: 0,
+    inter_90_quant_ns: 0, inter_90_quant_ws: 0,
+    max_quant_ns: 0, max_quant_ws: 0,
+    mean_quant_ns: 0, mean_quant_ws: 0,
+    median_quant_ns: 0, median_quant_ws: 0,
+    min_quant_ns: 0, min_quant_ws: 0,
+    std_quant_ns: 0, std_quant_ws: 0
+  })
+
+  const [StablizationFundData, setStablizationFundData] = useState({
+    inter_10_asset_stab: 0, inter_10_cash_stab: 0,
+    inter_10_total_stab: 0, inter_10_total_v_stab: 0,
+    inter_90_asset_stab: 0, inter_90_cash_stab: 0,
+    inter_90_total_stab: 0, inter_90_total_v_stab: 0,
+    max_asset_stab: 0, max_cash_stab: 0,
+    max_total_stab: 0, max_total_v_stab: 0,
+    mean_asset_stab: 0, mean_cash_stab: 0,
+    mean_total_stab: 0, mean_total_v_stab: 0,
+    median_asset_stab: 0, median_cash_stab: 0,
+    median_total_stab: 0, median_total_v_stab: 0,
+    min_asset_stab: 0, min_cash_stab: 0,
+    min_total_stab: 0, min_total_v_stab: 0,
+    std_asset_stab: 0, std_cash_stab: 0,
+    std_total_stab: 0, std_total_v_stab: 0
+
+  })
+
+  const [StablizationTotal, setStablizationTotal] = useState({
+    round_assets: 0, round_cash: 0, round_tk: 0
+  })
+
+
 
   useEffect(() => {
+    setMounted(true);
     getSimulations(
       tempname,
       creatorName,
@@ -58,7 +146,15 @@ export default function Home() {
       perPage,
       pageNo
     );
-  }, []);
+    getScenarios();
+
+  }, [viewData]);
+
+  const getScenarios = async () => {
+    const result = await API_Auth.getAllScenarios();
+    console.log("scenarios", result);
+    setFinalScenarios(result.scenarios);
+  };
   const getSimulations = async (
     tempname: any,
     creatorName: any,
@@ -91,7 +187,6 @@ export default function Home() {
   };
   const viewDetails = (data: any) => {
     console.log(data);
-    setViewData(data);
 
     router.push({
       pathname: "/simulation_history_info",
@@ -174,6 +269,24 @@ export default function Home() {
     }
   };
 
+  const handleAllData = () => {
+    setTempName("");
+    setCreatorName("");
+    setSType("");
+    setFromDate("");
+    setToDate("")
+    setCurrentPage(0)
+
+    getSimulations(
+      "",
+      "",
+      "",
+      "",
+      "",
+      perPage,
+      1)
+
+  }
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
     let page = selectedPage * perPage;
@@ -234,6 +347,7 @@ export default function Home() {
   };
 
   const handleCompareClick = () => {
+    console.log(dataRecords)
     if (dataRecords.length != 3) {
       toast.error("Template Records length should be 3");
     } else {
@@ -243,8 +357,12 @@ export default function Home() {
         pathname: "/templatedetails_excel",
         query: {
           temp_name1: dataRecords[0]?.temp_name,
+          exe_id1:dataRecords[0]?.exe_id,
           temp_name2: dataRecords[1]?.temp_name,
+          exe_id2:dataRecords[1]?.exe_id,
           temp_name3: dataRecords[2]?.temp_name,
+          exe_id3:dataRecords[2]?.exe_id,
+
         },
       });
     }
@@ -283,6 +401,7 @@ export default function Home() {
 
   const handleDownloadExcel = async (data: any) => {
     console.log(data);
+    setCount(0)
 
     let body = {
       temp_name: data.temp_name,
@@ -324,20 +443,27 @@ export default function Home() {
 
     /*  price*/
 
-    const withStabilizationData = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
-    const withoutStabilizationData = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
+    const meanPrice = await API_Auth.getSimulationResult(data.exe_id, "price")
+    console.log("meanPrice", meanPrice.sim)
+    const MeanPriceSimulation = meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim
+
+    const withStabilizationData =
+    {
+      Template: data.temp_name,
+      "Mean": MeanPriceSimulation.mean_price_ws,
+      "Median": MeanPriceSimulation.median_price_ws,
+      "Standard deviation": MeanPriceSimulation.std_price_ws,
+      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ws + "-" + MeanPriceSimulation.inter_90_price_ws
+    }
+    const withoutStabilizationData =
+    {
+      "Template": data.temp_name,
+      Mean: MeanPriceSimulation.mean_price_ns,
+      "Median": MeanPriceSimulation.median_price_ns,
+      "Standard deviation": MeanPriceSimulation.std_price_ns,
+      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ns + "-" + MeanPriceSimulation.inter_90_price_ns
+
+    }
 
     const wsData = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationData).forEach((key) => {
@@ -353,20 +479,29 @@ export default function Home() {
     XLSX.utils.book_append_sheet(wb, ws, "Price");
     /* volume */
 
-    const withStabilizationDataVOlume = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
-    const withoutStabilizationDataVolume = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
+    const meanVolume = await API_Auth.getSimulationResult(data.exe_id, "volume")
+    console.log("meanVolume", meanVolume.sim)
+    const MeanVolumeSimulation = meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim
+
+
+    const withStabilizationDataVOlume =
+    {
+      "Template": data.temp_name,
+      Mean: MeanVolumeSimulation.mean_amt_ws,
+      Median: MeanVolumeSimulation.median_amt_ws,
+      "Standard deviation": MeanVolumeSimulation.std_amt_ws,
+      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ws + "-" + MeanVolumeSimulation.inter_90_amt_ws
+    }
+    const withoutStabilizationDataVolume =
+
+    {
+      "Template": data.temp_name,
+      Mean: MeanVolumeSimulation.mean_amt_ns,
+      Median: MeanVolumeSimulation.median_amt_ns,
+      "Standard deviation": MeanVolumeSimulation.std_amt_ns,
+      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ns + "-" + MeanVolumeSimulation.inter_90_amt_ns
+    }
+
 
     const wsDataVolume = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataVOlume).forEach((key) => {
@@ -378,24 +513,35 @@ export default function Home() {
     });
 
     const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
-    XLSX.utils.book_append_sheet(wb, wsVolume, "Volume");
+    XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
 
     /* Quantity */
 
-    const withStabilizationDataQty = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
-    const withoutStabilizationDataQty = {
-      Template: "Bubble1",
-      Mean: 12,
-      Median: 10,
-      "Standard deviation": 19,
-      "10%-90% interval": 10,
-    };
+
+    const meanqty = await API_Auth.getSimulationResult(data.exe_id, "quantity")
+    console.log("meanqty", meanqty.sim)
+    const meanqtysimulation = meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim
+
+
+    const withStabilizationDataQty =
+    {
+      "Template": data.temp_name,
+      Mean: meanqtysimulation.mean_quant_ws,
+      Median: meanqtysimulation.median_quant_ws,
+      "Standard deviation": meanqtysimulation.std_quant_ws,
+      "10%-90% interval": meanqtysimulation.inter_10_quant_ws + "-" + meanqtysimulation.inter_90_quant_ws
+    }
+    const withoutStabilizationDataQty =
+
+    {
+      "Template": data.temp_name,
+      Mean: meanqtysimulation.mean_quant_nsn,
+      Median: meanqtysimulation.median_quant_ns,
+      "Standard deviation": meanqtysimulation.std_quant_ns,
+      "10%-90% interval": meanqtysimulation.inter_10_quant_ns + "-" + meanQuantitySimulation.inter_90_quant_ns
+    }
+
+
 
     const wsDataQty = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataQty).forEach((key) => {
@@ -411,29 +557,33 @@ export default function Home() {
 
     /* stablizationfund */
 
-    const withCash = { temp_name: "x", mean: 12, median: 10, deviation: 19 };
-    const withArrayQuantity = {
-      temp_name: "x",
-      mean: 12,
-      median: 10,
-      deviation: 19,
+
+
+    const stabresult = await API_Auth.getStablizationFundDetails(data.exe_id);
+    console.log("StablizationFund", stabresult);
+    const totalfundata = stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
+
+
+
+    const withCash = {
+      temp_name: data.temp_name, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
     };
-    const withTotalAssetV = {
-      temp_name: "x",
-      mean: 12,
-      median: 10,
-      deviation: 19,
+    const withArrayQuantity = {
+      temp_name: data.temp_name, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    };
+    const withTotalAssetV =
+    {
+      temp_name: data.temp_name, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
     };
     const withTotalAssetDollar = {
-      temp_name: "x",
-      mean: 12,
-      median: 10,
-      deviation: 19,
+      temp_name: data.temp_name, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
     };
 
-    const wsDataStablization = [
-      ["", "Cash", "Asset(Quantity)", "Total Asset/v", "Total Asset $"],
-    ];
+    const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset $', 'Total Asset/v',]];
     Object.keys(withCash).forEach((key) => {
       wsDataStablization.push([
         key,
@@ -447,205 +597,266 @@ export default function Home() {
     const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
     XLSX.utils.book_append_sheet(wb, wssdata, "Stablization");
 
-    XLSX.writeFile(wb, "Report.xlsx");
-  };
-  return (
-    <AppLayout>
-      <div className="container-fluid">
-        <div className="template details history">
-          <div className="template-header">
-            <div className="back-option"></div>
-            <div className="main-header">
-              <h1>Simulation History</h1>
 
-              {/* <p>({totalCount} )</p> */}
-            </div>
-            <div className="head"></div>
-          </div>
 
-          <div className="compare-banner">
-            <label htmlFor="">Compare Templates :</label>
-            {dataRecords.map((item: any) => (
-              <button className="templatename">
-                {item.temp_name}{" "}
-                <img
-                  src="imgs/close-black.svg"
-                  alt=""
-                  onClick={() => handleClose(item.exe_id)}
-                />
-              </button>
-            ))}
 
-            {/*  <button className="templatename">
-            Template1 <img src="imgs/close-black.svg" alt="" />
-          </button> */}
+    XLSX.writeFile(wb, data.temp_name + 'Report.xlsx');
 
-            <button className="compare-button">
-              <a onClick={() => handleCompareClick()}>Compare Templates</a>
-            </button>
-            <button className="clear" onClick={() => handleClear()}>
-              Clear All
-            </button>
-          </div>
-          <div className="template-type">
-            <div className="tabs">
-              <div className="filter">
-                <label htmlFor="filterBy">Filter by:</label>
-                <span>Scenario Type</span>
+
+
+
+  }
+
+  const handleDownloadPDF = async (data: any) => {
+    console.log(data);
+    console.log(data.temp_name);
+    router.push({
+      pathname: "/reportpdf",
+      query: { temp_name: data.temp_name, exe_id: data.exe_id },
+    });
+
+    /* setCount(0)
+
+    let body = {
+      temp_name: data.temp_name,
+      admin_id: "",
+      scenario: "",
+      datefrom: "",
+      dateto: "",
+      resultPerPage: 1,
+      pgNo: 1,
+      showPrivate: true,
+    };
+
+    console.log(body);
+
+    const result = await API_Auth.getAllTemplates(body);
+    var keydata = result.templates[0];
+    keydata['Iteartions'] = data.iterations;
+    keydata['Orders'] = data.nb_orders
+    keydata['rounds'] = data.nb_rounds
+    keydata['oder_variance'] = data.nb_orders_var;
+
+    console.log("keydata", keydata,result.templates.length)
+    setViewData(keydata)
+    setCount(result.templates.length);
+    if (result.templates.length > 0) {
+      if (pdfExportComponent.current) {
+        pdfExportComponent.current.save();
+      }
+    } */
+  }
+  //console.log("viewData---------->",viewData)
+  if (mounted)
+    return (
+      <AppLayout>
+        <div className="container-fluid">
+          <div className="template details">
+            <div className="template-header">
+              <div className="back-option"></div>
+              <div className="main-header">
+                <h1>Simulation History</h1>
+
+                {/* <p>({totalCount} )</p> */}
               </div>
+              <div className="head"></div>
+            </div>
 
-              <div className="filterArea">
-                <div className="filterLeft">
-                  <div className="tabs">
-                    {" "}
-                    <Tabs>
-                      <TabList>
+            <div className="compare-banner">
+              <label htmlFor="">Compare Templates :</label>
+              {dataRecords.map((item: any) => (
+                <button className="templatename">
+                  {item.temp_name} <img src="imgs/close-black.svg" alt=""
+                   
+                    onClick={() => handleClose(item.exe_id)} />
+                </button>
+              ))}
+
+
+
+              <button className="compare-button">
+                <a onClick={() => handleCompareClick()}>Compare Templates</a>
+              </button>
+              <button className="clear" onClick={() => handleClear()}>Clear All</button>
+            </div>
+            <div className="template-type">
+              <div className="tabs">
+                <div className="filter">
+                  <label htmlFor="filterBy">Filter by:</label>
+                  <span>Scenario Type</span>
+                </div>
+
+                <div className="filterArea">
+                  <div className="filterLeft">
+                    <div className="tabs">
+                      {" "}
+                      <Tabs>
+                        {/*  <TabList>
                         <Tab>All</Tab>
                         <Tab>Crash</Tab>
                         <Tab>Bubble</Tab>
-                      </TabList>{" "}
-                    </Tabs>
+                      </TabList>{" "} */}
+                        <TabList>
+                          <Tab>
+                            <div onClick={() => handleAllData()}>All</div>
+                          </Tab>
+                          <div className="searchScenario">
+                            <div className="searchScenarioArea options">
+                              <select
+                                name="scenarioType"
+                                id="type"
+                                value={s_type}
+                                onChange={handleInput}
+                              >
+                                <option value="">Select Scenario Type</option>
+                                {finalScenarios.map((item) => (
+                                  <option
+                                    key={item?.scenario_name}
+                                    value={item?.scenario_name}
+                                  >
+                                    {item?.scenario_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        </TabList>{" "}
+                      </Tabs>
+                    </div>
                   </div>
-                </div>
-                <div className="searchArea">
-                  <div className="searchFilter options">
-                    {/* <select name="filter" id="searchtype">
+                  <div className="searchArea">
+                    <div className="searchFilter options">
+                      {/* <select name="filter" id="searchtype">
                         <option value="template">Template</option>
                         <option value="creator">Creator</option>
                       </select> */}
-                    <input
-                      type="text"
-                      placeholder="Search by template name"
-                      onChange={handleInput}
-                      value={tempname}
-                      name="tempname"
-                    />
-                    <div className="search-icon">
-                      <img src="imgs/search-icon.svg" alt="" />
+                      <input
+                        type="text"
+                        placeholder="Search by template name"
+                        onChange={handleInput}
+                        value={tempname}
+                        name="tempname"
+                      />
+                      <div className="search-icon">
+                        <img src="imgs/search-icon.svg" alt="" />
+                      </div>
                     </div>
-                  </div>
-                  {/*   <div className="calendar">
+                    {/*   <div className="calendar">
                   <img src="imgs/calendar.svg" alt="" />
                   <select name="" id="calendar">
                     <option value="">From-to</option>
                   </select>
                 </div> */}
-                  <div className="dateFilter">
-                    <input
-                      type="date"
-                      name="fromDate"
-                      value={fromDate}
-                      onChange={handleInput}
-                      placeholder="Start Date"
-                    />
+                    <div className="dateFilter">
+                      <input
+                        type="date"
+                        name="fromDate"
+                        value={fromDate}
+                        onChange={handleInput}
+                        placeholder="Start Date"
+                      />
 
-                    <input
-                      type="date"
-                      name="toDate"
-                      value={toDate}
-                      onChange={handleInput}
-                      placeholder="End Date"
-                    />
+                      <input
+                        type="date"
+                        name="toDate"
+                        value={toDate}
+                        onChange={handleInput}
+                        placeholder="End Date"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {loading == true && <Loader />}
-              <div className=" table-responsive">
-                <div className="template-content">
-                  <table className="table" style={{ borderSpacing: 0 }}>
-                    <thead>
-                      <tr>
-                        <th>Compare Templates</th>
-                        <th>Scenario Type</th>
-                        <th>Template Name</th>
-                        <th>Visibility</th>
-                        <th>Simulation Date</th>
-                        <th>Execution Details</th>
-                        <th>
-                          <img src=" imgs/download-white.svg" alt="" /> Download
-                          Report
-                        </th>
-                      </tr>
-                    </thead>
-                    {templateData.length == 0 && (
-                      <tbody>
+                {loading == true && <Loader />}
+                <div className=" table-responsive">
+                  <div className="template-content">
+                    <table className="table" style={{ borderSpacing: 0 }}>
+                      <thead>
                         <tr>
+                          <th>Compare Templates</th>
+                          <th>Scenario Type</th>
+                          <th>Template Name</th>
+                          <th>Visibility</th>
+                          <th>Simulation Date</th>
+                          <th>Execution Details</th>
+                          <th>
+                            <img src=" imgs/download-white.svg" alt="" /> Download
+                            Report
+                          </th>
+                        </tr>
+                      </thead>
+                      {templateData.length == 0 && <tbody>
+                        <tr >
                           <td colSpan={12}>
                             <p className="no_Data_table">No Data Found</p>
                           </td>
                         </tr>
                       </tbody>
-                    )}
-                    <tbody>
-                      {templateData.map((data) => (
-                        <tr key={data.exe_id}>
-                          <td id="checkbox">
-                            {" "}
-                            <input
-                              type="checkbox"
-                              className="checkbox"
-                              checked={selectedRecords.includes(data.exe_id)}
-                              onChange={() => handleCheckboxChange(data.exe_id)}
-                            />
-                          </td>
-                          <td>{data.scenario_name}</td>
-                          <td>{data.temp_name}</td>
-                          <td id="privacy">
-                            <div className="btn-group privacy">
-                              <button
-                                className={
-                                  data.is_public === 1 ? "btn active" : "btn"
-                                }
-                                onClick={() => handleButtonClick(data)}
-                              >
-                                Public
-                              </button>
-                              <button
-                                className={
-                                  data.is_public === 0 ? "btn active" : "btn"
-                                }
-                                onClick={() => handleButtonClick(data)}
-                              >
-                                Private
-                              </button>
-                            </div>
-                          </td>
-                          <td>
-                            {moment(data.created_timestamp).format(
-                              "MM/DD/YYYY h:mm:ss A"
-                            )}
-                          </td>
+                      }
+                      <tbody>
+                        {templateData.map((data) => (
+                          <tr key={data.exe_id}>
+                            <td id="checkbox">
+                              {" "}
+                              <input type="checkbox" className="checkbox"
+                                checked={selectedRecords.includes(data.exe_id)}
+                                onChange={() => handleCheckboxChange(data.exe_id)} />
+                            </td>
+                            <td>{data.scenario_name}</td>
+                            <td>{data.temp_name}</td>
+                            <td id="privacy">
+                              <div className="btn-group privacy">
+                                <button
+                                  className={
+                                    data.is_public === 1 ? "btn active" : "btn"
+                                  }
+                                  onClick={() => handleButtonClick(data)}
+                                >
+                                  Public
+                                </button>
+                                <button
+                                  className={
+                                    data.is_public === 0 ? "btn active" : "btn"
+                                  }
+                                  onClick={() => handleButtonClick(data)}
+                                >
+                                  Private
+                                </button>
+                              </div>
+                            </td>
+                            <td>
+                              {moment(data.created_timestamp).format(
+                                "MM/DD/YYYY h:mm:ss A"
+                              )}
+                            </td>
 
-                          <td
-                            className="actions execution
+                            <td
+                              className="actions execution
                   "
-                          >
-                            <a>
-                              <button
-                                className="details-button"
-                                onClick={() => viewDetails(data)}
-                              >
-                                View Details
-                              </button>
-                            </a>
-                          </td>
-                          <td id="file">
-                            <Link href="templatepdf">PDF</Link>
-                            <a onClick={() => handleDownloadExcel(data)}>
-                              EXCEL
-                            </a>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                            >
+                              <a>
+                                <button
+                                  className="details-button"
+                                  onClick={() => viewDetails(data)}
+                                >
+                                  View Details
+                                </button>
+                              </a>
+                            </td>
+                            <td id="file">
+                              <a onClick={() => handleDownloadPDF(data)}>PDF</a>
+
+                              <a onClick={() => handleDownloadExcel(data)}>EXCEL</a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {templateData.length != 0 && (
-            <div className="pagging-area mt-2">
+            {templateData.length != 0 && <div className="pagging-area mt-2">
               <div className="toolbar">
                 <label htmlFor="">Results per page :</label>
                 <div className="tooldrop">
@@ -658,19 +869,12 @@ export default function Home() {
                 <span>of {totalCount}</span>
               </div>
               <div className="paging-list">
-                {currentPage == 0 && (
-                  <div className="leftaction disable-pointer">
-                    <img src="imgs/left-doublearrowg.svg" alt="" />
-                  </div>
-                )}
-                {currentPage != 0 && (
-                  <div
-                    className="leftaction disable-pointer"
-                    onClick={() => handleFirstRecord()}
-                  >
-                    <img src="imgs/left-doublearrow.svg" alt="" />
-                  </div>
-                )}
+                {currentPage == 0 && <div className="leftaction disable-pointer" >
+                  <img src="imgs/left-doublearrowg.svg" alt="" />
+                </div>}
+                {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
+                  <img src="imgs/left-doublearrow.svg" alt="" />
+                </div>}
                 {/*   <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
@@ -684,20 +888,8 @@ export default function Home() {
               <img src="imgs/right-paging.svg" alt="" />
             </div> */}
                 <ReactPaginate
-                  previousLabel={
-                    currentPage == 0 ? (
-                      <img src="imgs/leftpaginggray.svg" />
-                    ) : (
-                      <img src="imgs/left-paging.svg" alt="" />
-                    )
-                  }
-                  nextLabel={
-                    currentPage == pageCount - 1 ? (
-                      <img src="imgs/right-paging-gray.svg" />
-                    ) : (
-                      <img src="imgs/right-paging.svg" alt="" />
-                    )
-                  }
+                  previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
+                  nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
                   breakLabel={"..."}
                   breakClassName={"break-me"}
                   pageCount={pageCount}
@@ -710,25 +902,24 @@ export default function Home() {
                   disabledClassName="disabled"
                   disableInitialCallback
                 />
-                {currentPage != pageCount - 1 && (
-                  <div
-                    className="rightaction"
-                    onClick={() => handlelastRecord()}
-                  >
-                    <img src="imgs/right-doublearrow.svg" alt="" />
-                  </div>
-                )}
-                {currentPage == pageCount - 1 && (
-                  <div className="rightaction">
-                    <img src="imgs/right-doublearrowg.svg" alt="" />
-                  </div>
-                )}
+                {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
+                  <img src="imgs/right-doublearrow.svg" alt="" />
+                </div>
+                }
+                {currentPage == pageCount - 1 && <div className="rightaction" >
+                  <img src="imgs/right-doublearrowg.svg" alt="" />
+                </div>
+                }
               </div>
             </div>
-          )}
+            }
+          </div>
+          <ToastContainer />
+
+          {/* report pdf  */}
+
+
         </div>
-        <ToastContainer />
-      </div>
-    </AppLayout>
-  );
+      </AppLayout>
+    );
 }

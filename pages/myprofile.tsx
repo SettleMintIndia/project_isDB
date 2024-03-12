@@ -7,6 +7,8 @@ import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +17,7 @@ export default function Home() {
     display_name: "",
     display_pic: "",
   });
-
+  const [loading, setLoading] = useState(false)
   const handleEdit = () => {
     router.push("/changePassword");
   };
@@ -26,10 +28,12 @@ export default function Home() {
     getAdminInfo(email);
   }, []);
   const getAdminInfo = async (email: any) => {
-    let dummyemail = "demo@isdb.com";
-    const result = await API_Auth.getAdminInformation(dummyemail);
+    setLoading(true)
+    const result = await API_Auth.getAdminInformation(email);
     console.log(result);
     setUserData(result);
+    setLoading(false)
+
   };
 
   const handleFileUpload = async (e: any) => {
@@ -38,15 +42,19 @@ export default function Home() {
     console.log(selectedFile, fieldname);
     const email = localStorage.getItem("useremail");
     console.log("email", email);
-    let dummyemail = "demo@isdb.com";
+    let dummyemail = /* "demo@isdb.com" */ email;
 
     let body = {
       email: dummyemail,
       new_image_link: selectedFile.name,
     };
     console.log(body);
+    setLoading(true)
+
     const result = await API_Auth.uploadUserImage(body);
     console.log(result);
+    setLoading(false)
+
     if (result.status == 200) {
       toast.success("Image Upload Successfully");
       getAdminInfo(dummyemail);
@@ -63,18 +71,20 @@ export default function Home() {
             </div>
             <div></div>
           </div>
+          {loading == true && <Loader />}
           <div className="user-profile">
             <div className="profile">
               <div className="user-icon">
                 {userData.display_pic == null && (
-                  <img src="imgs/user.svg" alt="" />
+                  <Image src="imgs/user.svg" alt=""
+                    width={61.733} height={61.733} />
                 )}
                 {userData.display_pic != null && (
                   <img
                     src="https://www.shutterstock.com/image-illustration/generic-image-default-avatar-profile-260nw-1902153229.jpg"
                     alt=""
                     className="userImage"
-                  />
+                    />
                 )}
               </div>
               <div className="file">
@@ -119,7 +129,8 @@ export default function Home() {
                   <button onClick={() => handleEdit()}>
                     {" "}
                     <Link href="changePassword">
-                      <img src="imgs/pencil.svg" alt="" />
+                      <Image src="imgs/pencil.svg" alt=""
+                        width={22.119} height={22.375} />
                     </Link>{" "}
                   </button>
                 </div>

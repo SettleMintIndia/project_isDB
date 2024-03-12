@@ -19,10 +19,14 @@ import Loader from "@/components/layout/Loader";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import AppLayout from "@/components/layout/AppLayout";
+import * as React from 'react';
+import { PDFExport } from '@progress/kendo-react-pdf'
+
 export default function templateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
+  const pdfExportComponent = React.useRef<PDFExport>(null);
 
   const [templateData, setTemplateData] = useState([
     {
@@ -38,6 +42,7 @@ export default function templateDetails() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -72,6 +77,7 @@ export default function templateDetails() {
   useEffect(() => {
     handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, 1);
     getScenarios();
+    setMounted(true)
   }, []);
 
   const getScenarios = async () => {
@@ -79,21 +85,24 @@ export default function templateDetails() {
     console.log("scenarios", result);
     setFinalScenarios(result.scenarios);
   };
-  const handlegetAllTemplateDetails = async (
-    tempname: any,
+  const handlegetAllTemplateDetails = async (tempname: any,
     s_type: any,
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
-  ) => {
-    setLoading(true);
+    pageNo: any) => {
+
+    setLoading(true)
+
+    let email = localStorage.getItem('useremail')
+
+    const userresult = await API_Auth.getAdminInformation(email);
+    console.log(userresult);
     let body = {
       temp_name: tempname,
-      admin_id: 2,
+      admin_id: userresult.id,
       scenario: s_type,
-      datefrom:
-        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      datefrom: fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
@@ -101,16 +110,17 @@ export default function templateDetails() {
     };
 
     console.log(body);
+    setLoading(true);
 
     const result = await API_Auth.getAllTemplates(body);
     console.log(result);
-    setLoading(false);
+    setLoading(false)
 
     if (result.status == 200) {
       setTemplateData(result.templates);
       setTotalCount(result.count);
       setPageCount(Math.ceil(result.count / perPage));
-      console.log(Math.ceil(result.count / perPage));
+      console.log(Math.ceil(result.count / perPage))
     }
   };
 
@@ -122,18 +132,13 @@ export default function templateDetails() {
     //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
     //setPageNo(pageData);
     let data = e.selected + 1;
-    console.log("asdakl", data, page);
+    console.log("asdakl", data, page)
     setPageNo(data);
     setCurrentPage(e.selected);
 
-    handlegetAllTemplateDetails(
-      tempname,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      data
-    );
+
+    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, data);
+
   };
 
   const handleInput = async (e: any) => {
@@ -141,19 +146,13 @@ export default function templateDetails() {
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
       setSType(value);
-      setCurrentPage(0);
-      handlegetAllTemplateDetails(
-        tempname,
-        value,
-        fromDate,
-        toDate,
-        perPage,
-        1
-      );
+      setCurrentPage(0)
+      handlegetAllTemplateDetails(tempname, value, fromDate, toDate, perPage, 1);
+
     }
     if (name == "tempname") {
       setTempName(value);
-      setCurrentPage(0);
+      setCurrentPage(0)
 
       handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, 1);
 
@@ -161,29 +160,23 @@ export default function templateDetails() {
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0);
+      setCurrentPage(0)
 
       handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, 1);
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0);
+      setCurrentPage(0)
 
-      handlegetAllTemplateDetails(
-        tempname,
-        s_type,
-        fromDate,
-        value,
-        perPage,
-        1
-      );
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, value, perPage, 1);
     }
 
     if (name == "perPage") {
       setPerPage(Number(value));
       setPageNo(1);
       setCurrentPage(1);
-      setCurrentPage(0);
+      setCurrentPage(0)
+
 
       handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, value, 1);
     }
@@ -204,7 +197,7 @@ export default function templateDetails() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
-      setCurrentPage(0);
+      setCurrentPage(0)
 
       setTimeout(() => {
         handlegetAllTemplateDetails("", "", "", "", "", 1);
@@ -274,16 +267,26 @@ export default function templateDetails() {
 
 
   } */
-  const handleDownloadPDF = () => {
-    router.push({
-      pathname: "/templatepdf",
-      query: { temp_name: viewData.temp_name },
-    });
-  };
+  const handleDownloadPDF=()=>{
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+
+  }
   const handleDownloadExel = () => {
     console.log(viewData);
-    let finalData = [];
-    let finaldata = finalData.push(viewData);
+    let finalData: any[] = [];
+    Object.keys(viewData).forEach(function (key) {
+      var value = viewData[key];
+      console.log("key", key)
+      var obj;
+      if (key == "created_timestamp") {
+        obj = { 'key': key, 'Value': moment(value).format("MM/DD/YYYY h:mm:ss A") };
+      } else {
+        obj = { 'key': key, 'Value': value };
+      }
+      finalData.push(obj);
+    });
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
@@ -325,17 +328,23 @@ export default function templateDetails() {
     setToDate("");
     setCurrentPage(0);
     handlegetAllTemplateDetails("", "", "", "", perPage, 1);
-  };
+
+  }
   const handleFirstRecord = () => {
     handlegetAllTemplateDetails("", "", "", "", perPage, 1);
-    setCurrentPage(0);
-  };
+    setCurrentPage(0)
+
+
+  }
   const handlelastRecord = () => {
     handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
-    setCurrentPage(pageCount - 1);
-  };
+    setCurrentPage(pageCount - 1)
 
-  return (
+
+  }
+
+
+  if (mounted) return (
     <AppLayout>
       <div className="container-fluid">
         <div className="template details">
@@ -347,14 +356,13 @@ export default function templateDetails() {
               <p>({totalCount})</p>
             </div>
             <div className="head">
-              {/*  <button>
-              <Link href="createtemplate">
-                <img src="/imgs/plus.svg" alt="" /> Create Template
-              </Link>
-            </button> */}
+             {/*  <button>
+                <Link href="createtemplate">
+                  <img src="/imgs/plus.svg" alt="" /> Create Template
+                </Link>
+              </button> */}
             </div>
           </div>
-          {/* </div> */}
           <div className="template-type">
             <div className="tabs">
               <Tabs
@@ -363,11 +371,6 @@ export default function templateDetails() {
                   setTabIndex(tabIndex)
                 }
               >
-                {/*  <TabList>
-                <Tab>My Template</Tab>
-                <Tab>Other Templates</Tab>
-              </TabList> */}
-
                 <TabPanel>
                   <div className="filter">
                     <label htmlFor="filterBy">Filter by:</label>
@@ -383,35 +386,32 @@ export default function templateDetails() {
                             <Tab>
                               <div onClick={() => handleAllData()}>All</div>
                             </Tab>
-                            {/* <Tab>Crash</Tab>
-                          <Tab>Bubble</Tab> */}
-                            <select
-                              name="scenarioType"
-                              id="type"
-                              value={s_type}
-                              onChange={handleInput}
-                              style={{ width: "200px" }}
-                            >
-                              <option value="">Select Scenario Type</option>
-                              {finalScenarios.map((item) => (
-                                <option
-                                  key={item?.scenario_name}
-                                  value={item?.scenario_name}
+                            <div className="searchScenario">
+                              <div className="searchScenarioArea options">
+                                <select
+                                  name="scenarioType"
+                                  id="type"
+                                  value={s_type}
+                                  onChange={handleInput}
                                 >
-                                  {item?.scenario_name}
-                                </option>
-                              ))}
-                            </select>
+                                  <option value="">Select Scenario Type</option>
+                                  {finalScenarios.map((item) => (
+                                    <option
+                                      key={item?.scenario_name}
+                                      value={item?.scenario_name}
+                                    >
+                                      {item?.scenario_name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
                           </TabList>{" "}
                         </Tabs>
                       </div>
                     </div>
                     <div className="searchArea">
                       <div className="searchFilter options">
-                        {/* <select name="filter" id="searchtype">
-                        <option value="template">Template</option>
-                        <option value="creator">Creator</option>
-                      </select> */}
                         <input
                           type="text"
                           placeholder="Search by template name"
@@ -577,6 +577,39 @@ export default function templateDetails() {
               </Tabs>
             </div>
           </div>
+          {/*   <div className="pagging-area">
+          <div className="toolbar">
+            <label htmlFor="">Results per page :</label>
+            <div className="tooldrop">
+              <select name="" id="">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+            <span>of 40</span>
+          </div>
+          <div className="paging-list">
+            <div className="leftaction disable-pointer">
+              <img src="imgs/left-doublearrow.svg" alt="" />
+            </div>
+            <div className="leftaction-single">
+              <img src="imgs/left-paging.svg" alt="" />
+            </div>
+            <ul className="paging-count">
+              <li>1</li>
+              <li>2</li>
+              <li>3</li>
+              <li>4</li>
+            </ul>
+            <div className="rightaction-single">
+              <img src="imgs/right-paging.svg" alt="" />
+            </div>
+            <div className="rightaction">
+              <img src="imgs/right-doublearrow.svg" alt="" />
+            </div>
+          </div>
+        </div> */}
 
           <Modal
             show={showModal}
@@ -646,11 +679,11 @@ export default function templateDetails() {
                         </tr>
                         <tr>
                           <td>Limit Order Upper Bound</td>
-                          <td>0.95</td>
+                          <td>{viewData.limit_order_upper_bound}</td>
                         </tr>
                         <tr>
                           <td>Limit Order Lower Bound</td>
-                          <td>1.05</td>
+                          <td>{viewData.limit_order_lower_bound}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -674,6 +707,34 @@ export default function templateDetails() {
                         </tr>
                       </tbody>
                     </table>
+                    {viewData.distribution == "normal" && <table className="table">
+                      <tbody>
+                        <tr>
+                          <td>Standard Deviation Price Buy</td>
+                          <td>{viewData.std_dev_price_buy}</td>
+                        </tr>
+                        <tr>
+                          <td>Standard Deviation Price Sell</td>
+                          <td>{viewData.std_dev_price_sell}</td>
+                        </tr>
+                        <tr>
+                          <td>Standard Deviation Quantity</td>
+                          <td>{viewData.std_dev_quant}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Buy</td>
+                          <td>{viewData.mean_price_buy}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Sell</td>
+                          <td>{viewData.mean_price_sell}</td>
+                        </tr>
+                        <tr>
+                          <td>Mean Price Quantity</td>
+                          <td>{viewData.mean_quant}</td>
+                        </tr>
+                      </tbody>
+                    </table>}
 
                     <table className="table">
                       <tbody>
@@ -699,7 +760,7 @@ export default function templateDetails() {
               </div>
             </Modal.Body>
           </Modal>
-          <div className="pagging-area mt-2">
+          {templateData.length != 0 && <div className="pagging-area mt-2">
             <div className="toolbar">
               <label htmlFor="">Results per page :</label>
               <div className="tooldrop">
@@ -797,12 +858,124 @@ export default function templateDetails() {
                 </div>
               )}
             </div>
-          </div>
+          </div>}
         </div>
         <ToastContainer />
 
-        <div className="pdfclass" style={{ display: "none" }}>
-          <p>Hafjksd'sdsj;akfdfkl</p>
+
+      </div>
+      <div>
+        <div style={{ position: "absolute", left: "-1000px", top: 0 }}>
+          <PDFExport
+            paperSize="A3"
+            margin="1cm"
+            landscape
+            fileName={viewData.temp_name + ".pdf"}
+            ref={pdfExportComponent}
+          >
+            <div >
+              <div className="container-fluid pdf mt-2">
+                <div className="header">
+                  <div className="left-head">
+                    <img src="/imgs/isdb-logo-signin.svg" className="isDB-logo" alt="" />
+                  </div>
+                  <div className="right-head">
+                    <div className="pdf-title">{viewData.temp_name}</div>
+                    <div className="pdf info">
+                      <div className="pdf-time">
+                        <label htmlFor="">Template Created On </label>
+                        <span> {moment(viewData.created_timestamp).format(
+                          "MM/DD/YYYY h:mm:ss A"
+                        )}</span>
+                      </div>
+                      <div className="type">
+                        <label htmlFor="">Scenario Type </label>
+                        <span>{viewData.scenario_name}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pdf-section">
+                  <div className="pdf-name">{viewData.temp_name}</div>
+                  <div className="pdf-data">
+                    <div className="modal-details">
+                      <div className="details-section">
+                        <div className="template-details">
+                          <table className="table">
+                            <tbody>
+                              <tr>
+                                <td>Initial Market Price</td>
+                                <td>{viewData.initial_mkt_price}</td>
+                              </tr>
+                              <tr>
+                                <td>Price Variance Limit</td>
+                                <td>{viewData.price_var}</td>
+                              </tr>
+                              <tr>
+                                <td>Base Quantity</td>
+                                <td>{viewData.base_quant}</td>
+                              </tr>
+                              <tr>
+                                <td>Quantity Variance Limit</td>
+                                <td>{viewData.quant_var}</td>
+                              </tr>
+                              <tr>
+                                <td>Limit Order Upper Bound</td>
+                                <td>{viewData.limit_order_upper_bound}</td>
+                              </tr>
+                              <tr>
+                                <td>Limit Order Lower Bound</td>
+                                <td>{viewData.limit_order_lower_bound}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <table className="table">
+                            <tbody>
+                              <tr>
+                                <td>Alpha 0</td>
+                                <td>{viewData.alpha0}</td>
+                              </tr>
+                              <tr>
+                                <td>Alpha 1</td>
+                                <td>{viewData.alpha1}</td>
+                              </tr>
+                              <tr>
+                                <td>Theta 0</td>
+                                <td>{viewData.theta0}</td>
+                              </tr>
+                              <tr>
+                                <td>Theta 1</td>
+                                <td>{viewData.theta1}</td>
+                              </tr>
+                              <tr>
+                                <td>Distribution</td>
+                                <td>{viewData.distribution}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div className="right-section">
+
+                            <table className="independant-table">
+                              <tr>
+                                <td>Visibility</td>
+                                {viewData.is_public == 1 && <td>Public</td>}
+                                {viewData.is_public == 0 && <td>Private</td>}{" "}
+                              </tr>
+                            </table>
+                            <div className="modal-comment">
+                              <label htmlFor="comment">Comment</label>
+                              <p>{viewData.comments}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </PDFExport>
         </div>
       </div>
     </AppLayout>

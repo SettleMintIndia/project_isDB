@@ -9,10 +9,9 @@ import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import Loader from "@/components/layout/Loader";
 import AppLayout from "@/components/layout/AppLayout";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -26,7 +25,7 @@ export default function Home() {
   const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageNo, setPageNo] = useState();
+  const [pageNo, setPageNo] = useState(1);
   const [useremail, setUserEmail] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [offset, setOffSet] = useState(0);
@@ -36,6 +35,9 @@ export default function Home() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+  const [keyname, setKeyName] = useState('name')
+
+
   const handleDeleteClick = (data: any) => {
     console.log(data);
     setUserEmail(data.email);
@@ -44,18 +46,23 @@ export default function Home() {
   };
 
   useEffect(() => {
-    handlegetAllAdmins(searchKey, perPage, 1);
-  }, []);
+    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, 1);
+  }, [searchKey, fromDate, toDate, perPage]);
 
   const handlegetAllAdmins = async (
     searchKey: any,
+    fromDate: any,
+    toDate: any,
     perPage: any,
     pageNo: any
   ) => {
     let body = {
-      text: searchKey,
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      name: keyname == "name" ? searchKey : "",
+      email: keyname == "email" ? searchKey : "",
+      datefrom:
+        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      resultPerPage: perPage, pgNo: pageNo,
     };
 
     setLoading(true);
@@ -73,13 +80,16 @@ export default function Home() {
     let body = {
       email: useremail,
     };
+    setLoading(true)
     const result = await API_Auth.getdeleteAdmin(body);
     console.log(result);
+    setLoading(false)
+
     if (result.status == 200) {
       toast.success("Admin Deleted Successfully");
       setCurrentPage(0);
       setTimeout(() => {
-        handlegetAllAdmins("", perPage, 1);
+        handlegetAllAdmins("", "", "", perPage, 1);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -94,7 +104,7 @@ export default function Home() {
 
     setCurrentPage(0);
 
-    handlegetAllAdmins(event.target.value, perPage, 1);
+    handlegetAllAdmins(event.target.value, fromDate, toDate, perPage, 1);
   };
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
@@ -105,40 +115,43 @@ export default function Home() {
     console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
-    handlegetAllAdmins(searchKey, perPage, data);
+    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, data);
   };
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     console.log(name, value);
+    if (name == "keyname") {
+      setKeyName(value);
+    }
 
     if (name == "perPage") {
       setPerPage(Number(value));
       setPageNo(1);
       setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, Number(value), 1);
+      handlegetAllAdmins(searchKey, fromDate, toDate, Number(value), 1);
     }
     if (name == "fromDate") {
       setFromDate(value);
       setCurrentPage(0);
 
-      //handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, 1);
+      handlegetAllAdmins(searchKey, value, toDate, perPage, 1);
     }
     if (name == "toDate") {
       setToDate(value);
       setCurrentPage(0);
 
-      //handlegetAllTemplateDetails(tempname, s_type, fromDate, value, perPage, 1);
+      handlegetAllAdmins(searchKey, fromDate, value, perPage, 1);
     }
   };
 
   const handleFirstRecord = () => {
-    handlegetAllAdmins(searchKey, perPage, 1);
+    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, 1);
     setCurrentPage(0);
   };
   const handlelastRecord = () => {
-    handlegetAllAdmins(searchKey, perPage, pageCount);
+    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, pageCount);
     setCurrentPage(pageCount - 1);
   };
 
@@ -157,7 +170,7 @@ export default function Home() {
             <div className="head">
               <button>
                 <Link href="/createadmin">
-                  <img src="/imgs/plus.svg" alt="" />
+                  <Image src="/imgs/plus.svg" alt="" width={24} height={24} />
                   Add Admin
                 </Link>
               </button>
@@ -168,24 +181,26 @@ export default function Home() {
             <div className="searchArea">
               <div className="searchFilter options">
                 <div className="selectsearch">
-                  <select name="filter" id="searchtype">
-                    <option value="template">Name</option>
-                    <option value="creator">Email Address</option>
+                  <select name="keyname"  id="searchtype"
+                    value={keyname} onChange={handleInput}>
+                    <option value="name">Name</option>
+                    <option value="email">Email Address</option>
                   </select>
                 </div>
                 <input
                   type="text"
-                  placeholder="Search by"
+                  placeholder={keyname == "name" ? "Search by Name" : "Search by Email"}
                   onChange={handleSearchChange}
                   // value={tempname}
                   name="tempname"
                 />
                 <div className="search-icon">
-                  <img src="imgs/search-icon.svg" alt="" />
+                  <Image src="imgs/search-icon.svg" alt=""
+                    width={15.9} height={15.9} />
                 </div>
               </div>
               {/*   <div className="calendar">
-              <img src="imgs/calendar.svg" alt="" />
+              <Image src="imgs/calendar.svg" alt="" />
               <select name="" id="calendar">
                 <option value="">From-to</option>
               </select>
@@ -269,10 +284,13 @@ export default function Home() {
                           className="delete-icon"
                           onClick={() => handleDeleteClick(data)}
                         >
-                          <img
+                          <Image
                             src="imgs/recycle-bin.svg"
                             alt=""
                             title="Delete"
+                            width={19.059}
+                            height={21.391}
+
                           />
                           {tooltipVisible && key == data.id && (
                             <div className="delete-tooltip">
@@ -323,10 +341,10 @@ export default function Home() {
           </div>
           <div className="paging-list">
             <div className="leftaction disable-pointer">
-              <img src="imgs/left-doublearrow.svg" alt="" />
+              <Image src="imgs/left-doublearrow.svg" alt="" />
             </div>
             <div className="leftaction-single">
-              <img src="imgs/left-paging.svg" alt="" />
+              <Image src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
               <li>1</li>
@@ -335,14 +353,14 @@ export default function Home() {
               <li>4</li>
             </ul>
             <div className="rightaction-single">
-              <img src="imgs/right-paging.svg" alt="" />
+              <Image src="imgs/right-paging.svg" alt="" />
             </div>
             <div className="rightaction">
-              <img src="imgs/right-doublearrow.svg" alt="" />
+              <Image src="imgs/right-doublearrow.svg" alt="" />
             </div>
           </div>
         </div> */}
-          <div className="pagging-area" style={{ marginTop: "20px" }}>
+          {adminData.length != 0 && <div className="pagging-area" style={{ marginTop: "20px" }}>
             <div className="toolbar">
               <label htmlFor="">Results per page :</label>
               <div className="tooldrop">
@@ -377,7 +395,7 @@ export default function Home() {
 
               {currentPage == 0 && (
                 <div className="leftaction disable-pointer">
-                  <img src="imgs/left-doublearrowg.svg" alt="" />
+                  <Image src="imgs/left-doublearrowg.svg" alt="" width={11} height={11} />
                 </div>
               )}
               {currentPage != 0 && (
@@ -385,25 +403,30 @@ export default function Home() {
                   className="leftaction disable-pointer"
                   onClick={() => handleFirstRecord()}
                 >
-                  <img src="imgs/left-doublearrow.svg" alt="" />
+                  <Image src="imgs/left-doublearrow.svg" alt="" />
                 </div>
               )}
               {/*  <div className="leftaction-single">
-              <img src="imgs/left-paging.svg" alt="" />
+              <Image src="imgs/left-paging.svg" alt="" />
             </div> */}
               <ReactPaginate
                 previousLabel={
                   currentPage == 0 ? (
-                    <img src="imgs/leftpaginggray.svg" />
+                    <Image src="imgs/leftpaginggray.svg" alt=""
+                      width={6.219} height={11.002} />
                   ) : (
-                    <img src="imgs/left-paging.svg" alt="" />
+                    <Image src="imgs/left-paging.svg" alt=""
+                      width={6.219} height={11.002}
+                    />
                   )
                 }
                 nextLabel={
                   currentPage == pageCount - 1 ? (
-                    <img src="imgs/right-paging-gray.svg" />
+                    <Image src="imgs/right-paging-gray.svg" alt=""
+                      width={6.219} height={11.002} />
                   ) : (
-                    <img src="imgs/right-paging.svg" alt="" />
+                    <Image src="imgs/right-paging.svg" alt=""
+                      width={6.219} height={11.002} />
                   )
                 }
                 breakLabel={"..."}
@@ -425,20 +448,22 @@ export default function Home() {
               <li>4</li>
             </ul> 
             <div className="rightaction-single">
-              <img src="imgs/right-paging.svg" alt="" />
+              <Image src="imgs/right-paging.svg" alt="" />
             </div>*/}
               {currentPage != pageCount - 1 && (
                 <div className="rightaction" onClick={() => handlelastRecord()}>
-                  <img src="imgs/right-doublearrow.svg" alt="" />
+                  <Image src="imgs/right-doublearrow.svg" alt=""
+                    height={11} width={11} />
                 </div>
               )}
               {currentPage == pageCount - 1 && (
                 <div className="rightaction">
-                  <img src="imgs/right-doublearrowg.svg" alt="" />
+                  <Image src="imgs/right-doublearrowg.svg" alt=""
+                    height={11} width={11} />
                 </div>
               )}
             </div>
-          </div>
+          </div>}
         </div>
         <ToastContainer />
       </div>

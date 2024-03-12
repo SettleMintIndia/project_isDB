@@ -19,28 +19,45 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
+  const [username, setusername] = useState("");
+
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
+
 
   useEffect(() => {
     let admin_id = 1;
     getNotifications(admin_id);
     const data = localStorage.getItem("useremail");
-    console.log("email", loginuseremail);
+    console.log("email", data);
+    const superadminkey = localStorage.getItem("superadmin");
+    console.log("superadmin", superadminkey);
+    if (superadminkey == "superadmin") {
+      setKey("superadmin")
+    } else {
+      setKey("admin")
+    }
+    const name = localStorage.getItem("displayname");
+    console.log("username", name);
+    setusername(name);
+
+
+
+
 
     /*  const handleScroll = () => {
-      console.log(window.scrollY);
-      if (window.scrollY >= 100) {
-        setIsNavFixed(true);
-      } else {
-        setIsNavFixed(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }; */
+       console.log(window.scrollY);
+       if (window.scrollY >= 100) {
+         setIsNavFixed(true);
+       } else {
+         setIsNavFixed(false);
+       }
+     };
+ 
+     window.addEventListener("scroll", handleScroll);
+ 
+     return () => {
+       window.removeEventListener("scroll", handleScroll);
+     }; */
   }, [email]);
 
   const getNotifications = async (id: any) => {
@@ -128,7 +145,7 @@ const AppLayout = ({ children }: LayoutProps) => {
               )}
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
-              key == "superadmin" ? (
+                key == "superadmin" ? (
                 <>
                   <div className="nav-links">
                     <ul>
@@ -161,7 +178,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/runSimulation") &&
-              key == "admin" ? (
+                key == "admin" ? (
                 <>
                   <div className="nav-links">
                     <ul>
@@ -252,7 +269,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <div className="user">
                     <img src="/imgs/user.svg" alt="" />
                     <div className="username">
-                      <h4>Name1</h4>
+                      <h4>{username}</h4>
                       <p>{key == "superadmin" ? "Super Admin" : "Admin"} </p>
                     </div>
                   </div>

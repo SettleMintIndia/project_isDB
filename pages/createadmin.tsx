@@ -1,8 +1,6 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
+
 import { useState } from "react";
 import { useRouter } from "next/router";
-
 import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,7 +22,7 @@ export default function Home() {
   const [marginTop, setMarginTop] = useState("10px");
   const [totalErrors, setTotalErrors] = useState([]);
   const [loading, setLoading] = useState(false);
-  const[disabledSubmit,setDisableSubmit]=useState(false)
+  const [disabledSubmit, setDisableSubmit] = useState(false)
 
   const handleInput1 = (event: any) => {
     const { name, value } = event.target;
@@ -95,7 +93,6 @@ export default function Home() {
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     console.log(emailRegex.test(name));
-
     if (name === "") {
       setNameErr("Please Enter Email");
       error = error + 1;

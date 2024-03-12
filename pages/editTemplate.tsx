@@ -8,6 +8,8 @@ import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -40,10 +42,8 @@ export default function Home() {
   const [lowerboundErr, setlowerboundErr] = useState("");
   const [upperbound, setupperbound] = useState("");
   const [upperboundErr, setupperboundErr] = useState("");
-
   const [singleTemplate, setSingleTemplate] = useState({});
   const [finalErr, setFinalErr] = useState("");
-
   const [totalTempName, setTotalTempName] = useState(router.query.temp_name);
   const [publickey, setPublicKey] = useState(1);
   const [publickeyErr, setPublicKeyErr] = useState("");
@@ -53,7 +53,6 @@ export default function Home() {
   const [devpricesellErr, setDevPricesellErr] = useState("");
   const [devqty, setDevqty] = useState("");
   const [devqtyErr, setDevqtyErr] = useState("");
-
   const [meanpricebuy, setMeanPricebuy] = useState("");
   const [meanpricebuyErr, setMeanPricebuyErr] = useState("");
   const [meanpricesell, setMeanPricesell] = useState("");
@@ -62,36 +61,41 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
-
   const [newtemplateName, setnewtemplateName] = useState("");
   const [newtemplateNameErr, setnewtemplateNameErr] = useState("");
-
   const [finalComments, setfinalComments] = useState("");
   const [finalCommentsErr, setfinalCommentsErr] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
-
+  const [loading, setLoading] = useState(false)
+  const [userId, setUserId] = useState('')
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    console.log(totalTempName);
-
     getTemplateDetails(totalTempName);
+    let email = localStorage.getItem('useremail')
+    console.log("email");
+    getEmailInfo(email)
     getScenarios();
     getDistributions();
   }, [totalTempName]);
+
+  const getEmailInfo = async (email: any) => {
+    const result = await API_Auth.getAdminInformation(email);
+    console.log(result);
+    setUserId(result.id)
+  }
+
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
-    console.log("scenarios", result);
     setFinalScenarios(result.scenarios);
   };
+
   const getDistributions = async () => {
     const result = await API_Auth.getDistributions();
-    console.log("distributions", result);
     setFinalDistributions(result.distributions);
   };
 
   const getTemplateDetails = async (totalTempName: any) => {
-    // const result=API_Auth.getTemplateDetails(totalTempName);
-
     let body = {
       temp_name: totalTempName,
       admin_id: "",
@@ -144,11 +148,18 @@ export default function Home() {
     setShowModal(false);
   };
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleYesCancel = () => {
     setModalIsOpen(false);
-    router.push("/templateDetails");
+    const superadminkey = localStorage.getItem("superadmin");
+    console.log("superadmin", superadminkey);
+    if (superadminkey == "superadmin") {
+      router.push("/templateDetails");
+
+    } else {
+      router.push("/runSimulation");
+
+    }
   };
   const handleNoCancel = () => {
     setModalIsOpen(false);
@@ -417,12 +428,12 @@ export default function Home() {
         "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
         "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
         "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
-        "admin_id": 2,
+        "admin_id": userId,
         "limit_order_upper_bound": Number(upperbound),
         "limit_order_lower_bound": Number(lowerbound)
 
       }
-      console.log("finalbody",finalbody);
+      console.log("finalbody", finalbody);
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
         setFinalErr("price or quant variance should be less than 1")
       } else if (Number(upperbound) > 1) {
@@ -433,8 +444,7 @@ export default function Home() {
 
 
       } else {
-        setDisableSubmit(true);
-        console.log("finalbody",finalbody);
+        console.log("finalbody", finalbody);
 
         const template_exist = await API_Auth.getTemplateExists(newtemplateName)
         console.log("template_exist", template_exist)
@@ -443,17 +453,31 @@ export default function Home() {
         }
         else {
           setFinalErr("")
+          setDisableSubmit(true);
+          setLoading(true);
+
           const data = await API_Auth.createTemplate(finalbody)
-          console.log("result",data);
+          console.log("result", data);
+          setLoading(false)
           if (data.error! = '' || data.error == undefined) {
             toast.success("Template Created Successfully")
-            setTimeout(() => {
-              router.push("/templateDetails")
-            }, 2000);
+            const superadminkey = localStorage.getItem("superadmin");
+            console.log("superadmin", superadminkey);
+            if (superadminkey == "superadmin") {
+
+              setTimeout(() => {
+
+                router.push("/templateDetails");
+              }, 2000);
+            } else {
+              setTimeout(() => {
+
+                router.push("/runSimulation");
+              }, 2000);
+            }
 
           } else {
             setDisableSubmit(false);
-
             setFinalErr("Duplicate Entries Exists");
 
           }
@@ -466,486 +490,492 @@ export default function Home() {
   }
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template edit-template">
-        <div className="template-header">
-          <div className="back-option" onClick={() => handleBack()}>
-            <img src="imgs/left-arrow.svg" alt="" />
-            <p className="mb-0">Back</p>
+      <div className="container-fluid">
+        <div className="template edit-template">
+          <div className="template-header">
+            <div className="back-option" onClick={() => handleBack()}>
+              <Image src="imgs/left-arrow.svg" alt=""
+                width={27.443} height={25.767} />
+              <p className="mb-0">Back</p>
+            </div>
+            <div className="main-header">
+              <h1>Edit Template Details</h1>
+            </div>
+            <div></div>
           </div>
-          <div className="main-header">
-            <h1>Edit Template Details</h1>
+          <div className="table-responsive">
+            <div className="row">
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="type">Scenario Type*</label>
+                  <select
+                    name="scenarioType"
+                    id="type"
+                    value={scenarioType}
+                    onChange={handleInput}
+                  >
+                    <option value="">Select Scenario Type</option>
+
+                    {finalScenarios.map((item) => (
+                      <option
+                        key={item?.scenario_name}
+                        value={item?.scenario_name}
+                      >
+                        {item?.scenario_name}
+                      </option>
+                    ))}
+                  </select>
+                  {scenarioTypeErr != "" && (
+                    <p className="alert-message">{scenarioTypeErr}</p>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="name">Template Name*</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="templatename"
+                    required
+                    value={templatename}
+                    onChange={handleInput}
+                  />
+                </div>
+                {templatenameErr != "" && (
+                  <p className="alert-message">{templatenameErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="price">Initial Market Price*</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="inititalmarketprice"
+                    required
+                    value={inititalmarketprice}
+                    onChange={handleInput}
+                  />
+                  {inititalmarketpriceErr != "" && (
+                    <p className="alert-message">{inititalmarketpriceErr}</p>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="pricelimit">Price Variance Limit*</label>
+                  <input
+                    type="number"
+                    id="pricelimit"
+                    name="pricelimit"
+                    required
+                    value={pricelimit}
+                    onChange={handleInput}
+                  />
+                </div>
+                {pricelimitErr != "" && (
+                  <p className="alert-message">{pricelimitErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="quantity">Base Quantity*</label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    name="basequantity"
+                    required
+                    value={basequantity}
+                    onChange={handleInput}
+                  />
+                  {basequantityErr != "" && (
+                    <p className="alert-message">{basequantityErr}</p>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
+                  <input
+                    type="number"
+                    id="quantitylimit"
+                    name="quantitylimit"
+                    required
+                    value={quantitylimit}
+                    onChange={handleInput}
+                  />
+                </div>
+                {quantitylimitErr != "" && (
+                  <p className="alert-message">{quantitylimitErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="upperbonds">Limit Order Upper Bound*</label>
+                  <input
+                    type="text"
+                    id="upperbonds"
+                    name="upperbonds"
+                    required
+                    value={upperbound}
+                    onChange={handleInput}
+                  />
+                </div>
+                {upperboundErr != "" && (
+                  <p className="alert-message">{upperboundErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="lowerbonds">Limit Order Lower Bound*</label>
+                  <input
+                    type="text"
+                    id="lowerbonds"
+                    name="lowerbonds"
+                    required
+                    value={lowerbound}
+                    onChange={handleInput}
+                  />
+                </div>
+                {lowerboundErr != "" && (
+                  <p className="alert-message">{lowerboundErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="alpha0">Alpha 0*</label>
+                  <input
+                    type="number"
+                    id="alpha0"
+                    name="alpha0"
+                    required
+                    value={alpha0}
+                    onChange={handleInput}
+                  />
+                </div>
+                {alpha0Err != "" && <p className="alert-message">{alpha0Err}</p>}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="alpha1">Alpha 1*</label>
+                  <input
+                    type="number"
+                    id="alpha1"
+                    name="alpha1"
+                    required
+                    value={alpha1}
+                    onChange={handleInput}
+                  />
+                </div>
+                {alpha1Err != "" && <p className="alert-message">{alpha1Err}</p>}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="theta0">Theta 0*</label>
+                  <input
+                    type="number"
+                    id="theta0"
+                    name="theta0"
+                    required
+                    value={theta0}
+                    onChange={handleInput}
+                  />
+                </div>
+                {theta0Err != "" && <p className="alert-message">{theta0Err}</p>}
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="theta1">Theta 1*</label>
+                  <input
+                    type="number"
+                    id="theta1"
+                    name="theta1"
+                    required
+                    value={theta1}
+                    onChange={handleInput}
+                  />
+                </div>
+                {theta1Err != "" && <p className="alert-message">{theta1Err}</p>}
+              </div>
+
+              <div className="col-md-6 p-1">
+                <div className="form-content">
+                  <label htmlFor="distribution">Distribution*</label>
+                  <select
+                    name="distribution"
+                    id="distribution"
+                    value={distribution}
+                    onChange={handleInput}
+                    required
+                  >
+                    <option value="">Select Distribution Type</option>
+                    {finalDistributions.map((item) => (
+                      <option key={item?.name} value={item?.name}>
+                        {item?.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {distributionErr != "" && (
+                  <p className="alert-message">{distributionErr}</p>
+                )}
+              </div>
+              {distribution == 'normal' && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Standard Deviation Price Buy</label>
+                  <input
+                    type="number"
+                    id="devpricebuy"
+                    name="devpricebuy"
+                    required
+                    value={devpricebuy}
+                    onChange={handleInput}
+                  />
+                </div>
+                {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
+              </div>
+              }
+
+              {distribution == 'normal' && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Standard Deviation Price Sell</label>
+                  <input
+                    type="number"
+                    id="devpricesell"
+                    name="devpricesell"
+                    required
+                    value={devpricesell}
+                    onChange={handleInput}
+                  />
+                </div>
+                {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
+              </div>
+              }
+
+
+              {distribution == 'normal' && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Standard Deviation Quantity</label>
+                  <input
+                    type="number"
+                    id="devqty"
+                    name="devqty"
+                    required
+                    value={devqty}
+                    onChange={handleInput}
+                  />
+                </div>
+                {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
+              </div>
+              }
+              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Mean Price Buy</label>
+                  <input
+                    type="number"
+                    id="meanpricebuy"
+                    name="meanpricebuy"
+                    required
+                    value={meanpricebuy}
+                    onChange={handleInput}
+                  />
+                </div>
+                {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
+              </div>
+              }
+              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Mean Price Sell</label>
+                  <input
+                    type="number"
+                    id="meanpricesell"
+                    name="meanpricesell"
+                    required
+                    value={meanpricesell}
+                    onChange={handleInput}
+                  />
+                </div>
+                {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
+              </div>
+              }
+
+
+              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
+
+                <div className="form-content">
+                  <label htmlFor="theta1">Mean Price Quantity</label>
+                  <input
+                    type="number"
+                    id="meanqty"
+                    name="meanqty"
+                    required
+                    value={meanqty}
+                    onChange={handleInput}
+                  />
+                </div>
+                {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
+              </div>
+              }
+
+
+              <div className="col-md-6 p-1">
+                <div className="form-control p-1">
+                  <label htmlFor="accessible">Accessible Data For*</label>
+                  <div className="radio-button mt-2">
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="publickey"
+                        id="inlineRadio1"
+                        value={1}
+                        checked={publickey === 1}
+                        onChange={handleInput}
+
+                      />
+                      <label className="form-check-label" htmlFor="inlineRadio1">
+                        Public
+                      </label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="publickey"
+                        id="inlineRadio2"
+                        value={0}
+                        checked={publickey === 0}
+                        onChange={handleInput}
+
+                      />
+                      <label className="form-check-label" htmlFor="inlineRadio2">
+                        Private
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 p-1">
+                <div className="form-content comment">
+                  <label htmlFor="comment">
+                    Comment <span>(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="comment"
+                    name="comment"
+                    required
+                    value={comment}
+                    onChange={handleInput}
+                  />
+                </div>
+                {commentErr != "" && (
+                  <p className="alert-message">{commentErr}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="buttoncenter">
+              <button
+                className="create-template"
+                onClick={() => editCreateTemplate()}
+              >
+                Save As New Template{" "}
+              </button>
+
+              <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                className="energy-efficiency"
+              >
+                <Modal.Header className="custom-header">
+                  <Image src="imgs/close-black.svg" alt=""
+                    width={19.199} height={19.199}
+                    onClick={handleClose} />
+                </Modal.Header>
+                <Modal.Body>
+                  {" "}
+                  <div className="modal-details">
+                    <div className="save">
+                      <label htmlFor="">Template Name</label>
+                      <input
+                        type="text"
+                        name="newtemplateName"
+                        value={newtemplateName}
+                        onChange={handleInput}
+                      />
+                      {newtemplateNameErr != "" && (
+                        <p className="alert-message">{newtemplateNameErr}</p>
+                      )}{" "}
+                    </div>
+                    <div className="comment">
+                      <label htmlFor="">Comment </label>
+                      <input
+                        type="text"
+                        name="finalComments"
+                        value={finalComments}
+                        onChange={handleInput}
+                      />
+                      {finalCommentsErr != "" && (
+                        <p className="alert-message">{finalCommentsErr}</p>
+                      )}
+                      {finalErr != "" && (
+                        <p className="alert-message">{finalErr}</p>
+                      )}{" "}
+                    </div>
+                  </div>
+                </Modal.Body>
+                {loading == true && <Loader />}
+                <div className="modal-button">
+                  <button
+                    className="create-template"
+                    btn-close-black
+                    onClick={() => handleSaveTemplate()}
+                    disabled={disableSubmit}
+                  >
+                    Save Changes
+                  </button>
+                  <button className="cancel" onClick={handleClose}>
+                    Cancel
+                  </button>
+                </div>
+              </Modal>
+
+              <button className="cancel" onClick={() => openModal()}>
+                Cancel
+              </button>
+              <Modal show={modalIsOpen} onHide={closeModal}>
+                <Modal.Header className="custom-header">
+                  <Image src="imgs/close-black.svg" alt=""
+                    width={19.199} height={19.199}
+                    onClick={closeModal} />
+                </Modal.Header>
+                <Modal.Body className="modal-ask p-0">
+                  <div>
+                    <p>Are you sure you want to cancel the changes?</p>
+                  </div>
+                </Modal.Body>
+
+                <div className="modal-button ask">
+                  <Button className="yes" onClick={() => handleYesCancel()}>
+                    Yes
+                  </Button>
+                  <Button className="no" onClick={() => handleNoCancel()}>
+                    No
+                  </Button>
+                </div>
+              </Modal>
+            </div>
           </div>
-          <div></div>
         </div>
-        <div className="table-responsive">
-          <div className="row">
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="type">Scenario Type*</label>
-                <select
-                  name="scenarioType"
-                  id="type"
-                  value={scenarioType}
-                  onChange={handleInput}
-                >
-                  <option value="">Select Scenario Type</option>
-
-                  {finalScenarios.map((item) => (
-                    <option
-                      key={item?.scenario_name}
-                      value={item?.scenario_name}
-                    >
-                      {item?.scenario_name}
-                    </option>
-                  ))}
-                </select>
-                {scenarioTypeErr != "" && (
-                  <p className="alert-message">{scenarioTypeErr}</p>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="name">Template Name*</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="templatename"
-                  required
-                  value={templatename}
-                  onChange={handleInput}
-                />
-              </div>
-              {templatenameErr != "" && (
-                <p className="alert-message">{templatenameErr}</p>
-              )}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="price">Initial Market Price*</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="inititalmarketprice"
-                  required
-                  value={inititalmarketprice}
-                  onChange={handleInput}
-                />
-                {inititalmarketpriceErr != "" && (
-                  <p className="alert-message">{inititalmarketpriceErr}</p>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="pricelimit">Price Variance Limit*</label>
-                <input
-                  type="number"
-                  id="pricelimit"
-                  name="pricelimit"
-                  required
-                  value={pricelimit}
-                  onChange={handleInput}
-                />
-              </div>
-              {pricelimitErr != "" && (
-                <p className="alert-message">{pricelimitErr}</p>
-              )}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="quantity">Base Quantity*</label>
-                <input
-                  type="number"
-                  id="quantity"
-                  name="basequantity"
-                  required
-                  value={basequantity}
-                  onChange={handleInput}
-                />
-                {basequantityErr != "" && (
-                  <p className="alert-message">{basequantityErr}</p>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
-                <input
-                  type="number"
-                  id="quantitylimit"
-                  name="quantitylimit"
-                  required
-                  value={quantitylimit}
-                  onChange={handleInput}
-                />
-              </div>
-              {quantitylimitErr != "" && (
-                <p className="alert-message">{quantitylimitErr}</p>
-              )}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="upperbonds">Limit Order Upper Bound*</label>
-                <input
-                  type="text"
-                  id="upperbonds"
-                  name="upperbonds"
-                  required
-                  value={upperbound}
-                  onChange={handleInput}
-                />
-              </div>
-              {upperboundErr != "" && (
-                <p className="alert-message">{upperboundErr}</p>
-              )}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="lowerbonds">Limit Order Lower Bound*</label>
-                <input
-                  type="text"
-                  id="lowerbonds"
-                  name="lowerbonds"
-                  required
-                  value={lowerbound}
-                  onChange={handleInput}
-                />
-              </div>
-              {lowerboundErr != "" && (
-                <p className="alert-message">{lowerboundErr}</p>
-              )}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="alpha0">Alpha 0*</label>
-                <input
-                  type="number"
-                  id="alpha0"
-                  name="alpha0"
-                  required
-                  value={alpha0}
-                  onChange={handleInput}
-                />
-              </div>
-              {alpha0Err != "" && <p className="alert-message">{alpha0Err}</p>}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="alpha1">Alpha 1*</label>
-                <input
-                  type="number"
-                  id="alpha1"
-                  name="alpha1"
-                  required
-                  value={alpha1}
-                  onChange={handleInput}
-                />
-              </div>
-              {alpha1Err != "" && <p className="alert-message">{alpha1Err}</p>}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="theta0">Theta 0*</label>
-                <input
-                  type="number"
-                  id="theta0"
-                  name="theta0"
-                  required
-                  value={theta0}
-                  onChange={handleInput}
-                />
-              </div>
-              {theta0Err != "" && <p className="alert-message">{theta0Err}</p>}
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="theta1">Theta 1*</label>
-                <input
-                  type="number"
-                  id="theta1"
-                  name="theta1"
-                  required
-                  value={theta1}
-                  onChange={handleInput}
-                />
-              </div>
-              {theta1Err != "" && <p className="alert-message">{theta1Err}</p>}
-            </div>
-
-            <div className="col-md-6 p-1">
-              <div className="form-content">
-                <label htmlFor="distribution">Distribution*</label>
-                <select
-                  name="distribution"
-                  id="distribution"
-                  value={distribution}
-                  onChange={handleInput}
-                  required
-                >
-                  <option value="">Select Distribution Type</option>
-                  {finalDistributions.map((item) => (
-                    <option key={item?.name} value={item?.name}>
-                      {item?.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {distributionErr != "" && (
-                <p className="alert-message">{distributionErr}</p>
-              )}
-            </div>
-            {distribution == 'normal' && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Price Buy</label>
-                <input
-                  type="number"
-                  id="devpricebuy"
-                  name="devpricebuy"
-                  required
-                  value={devpricebuy}
-                  onChange={handleInput}
-                />
-              </div>
-              {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
-            </div>
-            }
-
-            {distribution == 'normal' && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Price Sell</label>
-                <input
-                  type="number"
-                  id="devpricesell"
-                  name="devpricesell"
-                  required
-                  value={devpricesell}
-                  onChange={handleInput}
-                />
-              </div>
-              {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
-            </div>
-            }
-
-
-            {distribution == 'normal' && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Standard Deviation Quantity</label>
-                <input
-                  type="number"
-                  id="devqty"
-                  name="devqty"
-                  required
-                  value={devqty}
-                  onChange={handleInput}
-                />
-              </div>
-              {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
-            </div>
-            }
-            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Buy</label>
-                <input
-                  type="number"
-                  id="meanpricebuy"
-                  name="meanpricebuy"
-                  required
-                  value={meanpricebuy}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
-            </div>
-            }
-            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Sell</label>
-                <input
-                  type="number"
-                  id="meanpricesell"
-                  name="meanpricesell"
-                  required
-                  value={meanpricesell}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
-            </div>
-            }
-
-
-            {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-              <div className="form-content">
-                <label htmlFor="theta1">Mean Price Quantity</label>
-                <input
-                  type="number"
-                  id="meanqty"
-                  name="meanqty"
-                  required
-                  value={meanqty}
-                  onChange={handleInput}
-                />
-              </div>
-              {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
-            </div>
-            }
-
-
-            <div className="col-md-6 p-1">
-              <div className="form-control p-1">
-                <label htmlFor="accessible">Accessible Data For*</label>
-                <div className="radio-button mt-2">
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="publickey"
-                      id="inlineRadio1"
-                      value={1}
-                      checked={publickey === 1}
-                      onChange={handleInput}
-
-                    />
-                    <label className="form-check-label" htmlFor="inlineRadio1">
-                      Public
-                    </label>
-                  </div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="publickey"
-                      id="inlineRadio2"
-                      value={0}
-                      checked={publickey === 0}
-                      onChange={handleInput}
-
-                    />
-                    <label className="form-check-label" htmlFor="inlineRadio2">
-                      Private
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 p-1">
-              <div className="form-content comment">
-                <label htmlFor="comment">
-                  Comment <span>(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  id="comment"
-                  name="comment"
-                  required
-                  value={comment}
-                  onChange={handleInput}
-                />
-              </div>
-              {commentErr != "" && (
-                <p className="alert-message">{commentErr}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="buttoncenter">
-            <button
-              className="create-template"
-              onClick={() => editCreateTemplate()}
-            >
-              Save As New Template{" "}
-            </button>
-
-            <Modal
-              show={showModal}
-              onHide={handleCloseModal}
-              className="energy-efficiency"
-            >
-              <Modal.Header className="custom-header">
-                <img src="imgs/close-black.svg" alt="" onClick={handleClose} />
-              </Modal.Header>
-              <Modal.Body>
-                {" "}
-                <div className="modal-details">
-                  <div className="save">
-                    <label htmlFor="">Template Name</label>
-                    <input
-                      type="text"
-                      name="newtemplateName"
-                      value={newtemplateName}
-                      onChange={handleInput}
-                    />
-                    {newtemplateNameErr != "" && (
-                      <p className="alert-message">{newtemplateNameErr}</p>
-                    )}{" "}
-                  </div>
-                  <div className="comment">
-                    <label htmlFor="">Comment </label>
-                    <input
-                      type="text"
-                      name="finalComments"
-                      value={finalComments}
-                      onChange={handleInput}
-                    />
-                    {finalCommentsErr != "" && (
-                      <p className="alert-message">{finalCommentsErr}</p>
-                    )}
-                    {finalErr != "" && (
-                      <p className="alert-message">{finalErr}</p>
-                    )}{" "}
-                  </div>
-                </div>
-              </Modal.Body>
-              <div className="modal-button">
-                <button
-                  className="create-template"
-                  btn-close-black
-                  onClick={() => handleSaveTemplate()}
-                  disabled={disableSubmit}
-                >
-                  Save Changes
-                </button>
-                <button className="cancel" onClick={handleClose}>
-                  Cancel
-                </button>
-              </div>
-            </Modal>
-
-            <button className="cancel" onClick={() => openModal()}>
-              Cancel
-            </button>
-            <Modal show={modalIsOpen} onHide={closeModal}>
-              <Modal.Header className="custom-header">
-                <img src="imgs/close-black.svg" alt="" onClick={closeModal} />
-              </Modal.Header>
-              <Modal.Body className="modal-ask p-0">
-                <div>
-                  <p>Are you sure you want to cancel the changes?</p>
-                </div>
-              </Modal.Body>
-
-              <div className="modal-button ask">
-                <Button className="yes" onClick={() => handleYesCancel()}>
-                  Yes
-                </Button>
-                <Button className="no" onClick={() => handleNoCancel()}>
-                  No
-                </Button>
-              </div>
-            </Modal>
-          </div>
-        </div>
+        <ToastContainer />
       </div>
-      <ToastContainer/>
-    </div>
     </AppLayout>
   );
 }

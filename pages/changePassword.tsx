@@ -5,6 +5,8 @@ import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -23,6 +25,7 @@ export default function Home() {
  
   const [totalErrors, setTotalErrors] = useState([])
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const[loading,setLoading]=useState(false)
 
 
   const handleNewPasswordInput = (event: any) => {
@@ -121,14 +124,17 @@ export default function Home() {
       let dummyemail = "demo@isdb.com";
 
       let body = {
-        "email": dummyemail,
+        "email": email,
         "old_password": currentPassword,
         "new_password": newPassword
       }
+      setLoading(true)
       setDisableSubmit(true);
 
       const result = await API_Auth.updatePassword(body);
       console.log(result);
+      setLoading(false)
+
       if (result.status == 400) {
         toast.error(result.error)
         setDisableSubmit(false);
@@ -151,7 +157,8 @@ export default function Home() {
         <div className="template edit-password">
           <div className="template-header">
             <div className="back-option" onClick={() => handleBack()}>
-              <img src="imgs/left-arrow.svg" alt="" />
+              <Image src="imgs/left-arrow.svg" alt=""
+              width={27.443} height={25.767} />
               <p>Back</p>
             </div>
             <div className="main-header">
@@ -159,13 +166,14 @@ export default function Home() {
             </div>
             <div></div>
           </div>
+          {loading==true && <Loader/>}
           <div className="row">
             <div className="col-md-6 mb-3">
               <div className="form-content current-password">
                 <label htmlFor="password1">Current Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>
                   <input
-                    type="password"
+                    type={showCurrentPassword ? "text" : "password"}
                     id="password1"
                     name="currentPassword"
                     value={currentPassword}

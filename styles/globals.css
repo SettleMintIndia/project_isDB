@@ -2606,6 +2606,13 @@ label {
   max-height: 300px;
   overflow-y: auto;
 }
+.action-points {
+  float: right;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 
 /* kavya */
 .template .searchScenario {
@@ -2621,6 +2628,7 @@ label {
   justify-content: space-between;
   padding-right: 2px;
 }
+
 
 .template .searchScenario select {
   background: none;

@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import API_Auth from "./api/API_Auth";
 import moment from "moment";
 import AppLayout from "@/components/layout/AppLayout";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -78,10 +79,12 @@ export default function Home() {
         <div className="container-fluid pdf report compared mt-2">
           <div className="header">
             <div className="left-head">
-              <img
+              <Image
                 src="/imgs/isdb-logo-signin.svg"
                 className="isDB-logo"
                 alt=""
+                width={141.479}
+                height={83.2}
               />
             </div>
             <div className="right-head">

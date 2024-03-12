@@ -1,23 +1,19 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import API_Auth from "./api/API_Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
 
 export default function Home() {
   const router = useRouter();
   const [scenariotype, setscenariotype] = useState("");
   const [scenariotypeErr, setscenariotypeErr] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [loading,setLoading]=useState(false)
 
-  const handleLogin = () => {
-    router.push("/scenarioType");
-  };
-
+  
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
@@ -39,9 +35,11 @@ export default function Home() {
       };
 
       setDisableSubmit(true);
+      setLoading(true)
 
       const result_exist = await API_Auth.getScenarioExists(scenariotype);
       console.log(result_exist.exists);
+      setLoading(false)
       if (result_exist.exists == true) {
         setDisableSubmit(false);
 
@@ -67,6 +65,8 @@ export default function Home() {
           <h1>Create Scenario Type</h1>
           <div className="table-responsive">
             <div className="row scenario">
+              {loading == true && <Loader />}
+
               <div className="col-md-6 mb-3">
                 <div className="form-content">
                   <label htmlFor="scenario"> Scenario Type</label>
@@ -87,6 +87,7 @@ export default function Home() {
               <button
                 className="create-template"
                 onClick={() => handleCreateScenario()}
+                disabled={disableSubmit}
               >
                 {" "}
                 Create

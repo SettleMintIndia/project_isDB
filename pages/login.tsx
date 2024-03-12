@@ -2,8 +2,9 @@ import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
 import { UserContext } from "./context";
-import Link from "next/link";
 import AppLayout from "@/components/layout/AppLayout";
+import Loader from "@/components/layout/Loader";
+import Image from 'next/image';
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState("");
@@ -12,10 +13,12 @@ export default function Home() {
   const [passwordErr, setPasswordErr] = useState("");
   const router = useRouter();
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
-
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [disabledSubmit, setDisableSubmit] = useState(false)
 
-  const handleLogin = async () => {
+   const handleLogin = async () => {
     let error = 0;
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (userEmail === "") {
@@ -34,51 +37,50 @@ export default function Home() {
       setPasswordErr("");
     }
     console.log(error);
-    /*  if (error == 0) {
-       router.push("/listemplates");
-     } */
+
     if (error == 0) {
       let body = {
         email: userEmail,
         password: password,
       };
       console.log(body);
-      localStorage.setItem("useremail", "superadmin@isdb.com");
-      setloginuseremail("superadmin@isdb.com");
-
-      router.push("/createtemplate");
-      /* 
+      setDisableSubmit(true)
+      setLoading(true)
       const result = await API_Auth.getLogin(body);
       console.log("result", result);
+      setLoading(false)
       if (result.status == 400) {
         setErr(result.error)
+        setDisableSubmit(false)
       } else {
+        let key = result.isSuper == 1 ? "superadmin" : "admin"
         localStorage.setItem("useremail", result.email)
-        localStorage.setItem("superadmin", result.isSuper);
+        localStorage.setItem("superadmin", key);
         localStorage.setItem("displayname", result.display_name)
-        router.push('/createtemplate')
-      } */
+        if (result.isSuper == 1) {
+          router.push('/createtemplate')
+        } else {
+          router.push('/runSimulation')
+        }
+      }
     }
   };
 
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
-
     if (name === "userEmail") {
       setUserEmail(value);
     }
-
     if (name === "password") {
       setPassword(value);
     }
   };
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   return (
     <>
       <AppLayout>
@@ -137,12 +139,7 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* <span
-              className="show-password-icon"
-              onClick={togglePasswordVisibility()}
-            >
-              &#128065;
-            </span> */}
+
                     <label id="checkbox">
                       <input
                         className="checkbox"
@@ -152,11 +149,15 @@ export default function Home() {
                       Keep me signed in.
                     </label>
 
-                    {/*                         <input className="signin-button" type="submit" value="SIGN IN" />
-                     */}
+                    {err != "" && (
+                      <p className="alert-message">{err}</p>
+                    )}
+                    {loading == true && <Loader />
+                    }
                     <button
                       className="signin-button"
                       onClick={() => handleLogin()}
+                      disabled={disabledSubmit}
                     >
                       Sign In
                     </button>

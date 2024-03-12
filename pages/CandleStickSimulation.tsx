@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'; // If you're using Next.js, otherwise use another method for conditional imports
 const DynamicChart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import Image from 'next/image';
 
 export default function CandleStickSimulation(props: any) {
     console.log(props)
 
     const [candlestickData, setCandleStickData] = useState([])
-    
+
     const [iterationData, setIterationData] = useState(props.iteration)
     const [roundData, setRoundData] = useState(props.round)
 
@@ -15,8 +16,8 @@ export default function CandleStickSimulation(props: any) {
     const [resetData, setResetData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const [Siterations,setSIterations]=useState(props.noofiterations)
-    const [Srounds,setSRounds]=useState(props.noofrounds)
+    const [Siterations, setSIterations] = useState(props.noofiterations)
+    const [Srounds, setSRounds] = useState(props.noofrounds)
 
     const [visibleRange, setVisibleRange] = useState({
         min: 0,
@@ -38,22 +39,22 @@ export default function CandleStickSimulation(props: any) {
             events: {
                 dataPointSelection: (event, chartContext, config) => {
                     //  console.log(config.w.config.series[0].data[config.dataPointIndex].rounds);
-                    console.log(roundData,config.w.config.series[0].data[config.dataPointIndex]);
+                    console.log(roundData, config.w.config.series[0].data[config.dataPointIndex]);
                     const filteredArray = roundData.filter(item => item.iteration === config.w.config.series[0].data[config.dataPointIndex].x);
-                    console.log("filteredArray",filteredArray)
+                    console.log("filteredArray", filteredArray)
 
-                    let round_result=[];
+                    let round_result = [];
                     for (let iter in filteredArray) {
-                        console.log("iter",iter)
+                        console.log("iter", iter)
                         round_result.push({
                             x: Number(filteredArray[iter].round),
-                            y: [Number(filteredArray[iter].opening_price),Number(filteredArray[iter].max_price),
-                            Number(filteredArray[iter].min_price),Number(filteredArray[iter].closing_price)]
+                            y: [Number(filteredArray[iter].opening_price), Number(filteredArray[iter].max_price),
+                            Number(filteredArray[iter].min_price), Number(filteredArray[iter].closing_price)]
                         });
                     }
-                    console.log("candleresultrounds",round_result);
+                    console.log("candleresultrounds", round_result);
 
-                    let seriesData: any = [{ data: round_result}]
+                    let seriesData: any = [{ data: round_result }]
                     setCurrentView("Rounds")
                     setTimeout(() => {
                         setIteration(config.w.config.series[0].data[config.dataPointIndex].x)
@@ -116,16 +117,16 @@ export default function CandleStickSimulation(props: any) {
 
     useEffect(() => {
         console.log(iterationData, roundData)
-        let result=[];
+        let result = [];
         for (let iter in iterationData) {
-            console.log("iter",iter)
+            console.log("iter", iter)
             result.push({
                 x: Number(iterationData[iter].iteration),
-                y: [Number(iterationData[iter].opening_price),Number(iterationData[iter].max_price),
-                Number(iterationData[iter].min_price),Number(iterationData[iter].closing_price)]
+                y: [Number(iterationData[iter].opening_price), Number(iterationData[iter].max_price),
+                Number(iterationData[iter].min_price), Number(iterationData[iter].closing_price)]
             });
         }
-        console.log("candleresult",result);
+        console.log("candleresult", result);
 
         let series: any = [
             {
@@ -133,7 +134,7 @@ export default function CandleStickSimulation(props: any) {
             }
         ]
 
-        console.log("series",series);
+        console.log("series", series);
         setSeries(series);
         setResetData(series)
 
@@ -242,14 +243,18 @@ export default function CandleStickSimulation(props: any) {
 
         <div>
 
-{iteration != '' && <button className="iterationbutton" onClick={() => hadleResetData()}>Back</button>}
+            {iteration != '' && <button className="iterationbutton" onClick={() => hadleResetData()}>Back</button>}
 
             <DynamicChart options={options} series={series} type="candlestick" height={400} />
             <div className="button-container">
-                <button className='buttongrid' onClick={handleZoomIn}>  <img src="imgs/plus.png" alt="" className='imggrid' /></button>
-                <button className='buttongrid' onClick={handleZoomOut}> <img src="imgs/minus.png" alt="" className='imggrid' /></button>
-                <button className='buttongrid' onClick={handleScrollLeft}> <img src="imgs/left-arrow.png" alt="" className='imggrid' /></button>
-                <button className='buttongrid' onClick={handleScrollRight}> <img src="imgs/right-arrow.png" alt="" className='imggrid' /></button>
+                <button className='buttongrid' onClick={handleZoomIn}>  <img src="imgs/plus.png" alt="" className='imggrid'
+                /></button>
+                <button className='buttongrid' onClick={handleZoomOut}> <img src="imgs/minus.png" alt="" className='imggrid'
+                /></button>
+                <button className='buttongrid' onClick={handleScrollLeft}> <img src="imgs/left-arrow.png" alt="" className='imggrid'
+                /></button>
+                <button className='buttongrid' onClick={handleScrollRight}> <img src="imgs/right-arrow.png" alt="" className='imggrid'
+                /></button>
             </div>
 
         </div>

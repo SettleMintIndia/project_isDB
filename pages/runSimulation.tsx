@@ -89,10 +89,14 @@ export default function Home() {
     is_public: 1,
   });
 
+  const [userId, setUserId] = useState('')
+
+  
   useEffect(() => {
     console.log("tabIndex", tabIndex);
     setMounted(true)
     getScenarios()
+
     if (tabIndex == 0) {
       setCurrentPage(0);
 
@@ -116,10 +120,16 @@ export default function Home() {
     perPage: any,
     pageNo: any
   ) => {
+
+    let email = localStorage.getItem('useremail')
+
+    const userresult = await API_Auth.getAdminInformation(email);
+    console.log(userresult);
+    setUserId(userresult.id)
     setLoading(true);
     let body = {
       temp_name: tempname,
-      admin_id: "2",
+      admin_id: userresult.id,
       scenario: s_type,
       datefrom:
         fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
@@ -128,7 +138,7 @@ export default function Home() {
       pgNo: pageNo,
       showPrivate: true,
     };
-    console.log(body);
+    console.log("user", body);
     const result = await API_Auth.getAllTemplates(body);
     console.log(result);
     setLoading(false);

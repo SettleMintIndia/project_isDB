@@ -11,6 +11,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import API_Auth from "./api/API_Auth";
 import moment from "moment";
 import AppLayout from "@/components/layout/AppLayout";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 
 export default function Home() {
   const router = useRouter();
@@ -18,6 +21,8 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
 
   const [viewData, setViewData] = useState({
+    limit_order_upper_bound: '',
+    limit_order_lower_bound: '',
     temp_name: "",
     created_timestamp: "",
     scenario_name: "",
@@ -38,7 +43,67 @@ export default function Home() {
     mean_price_buy: "",
     mean_price_sell: "",
     is_public: 1,
+    Iteartions: "",
+    Orders: "",
+    rounds: "",
+    oder_variance: "",
   });
+
+  const [ex_id, setExid] = useState(router.query.exe_id);
+
+
+  const [meanPriceSimulation, setMeanPriceSimulation] = useState({
+    inter_10_price_ns: 0, inter_10_price_ws: 0,
+    inter_90_price_ns: 0, inter_90_price_ws: 0,
+    max_price_ns: 0, max_price_ws: 0,
+    mean_price_ns: 0, mean_price_ws: 0,
+    median_price_ns: 0, median_price_ws: 0,
+    min_price_ns: 0, min_price_ws: 0,
+    std_price_ns: 0, std_price_ws: 0
+  })
+  const [meanVolumeSimulation, setMeanVolumeSimulation] = useState({
+    inter_10_amt_ns: 0, inter_10_amt_ws: 0,
+    inter_90_amt_ns: 0, inter_90_amt_ws: 0,
+    max_amt_ns: 0, max_amt_ws: 0,
+    mean_amt_ns: 0, mean_amt_ws: 0,
+    median_amt_ns: 0, median_amt_ws: 0,
+    min_amt_ns: 0, min_amt_ws: 0,
+    std_amt_ns: 0, std_amt_ws: 0
+  })
+
+  const [meanQuantitySimulation, setMeanQuantitySimulation] = useState({
+    inter_10_quant_ns: 0, inter_10_quant_ws: 0,
+    inter_90_quant_ns: 0, inter_90_quant_ws: 0,
+    max_quant_ns: 0, max_quant_ws: 0,
+    mean_quant_ns: 0, mean_quant_ws: 0,
+    median_quant_ns: 0, median_quant_ws: 0,
+    min_quant_ns: 0, min_quant_ws: 0,
+    std_quant_ns: 0, std_quant_ws: 0
+  })
+
+  const [StablizationFundData, setStablizationFundData] = useState({
+    inter_10_asset_stab: 0, inter_10_cash_stab: 0,
+    inter_10_total_stab: 0, inter_10_total_v_stab: 0,
+    inter_90_asset_stab: 0, inter_90_cash_stab: 0,
+    inter_90_total_stab: 0, inter_90_total_v_stab: 0,
+    max_asset_stab: 0, max_cash_stab: 0,
+    max_total_stab: 0, max_total_v_stab: 0,
+    mean_asset_stab: 0, mean_cash_stab: 0,
+    mean_total_stab: 0, mean_total_v_stab: 0,
+    median_asset_stab: 0, median_cash_stab: 0,
+    median_total_stab: 0, median_total_v_stab: 0,
+    min_asset_stab: 0, min_cash_stab: 0,
+    min_total_stab: 0, min_total_v_stab: 0,
+    std_asset_stab: 0, std_cash_stab: 0,
+    std_total_stab: 0, std_total_v_stab: 0
+
+  })
+
+  const [StablizationTotal, setStablizationTotal] = useState({
+    round_assets: 0, round_cash: 0, round_tk: 0
+  })
+
+
 
   useEffect(() => {
     setMounted(true);
@@ -46,7 +111,59 @@ export default function Home() {
     console.log(totalTempName);
 
     getTemplateDetails(totalTempName);
-  }, [totalTempName]);
+    getSimulationResultDetails(ex_id);
+    getSimulationVolumeResultDetails(ex_id);
+
+    getSimulationQuantityResultDetails(ex_id);
+    getStablizationFund(ex_id);
+
+
+  }, [totalTempName, ex_id]);
+
+
+  const getStablizationFund = async (id: any) => {
+
+    const result = await API_Auth.getStablizationFundDetails(id);
+    console.log("StablizationFund", result);
+    setStablizationFundData(result.stab)
+
+    setStablizationFundData(result.stab == undefined ? StablizationFundData : result.stab)
+
+    setStablizationTotal(result.stab_totals == undefined ? StablizationTotal : result.stab_totals.stab_totals)
+
+  };
+  const getSimulationResultDetails = async (id: any) => {
+    const result = await API_Auth.getSimulationResult(id, "price");
+    console.log("simulationresult", result);
+
+    setMeanPriceSimulation(result.sim == undefined ? meanPriceSimulation : result.sim)
+
+
+  };
+  const getSimulationQuantityResultDetails = async (executionId: any) => {
+    const result = await API_Auth.getSimulationResult(executionId, "quantity");
+    console.log("quantityresult", result);
+    console.log("quantity--------------------------->")
+
+    setMeanQuantitySimulation(result.sim == undefined ? meanQuantitySimulation : result.sim)
+
+
+
+  };
+
+  const getSimulationVolumeResultDetails = async (executionId: any) => {
+    const result = await API_Auth.getSimulationResult(executionId, "volume");
+    console.log("volumeresult", result);
+    console.log("volume--------------------------->")
+    setMeanVolumeSimulation(result.sim)
+
+    setMeanVolumeSimulation(result.sim == undefined ? meanVolumeSimulation : result.sim)
+
+
+
+
+  };
+
   const getTemplateDetails = async (totalTempName: any) => {
     // const result=API_Auth.getTemplateDetails(totalTempName);
 
@@ -69,13 +186,58 @@ export default function Home() {
     if (result.status == 200) {
       console.log(result.templates[0]);
       var data = result.templates[0];
-      setViewData(result.templates[0]);
+
+
+      let body = {
+        temp_name: name,
+        creator: "",
+        scenario: "",
+        datefrom: "",
+        dateto: "",
+        resultPerPage: 1,
+        pgNo: 1,
+        execution_id: ex_id
+      };
+      const simulationresult = await API_Auth.getSimulationHistory(body);
+      console.log(
+        "simulationresult",
+        simulationresult,
+      );
+
+
+
+      data['Iteartions'] = simulationresult.simulations[0].iterations;
+      data['Orders'] = simulationresult.simulations[0].nb_orders
+      data['rounds'] = simulationresult.simulations[0].nb_rounds
+      data['oder_variance'] = simulationresult.simulations[0].nb_orders_var;
+
+      setViewData(data);
+
+      console.log("keydata", data, result.templates.length)
+      setViewData(data)
     }
   };
+  const handleDownloadPdf = () => {
+    const input = document.getElementById('page');
+
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'px', 'a4');
+        var width = pdf.internal.pageSize.getWidth();
+        var height = pdf.internal.pageSize.getHeight() - 50;
+
+        pdf.addImage(imgData, 'JPEG', 0, 20, width, height);
+        pdf.save(totalTempName + ".pdf");
+      });
+
+  }
   if (mounted)
     return (
       <AppLayout>
-        <div className="container-fluid pdf report mt-2">
+        <div className="container-fluid pdf report mt-2" id="page">
+
+
           <div className="header">
             <div className="left-head">
               <img
@@ -84,14 +246,24 @@ export default function Home() {
                 alt=""
               />
             </div>
+
+
             <div className="right-head">
+              <div className="action-points">
+                <div className="file-type">
+                  <Button onClick={() => handleDownloadPdf()} data-html2canvas-ignore="true">
+                    <img src="imgs/download-white.svg" alt="" />
+                    PDF
+                  </Button>
+                </div></div>
+
               <div className="pdf-title">Report</div>
               <div className="pdf info">
                 <div className="pdf-time">
                   <label htmlFor="">Report Downloaded Date & Time </label>
                   <span>
                     {" "}
-                    {moment(viewData.created_timestamp).format(
+                    {moment(new Date()).format(
                       "MM/DD/YYYY h:mm:ss A"
                     )}
                   </span>
@@ -138,11 +310,11 @@ export default function Home() {
                         </tr>
                         <tr>
                           <td>Limit Order Upper Bound</td>
-                          <td>0.95</td>
+                          <td>{viewData.limit_order_upper_bound}</td>
                         </tr>
                         <tr>
                           <td>Limit Order Lower Bound</td>
-                          <td>1.05</td>
+                          <td>{viewData.limit_order_lower_bound}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -174,15 +346,19 @@ export default function Home() {
                       <tbody>
                         <tr>
                           <td>Number Of Iterations</td>
-                          <td>0.05</td>
+                          <td>{viewData.Iteartions}</td>
                         </tr>
                         <tr>
                           <td>Number Of Rounds</td>
-                          <td>0.3</td>
+                          <td>{viewData.rounds}</td>
                         </tr>
                         <tr>
                           <td>Number Of Orders In Each Round</td>
-                          <td>0.75</td>
+                          <td>{viewData.Orders}</td>
+                        </tr>
+                        <tr>
+                          <td>Order Variance</td>
+                          <td>{viewData.oder_variance}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -211,23 +387,23 @@ export default function Home() {
                           <tbody>
                             <tr>
                               <th className="emptycell">Mean</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanVolumeSimulation.mean_amt_ws}</td>
+                              <td>{meanVolumeSimulation.mean_amt_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Median</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanVolumeSimulation.median_amt_ws}</td>
+                              <td>{meanVolumeSimulation.median_amt_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Standard deviation</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanVolumeSimulation.std_amt_ws}</td>
+                              <td>{meanVolumeSimulation.std_amt_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">10% - 90% interval</th>
-                              <td>55.01</td>
-                              <td>615.00</td>
+                              <td>{meanVolumeSimulation.inter_10_amt_ws}-{meanVolumeSimulation.inter_90_amt_ws}</td>
+                              <td>{meanVolumeSimulation.inter_10_amt_ns}-{meanVolumeSimulation.inter_90_amt_ns}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -251,23 +427,24 @@ export default function Home() {
                           <tbody>
                             <tr>
                               <th className="emptycell">Mean</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanPriceSimulation.mean_price_ws}</td>
+                              <td>{meanPriceSimulation.mean_price_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Median</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanPriceSimulation.median_price_ws}</td>
+                              <td>{meanPriceSimulation.median_price_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Standard deviation</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanPriceSimulation.std_price_ws}</td>
+                              <td>{meanPriceSimulation.std_price_ws}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">10% - 90% interval</th>
-                              <td>55.01</td>
-                              <td>615.00</td>
+                              <td>{meanPriceSimulation.inter_10_price_ws}-{meanPriceSimulation.inter_90_price_ws}</td>
+                              <td>{meanPriceSimulation.inter_10_price_ns}-{meanPriceSimulation.inter_90_price_ns}</td>
+
                             </tr>
                           </tbody>
                         </table>
@@ -291,23 +468,24 @@ export default function Home() {
                           <tbody>
                             <tr>
                               <th className="emptycell">Mean</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanQuantitySimulation.mean_quant_ws}</td>
+                              <td>{meanQuantitySimulation.mean_quant_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Median</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanQuantitySimulation.median_quant_ws}</td>
+                              <td>{meanQuantitySimulation.median_quant_ns}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">Standard deviation</th>
-                              <td>105.77</td>
-                              <td>615.00</td>
+                              <td>{meanQuantitySimulation.std_quant_ws}</td>
+                              <td>{meanQuantitySimulation.std_quant_ws}</td>
                             </tr>
                             <tr>
                               <th className="emptycell">10% - 90% interval</th>
-                              <td>55.01</td>
-                              <td>615.00</td>
+                              <td>{meanQuantitySimulation.inter_10_quant_ws}-{meanQuantitySimulation.inter_90_quant_ws}</td>
+                              <td>{meanQuantitySimulation.inter_10_quant_ns}-{meanQuantitySimulation.inter_90_quant_ns}</td>
+
                             </tr>
                           </tbody>
                         </table>
@@ -326,15 +504,15 @@ export default function Home() {
                     <ul className="stabilization-fund">
                       <li className="token-issued">
                         <label htmlFor="token">Token Issued</label>
-                        <span>100</span>
+                        <span>{StablizationTotal.round_tk}</span>
                       </li>
                       <li className="assets">
                         <label htmlFor="asset">Assets (QTY)</label>
-                        <span>200</span>
+                        <span>{StablizationTotal.round_assets}</span>
                       </li>
                       <li className="cash">
                         <label htmlFor="cash">Cash</label>
-                        <span>200</span>
+                        <span>{StablizationTotal.round_cash}</span>
                       </li>
                     </ul>
                   </div>
@@ -354,31 +532,34 @@ export default function Home() {
                           <tbody>
                             <tr>
                               <th className="emptycell">Mean</th>
-                              <td>44963.09</td>
-                              <td>635.46</td>
-                              <td>53901.14</td>
-                              <td>0.26</td>
+                              <td>{StablizationFundData.mean_cash_stab}</td>
+                              <td>{StablizationFundData.mean_asset_stab}</td>
+                              <td>{StablizationFundData.mean_total_stab}</td>
+                              <td>{StablizationFundData.mean_total_v_stab}</td>
+
                             </tr>
                             <tr>
                               <th className="emptycell">Median</th>
-                              <td>44963.09</td>
-                              <td>635.46</td>
-                              <td>53901.14</td>
-                              <td>0.26</td>
+                              <td>{StablizationFundData.median_cash_stab}</td>
+                              <td>{StablizationFundData.median_asset_stab}</td>
+                              <td>{StablizationFundData.median_total_stab}</td>
+                              <td>{StablizationFundData.median_total_v_stab}</td>
+
                             </tr>
                             <tr>
                               <th className="emptycell">Standard deviation</th>
-                              <td>44963.09</td>
-                              <td>635.46</td>
-                              <td>53901.14</td>
-                              <td>0.26</td>
+                              <td>{StablizationFundData.std_cash_stab}</td>
+                              <td>{StablizationFundData.std_asset_stab}</td>
+                              <td>{StablizationFundData.std_total_stab}</td>
+                              <td>{StablizationFundData.std_total_v_stab}</td>
+
                             </tr>
                             <tr>
                               <th className="emptycell">10% - 90% interval</th>
-                              <td>44963.09</td>
-                              <td>635.46</td>
-                              <td>53901.14</td>
-                              <td>0.26</td>
+                              <td>{StablizationFundData.inter_10_cash_stab}-{StablizationFundData.inter_90_cash_stab}</td>
+                              <td>{StablizationFundData.inter_10_asset_stab}-{StablizationFundData.inter_90_asset_stab}</td>
+                              <td>{StablizationFundData.inter_10_total_stab}-{StablizationFundData.inter_90_total_stab}</td>
+                              <td>{StablizationFundData.inter_10_total_v_stab}-{StablizationFundData.inter_90_total_v_stab}</td>
                             </tr>
                           </tbody>
                         </table>
