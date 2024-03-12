@@ -22,7 +22,7 @@ export default function Home() {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
   const [selectedRecords, setSelectedRecords] = useState([]);
-  const [dataRecords, setDataRecords] = useState([])
+  const [dataRecords, setDataRecords] = useState([]);
 
   const [templateData, setTemplateData] = useState([
     {
@@ -47,7 +47,6 @@ export default function Home() {
   const [offset, setOffSet] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [viewData, setViewData] = useState({});
-
 
   useEffect(() => {
     getSimulations(
@@ -79,15 +78,15 @@ export default function Home() {
       pgNo: pageNo,
       execution_id: "",
     };
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationHistory(body);
     console.log(result);
-    setLoading(false)
+    setLoading(false);
     if (result.status == 200) {
       setTemplateData(result.simulations);
       setTotalCount(result.count);
       setPageCount(Math.ceil(result.count / perPage));
-      console.log(Math.ceil(result.count / perPage))
+      console.log(Math.ceil(result.count / perPage));
     }
   };
   const viewDetails = (data: any) => {
@@ -118,7 +117,8 @@ export default function Home() {
         fromDate,
         toDate,
         perPage,
-        1)
+        1
+      );
     }
   };
   const handleInput = async (e: any) => {
@@ -126,7 +126,7 @@ export default function Home() {
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
       setSType(value);
-      setCurrentPage(0)
+      setCurrentPage(0);
       getSimulations(
         tempname,
         creatorName,
@@ -134,39 +134,25 @@ export default function Home() {
         fromDate,
         toDate,
         perPage,
-        1)
+        1
+      );
     }
     if (name == "tempname") {
       setTempName(value);
-      setCurrentPage(0)
+      setCurrentPage(0);
 
-
-      getSimulations(
-        value,
-        creatorName,
-        s_type,
-        fromDate,
-        toDate,
-        perPage,
-        1)
+      getSimulations(value, creatorName, s_type, fromDate, toDate, perPage, 1);
       //handlegetAllTemplateDetails();
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0)
+      setCurrentPage(0);
 
-      getSimulations(
-        tempname,
-        creatorName,
-        s_type,
-        value,
-        toDate,
-        perPage,
-        1)
+      getSimulations(tempname, creatorName, s_type, value, toDate, perPage, 1);
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0)
+      setCurrentPage(0);
 
       getSimulations(
         tempname,
@@ -175,23 +161,16 @@ export default function Home() {
         fromDate,
         value,
         perPage,
-        1)
+        1
+      );
     }
 
     if (name == "perPage") {
       setPerPage(Number(value));
       setPageNo(1);
-      setCurrentPage(0)
+      setCurrentPage(0);
 
-
-      getSimulations(
-        tempname,
-        creatorName,
-        s_type,
-        fromDate,
-        toDate,
-        value,
-        1)
+      getSimulations(tempname, creatorName, s_type, fromDate, toDate, value, 1);
     }
   };
 
@@ -203,10 +182,9 @@ export default function Home() {
     //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
     //setPageNo(pageData);
     let data = e.selected + 1;
-    console.log("asdakl", data, page)
+    console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
-
 
     getSimulations(
       tempname,
@@ -215,49 +193,49 @@ export default function Home() {
       fromDate,
       toDate,
       perPage,
-      data)
+      data
+    );
   };
 
   const handleCheckboxChange = async (id: any) => {
-    console.log(id)
+    console.log(id);
     // Check if the record is already in the array
     const index = selectedRecords.indexOf(id);
-    console.log(selectedRecords)
+    console.log(selectedRecords);
 
     const filteredArray = templateData.filter((item) => item.exe_id === id);
-    console.log("filteredArray", filteredArray, dataRecords)
+    console.log("filteredArray", filteredArray, dataRecords);
 
     if (dataRecords.length < 3) {
-
-
       // If the record is checked, add it to the array
       if (index === -1) {
         setSelectedRecords([...selectedRecords, id]);
-        setDataRecords([...dataRecords, filteredArray[0]])
+        setDataRecords([...dataRecords, filteredArray[0]]);
       } else {
         // If the record is unchecked, remove it from the array
         const updatedRecords = [...selectedRecords];
-        const updateDataRecords = [...dataRecords]
+        const updateDataRecords = [...dataRecords];
         updatedRecords.splice(index, 1);
         //updateDataRecords.splice(index, 1);
-        const updatedData = updateDataRecords.filter((item) => item.exe_id === id);
+        const updatedData = updateDataRecords.filter(
+          (item) => item.exe_id === id
+        );
 
-        setDataRecords([...updatedData])
+        setDataRecords([...updatedData]);
         setSelectedRecords(updatedRecords);
       }
     } else {
-      toast.error("Template Records should not more than 3")
+      toast.error("Template Records should not more than 3");
     }
   };
   const handleClear = () => {
-    setDataRecords([])
-    setSelectedRecords([])
-  }
+    setDataRecords([]);
+    setSelectedRecords([]);
+  };
 
   const handleCompareClick = () => {
     if (dataRecords.length != 3) {
-      toast.error("Template Records length should be 3")
-
+      toast.error("Template Records length should be 3");
     } else {
       //router.push("/templatedetails_excel")
 
@@ -266,40 +244,30 @@ export default function Home() {
         query: {
           temp_name1: dataRecords[0]?.temp_name,
           temp_name2: dataRecords[1]?.temp_name,
-          temp_name3: dataRecords[2]?.temp_name
+          temp_name3: dataRecords[2]?.temp_name,
         },
       });
     }
-  }
+  };
   const handleClose = (id: any) => {
     console.log("Exid", id);
     const updatedRecords = [...selectedRecords];
     const index = selectedRecords.indexOf(id);
 
-    const updateDataRecords = [...dataRecords]
+    const updateDataRecords = [...dataRecords];
     updatedRecords.splice(index, 1);
     //updateDataRecords.splice(index, 1);
     const updatedData = updateDataRecords.filter((item) => item.exe_id != id);
-    console.log("updatedData", updatedData, updateDataRecords)
+    console.log("updatedData", updatedData, updateDataRecords);
 
-    setDataRecords([...updatedData])
+    setDataRecords([...updatedData]);
     setSelectedRecords(updatedRecords);
-
-  }
+  };
 
   const handleFirstRecord = () => {
-    setCurrentPage(0)
-    getSimulations(
-      tempname,
-      creatorName,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      1)
-
-
-  }
+    setCurrentPage(0);
+    getSimulations(tempname, creatorName, s_type, fromDate, toDate, perPage, 1);
+  };
   const handlelastRecord = () => {
     getSimulations(
       tempname,
@@ -308,11 +276,10 @@ export default function Home() {
       fromDate,
       toDate,
       perPage,
-      pageCount)
-    setCurrentPage(pageCount - 1)
-
-
-  }
+      pageCount
+    );
+    setCurrentPage(pageCount - 1);
+  };
 
   const handleDownloadExcel = async (data: any) => {
     console.log(data);
@@ -334,101 +301,158 @@ export default function Home() {
     console.log("result", result);
     console.log(result.templates[0]);
     var keydata = result.templates[0];
-    keydata['Iteartions'] = data.iterations;
-    keydata['Orders'] = data.nb_orders
-    keydata['rounds'] = data.nb_rounds
-    keydata['oder variance'] = data.nb_orders_var;
-    keydata['created_timestamp'] = moment(keydata.created_timestamp).format("MM/DD/YYYY h:mm:ss A")
+    keydata["Iteartions"] = data.iterations;
+    keydata["Orders"] = data.nb_orders;
+    keydata["rounds"] = data.nb_rounds;
+    keydata["oder variance"] = data.nb_orders_var;
+    keydata["created_timestamp"] = moment(keydata.created_timestamp).format(
+      "MM/DD/YYYY h:mm:ss A"
+    );
     let finalData: any[] = [];
 
     const wb = XLSX.utils.book_new();
 
     Object.keys(keydata).forEach(function (key) {
       var value = keydata[key];
-      let obj = { 'key': key, 'Value': value };
+      let obj = { key: key, Value: value };
       finalData.push(obj);
     });
-    console.log("finalData", finalData)
+    console.log("finalData", finalData);
 
     const tempData = XLSX.utils.json_to_sheet(finalData);
-    XLSX.utils.book_append_sheet(wb, tempData, 'Template');
-
-
-
+    XLSX.utils.book_append_sheet(wb, tempData, "Template");
 
     /*  price*/
 
-    const withStabilizationData = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
-    const withoutStabilizationData = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withStabilizationData = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
+    const withoutStabilizationData = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
 
-    const wsData = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsData = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationData).forEach((key) => {
-      wsData.push([key, withStabilizationData[key], withoutStabilizationData[key]]);
+      wsData.push([
+        key,
+        withStabilizationData[key],
+        withoutStabilizationData[key],
+      ]);
     });
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-    XLSX.utils.book_append_sheet(wb, ws, 'Price');
+    XLSX.utils.book_append_sheet(wb, ws, "Price");
     /* volume */
 
-    const withStabilizationDataVOlume = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
-    const withoutStabilizationDataVolume = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withStabilizationDataVOlume = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
+    const withoutStabilizationDataVolume = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
 
-    const wsDataVolume = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsDataVolume = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataVOlume).forEach((key) => {
-      wsDataVolume.push([key, withStabilizationDataVOlume[key], withoutStabilizationDataVolume[key]]);
+      wsDataVolume.push([
+        key,
+        withStabilizationDataVOlume[key],
+        withoutStabilizationDataVolume[key],
+      ]);
     });
 
     const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
-    XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
-
-
-
-
-
+    XLSX.utils.book_append_sheet(wb, wsVolume, "Volume");
 
     /* Quantity */
 
-    const withStabilizationDataQty = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
-    const withoutStabilizationDataQty = { "Template": 'Bubble1', Mean: 12, Median: 10, "Standard deviation": 19, "10%-90% interval": 10 }
+    const withStabilizationDataQty = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
+    const withoutStabilizationDataQty = {
+      Template: "Bubble1",
+      Mean: 12,
+      Median: 10,
+      "Standard deviation": 19,
+      "10%-90% interval": 10,
+    };
 
-    const wsDataQty = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsDataQty = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataQty).forEach((key) => {
-      wsDataQty.push([key, withStabilizationDataQty[key], withoutStabilizationDataQty[key]]);
+      wsDataQty.push([
+        key,
+        withStabilizationDataQty[key],
+        withoutStabilizationDataQty[key],
+      ]);
     });
 
     const wsQty = XLSX.utils.aoa_to_sheet(wsDataQty);
-    XLSX.utils.book_append_sheet(wb, wsQty, 'Quantity');
+    XLSX.utils.book_append_sheet(wb, wsQty, "Quantity");
 
     /* stablizationfund */
 
-    const withCash = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
-    const withArrayQuantity = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
-    const withTotalAssetV = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
-    const withTotalAssetDollar = { temp_name: 'x', mean: 12, median: 10, deviation: 19 };
+    const withCash = { temp_name: "x", mean: 12, median: 10, deviation: 19 };
+    const withArrayQuantity = {
+      temp_name: "x",
+      mean: 12,
+      median: 10,
+      deviation: 19,
+    };
+    const withTotalAssetV = {
+      temp_name: "x",
+      mean: 12,
+      median: 10,
+      deviation: 19,
+    };
+    const withTotalAssetDollar = {
+      temp_name: "x",
+      mean: 12,
+      median: 10,
+      deviation: 19,
+    };
 
-
-    const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset/v', 'Total Asset $']];
+    const wsDataStablization = [
+      ["", "Cash", "Asset(Quantity)", "Total Asset/v", "Total Asset $"],
+    ];
     Object.keys(withCash).forEach((key) => {
-      wsDataStablization.push([key, withCash[key], withArrayQuantity[key], withTotalAssetV[key], withTotalAssetDollar[key]]);
+      wsDataStablization.push([
+        key,
+        withCash[key],
+        withArrayQuantity[key],
+        withTotalAssetV[key],
+        withTotalAssetDollar[key],
+      ]);
     });
 
     const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
-    XLSX.utils.book_append_sheet(wb, wssdata, 'Stablization');
+    XLSX.utils.book_append_sheet(wb, wssdata, "Stablization");
 
-
-
-
-    XLSX.writeFile(wb, 'Report.xlsx');
-
-
-
-
-  }
+    XLSX.writeFile(wb, "Report.xlsx");
+  };
   return (
     <AppLayout>
       <div className="container-fluid">
-        <div className="template details">
+        <div className="template details history">
           <div className="template-header">
             <div className="back-option"></div>
             <div className="main-header">
@@ -443,7 +467,12 @@ export default function Home() {
             <label htmlFor="">Compare Templates :</label>
             {dataRecords.map((item: any) => (
               <button className="templatename">
-                {item.temp_name} <img src="imgs/close-black.svg" alt="" onClick={() => handleClose(item.exe_id)} />
+                {item.temp_name}{" "}
+                <img
+                  src="imgs/close-black.svg"
+                  alt=""
+                  onClick={() => handleClose(item.exe_id)}
+                />
               </button>
             ))}
 
@@ -454,7 +483,9 @@ export default function Home() {
             <button className="compare-button">
               <a onClick={() => handleCompareClick()}>Compare Templates</a>
             </button>
-            <button className="clear" onClick={() => handleClear()}>Clear All</button>
+            <button className="clear" onClick={() => handleClear()}>
+              Clear All
+            </button>
           </div>
           <div className="template-type">
             <div className="tabs">
@@ -537,22 +568,26 @@ export default function Home() {
                         </th>
                       </tr>
                     </thead>
-                    {templateData.length == 0 && <tbody>
-                      <tr >
-                        <td colSpan={12}>
-                          <p className="no_Data_table">No Data Found</p>
-                        </td>
-                      </tr>
-                    </tbody>
-                    }
+                    {templateData.length == 0 && (
+                      <tbody>
+                        <tr>
+                          <td colSpan={12}>
+                            <p className="no_Data_table">No Data Found</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    )}
                     <tbody>
                       {templateData.map((data) => (
                         <tr key={data.exe_id}>
                           <td id="checkbox">
                             {" "}
-                            <input type="checkbox" className="checkbox"
+                            <input
+                              type="checkbox"
+                              className="checkbox"
                               checked={selectedRecords.includes(data.exe_id)}
-                              onChange={() => handleCheckboxChange(data.exe_id)} />
+                              onChange={() => handleCheckboxChange(data.exe_id)}
+                            />
                           </td>
                           <td>{data.scenario_name}</td>
                           <td>{data.temp_name}</td>
@@ -597,7 +632,9 @@ export default function Home() {
                           </td>
                           <td id="file">
                             <Link href="templatepdf">PDF</Link>
-                            <a onClick={() => handleDownloadExcel(data)}>EXCEL</a>
+                            <a onClick={() => handleDownloadExcel(data)}>
+                              EXCEL
+                            </a>
                           </td>
                         </tr>
                       ))}
@@ -607,26 +644,34 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {templateData.length != 0 && <div className="pagging-area mt-2">
-            <div className="toolbar">
-              <label htmlFor="">Results per page :</label>
-              <div className="tooldrop">
-                <select name="" id="">
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                </select>
+          {templateData.length != 0 && (
+            <div className="pagging-area mt-2">
+              <div className="toolbar">
+                <label htmlFor="">Results per page :</label>
+                <div className="tooldrop">
+                  <select name="" id="">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                  </select>
+                </div>
+                <span>of {totalCount}</span>
               </div>
-              <span>of {totalCount}</span>
-            </div>
-            <div className="paging-list">
-              {currentPage == 0 && <div className="leftaction disable-pointer" >
-                <img src="imgs/left-doublearrowg.svg" alt="" />
-              </div>}
-              {currentPage != 0 && <div className="leftaction disable-pointer" onClick={() => handleFirstRecord()}>
-                <img src="imgs/left-doublearrow.svg" alt="" />
-              </div>}
-              {/*   <div className="leftaction-single">
+              <div className="paging-list">
+                {currentPage == 0 && (
+                  <div className="leftaction disable-pointer">
+                    <img src="imgs/left-doublearrowg.svg" alt="" />
+                  </div>
+                )}
+                {currentPage != 0 && (
+                  <div
+                    className="leftaction disable-pointer"
+                    onClick={() => handleFirstRecord()}
+                  >
+                    <img src="imgs/left-doublearrow.svg" alt="" />
+                  </div>
+                )}
+                {/*   <div className="leftaction-single">
               <img src="imgs/left-paging.svg" alt="" />
             </div>
             <ul className="paging-count">
@@ -638,32 +683,49 @@ export default function Home() {
             <div className="rightaction-single">
               <img src="imgs/right-paging.svg" alt="" />
             </div> */}
-              <ReactPaginate
-                previousLabel={currentPage == 0 ? <img src="imgs/leftpaginggray.svg" /> : <img src="imgs/left-paging.svg" alt="" />}
-                nextLabel={currentPage == pageCount - 1 ? <img src="imgs/right-paging-gray.svg" /> : <img src="imgs/right-paging.svg" alt="" />}
-                breakLabel={"..."}
-                breakClassName={"break-me"}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-                forcePage={currentPage}
-                disabledClassName="disabled"
-                disableInitialCallback
-              />
-              {currentPage != pageCount - 1 && <div className="rightaction" onClick={() => handlelastRecord()}>
-                <img src="imgs/right-doublearrow.svg" alt="" />
+                <ReactPaginate
+                  previousLabel={
+                    currentPage == 0 ? (
+                      <img src="imgs/leftpaginggray.svg" />
+                    ) : (
+                      <img src="imgs/left-paging.svg" alt="" />
+                    )
+                  }
+                  nextLabel={
+                    currentPage == pageCount - 1 ? (
+                      <img src="imgs/right-paging-gray.svg" />
+                    ) : (
+                      <img src="imgs/right-paging.svg" alt="" />
+                    )
+                  }
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageClick}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                  forcePage={currentPage}
+                  disabledClassName="disabled"
+                  disableInitialCallback
+                />
+                {currentPage != pageCount - 1 && (
+                  <div
+                    className="rightaction"
+                    onClick={() => handlelastRecord()}
+                  >
+                    <img src="imgs/right-doublearrow.svg" alt="" />
+                  </div>
+                )}
+                {currentPage == pageCount - 1 && (
+                  <div className="rightaction">
+                    <img src="imgs/right-doublearrowg.svg" alt="" />
+                  </div>
+                )}
               </div>
-              }
-              {currentPage == pageCount - 1 && <div className="rightaction" >
-                <img src="imgs/right-doublearrowg.svg" alt="" />
-              </div>
-              }
             </div>
-          </div>
-          }
+          )}
         </div>
         <ToastContainer />
       </div>

@@ -18,10 +18,9 @@ import Loader from "@/components/layout/Loader";
 import CandleStickSimulation from "./CandleStickSimulation";
 import BarGraph from "./BarGraph";
 
-
 export default function Home() {
   const router = useRouter();
-  const[runLoading,setRunLoading]=useState(false)
+  const [runLoading, setRunLoading] = useState(false);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -108,37 +107,45 @@ export default function Home() {
   const [type, setType] = useState("price");
 
   const { loginexid, setloginexid } = useContext(UserContext);
-  const [orderWsbuy, setorderWsbuy] = useState([{
-    quantity: '', price: ''
+  const [orderWsbuy, setorderWsbuy] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
+  const [orderWssell, setorderWssell] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
 
-  }]);
-  const [orderWssell, setorderWssell] = useState([{
-    quantity: '', price: ''
+  const [orderNsbuy, setorderNsbuy] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
+  const [orderNssell, setorderNssell] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
 
-  }]);
-
-  const [orderNsbuy, setorderNsbuy] = useState([{
-    quantity: '', price: ''
-
-  }]);
-  const [orderNssell, setorderNssell] = useState([{
-    quantity: '', price: ''
-
-  }]);
-
- const[loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [graphDataWsIteration, setgraphDataWsIteration] = useState([])
-  const [graphDataWsRound, setgraphDataWsRound] = useState([])
-  const [graphDataNsIteration, setgraphDataNsIteration] = useState([])
-  const [graphDataNsRound, setgraphDataNsRound] = useState([])
-  const [simulationQuantityData, setSimulationQuantityData] = useState([])
-  const [simulationVolumeData, setSimulationVolumeData] = useState([])
+  const [graphDataWsIteration, setgraphDataWsIteration] = useState([]);
+  const [graphDataWsRound, setgraphDataWsRound] = useState([]);
+  const [graphDataNsIteration, setgraphDataNsIteration] = useState([]);
+  const [graphDataNsRound, setgraphDataNsRound] = useState([]);
+  const [simulationQuantityData, setSimulationQuantityData] = useState([]);
+  const [simulationVolumeData, setSimulationVolumeData] = useState([]);
 
-  const [nsimulationQuantityData, setNSimulationQuantityData] = useState([])
-  const [nsimulationVolumeData, setNSimulationVolumeData] = useState([])
+  const [nsimulationQuantityData, setNSimulationQuantityData] = useState([]);
+  const [nsimulationVolumeData, setNSimulationVolumeData] = useState([]);
   const [tabName, setTabName] = useState(0);
-  const [stablization, setStablization] = useState(0)
+  const [stablization, setStablization] = useState(0);
 
   useEffect(() => {
     console.log(totalTempName);
@@ -171,8 +178,7 @@ export default function Home() {
       getTradeHistoryNS(executionId, 1, 1);
     }
     if (tabIndex == 5) {
-
-      console.log("tab-------------------", tabName)
+      console.log("tab-------------------", tabName);
       if (tabName === 0) {
         getSimulationResultDetails(executionId);
       }
@@ -191,71 +197,59 @@ export default function Home() {
   }, [totalTempName, tabIndex, executionId, tabName, stablization]);
 
   const getStablizationFund = async (id: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
-    setLoading(false)
-
+    setLoading(false);
   };
   const getSimulationResultDetails = async (id: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
 
     setgraphDataWsIteration(result.graphDataWS.byiter);
     setgraphDataWsRound(result.graphDataWS.byround);
-    setgraphDataNsIteration(result.graphDataNS.byiter)
-    setgraphDataNsRound(result.graphDataNS.byround)
-    setLoading(false)
-
+    setgraphDataNsIteration(result.graphDataNS.byiter);
+    setgraphDataNsRound(result.graphDataNS.byround);
+    setLoading(false);
   };
   const getSimulationQuantityResultDetails = async (executionId: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "quantity");
     console.log("quantityresult", result);
-    console.log("quantity--------------------------->")
+    console.log("quantity--------------------------->");
 
-    setSimulationQuantityData(result.graphDataWS[0])
-    setNSimulationQuantityData(result.graphDataNS[0])
-    setLoading(false)
-
-
+    setSimulationQuantityData(result.graphDataWS[0]);
+    setNSimulationQuantityData(result.graphDataNS[0]);
+    setLoading(false);
   };
 
   const getSimulationVolumeResultDetails = async (executionId: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "volume");
     console.log("volumeresult", result);
-    console.log("volume--------------------------->")
-    setSimulationVolumeData(result.graphDataWS[0])
-    setNSimulationVolumeData(result.graphDataNS[0])
+    console.log("volume--------------------------->");
+    setSimulationVolumeData(result.graphDataWS[0]);
+    setNSimulationVolumeData(result.graphDataNS[0]);
 
-    setLoading(false)
-
-
-
-
-
+    setLoading(false);
   };
 
-
   const getOrderBook = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
-    setLoading(false)
+    setLoading(false);
 
     setorderWsbuy(result.ordersWSBuy);
-    setorderWssell(result.ordersWSSell)
+    setorderWssell(result.ordersWSSell);
     setorderNsbuy(result.ordersNSBuy);
-    setorderNssell(result.ordersNSSell)
-
-
+    setorderNssell(result.ordersNSSell);
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getTradeHistoryWithStablization(
       id,
@@ -263,12 +257,12 @@ export default function Home() {
       sround
     );
     console.log("tadingws", result.trade, result);
-    setLoading(false)
+    setLoading(false);
 
     setTradeHistoryWS(result.trades);
   };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getTradeHistoryWithoutStablization(
       id,
@@ -277,8 +271,7 @@ export default function Home() {
     );
     console.log("tadingns", result.trade);
     setTradeHistoryNS(result.trade);
-    setLoading(false)
-
+    setLoading(false);
   };
   const getDistributions = async () => {
     const result = await API_Auth.getDistributions();
@@ -688,18 +681,16 @@ export default function Home() {
     if (ordersVar == "") {
       error = error + 1;
       setordersVarErr("Please Enter Order Variance");
-    }
-    else if(Number(ordersVar) >1 ) {
+    } else if (Number(ordersVar) > 1) {
       error = error + 1;
 
-      setordersVarErr("order variance should be less than 1") ;   
-    }else{
+      setordersVarErr("order variance should be less than 1");
+    } else {
       setordersVarErr("");
-
     }
     if (error == 0) {
-     // setDisableSubmit(true)
-     setRunLoading(true)
+      // setDisableSubmit(true)
+      setRunLoading(true);
       let body = {
         temp_name: templatename,
         nb_rounds: Number(rounds),
@@ -711,22 +702,19 @@ export default function Home() {
       };
       const result = await API_Auth.runSimulation(body);
       console.log(result);
-      setRunLoading(false)
+      setRunLoading(false);
 
       if (result.status == 400) {
         toast.error(result.msg);
-        setDisableSubmit(false)
-
+        setDisableSubmit(false);
       } else {
         console.log(result.exe);
         toast.success("Execution done successfully");
-
 
         setExecutionId(result.exe);
       }
     }
   };
-
 
   const handleSearch = () => {
     let error = 0;
@@ -773,8 +761,7 @@ export default function Home() {
         getTradeHistoryNS(executionId, 1, 1);
       }
       if (tabIndex == 5) {
-
-        console.log("tab-------------------", tabName)
+        console.log("tab-------------------", tabName);
         if (tabName === 0) {
           getSimulationResultDetails(executionId);
         }
@@ -790,7 +777,6 @@ export default function Home() {
         getStablizationFund(executionId);
       }
       console.log("tabIndex", tabIndex);
-
     }
   };
 
@@ -871,10 +857,10 @@ export default function Home() {
           </div>
 
           <div className="simulation-section">
-            <div className="row">
+            <div className="frame-area">
               <div
                 className={
-                  isExpanded ? "col-md-4 expanded" : "col-sm-1 compressed"
+                  isExpanded ? "leftArea expanded" : "leftArea compressed"
                 }
               >
                 <div className="template-modal">
@@ -894,510 +880,382 @@ export default function Home() {
                     </div>
                     <div className="details-section">
                       <div className="template-details">
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <thead>
-                                <tr>
-                                  <th>Scenario Type*</th>
-                                  <th>Crash</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Initial Market Price*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="price"
-                                      name="inititalmarketprice"
-                                      required
-                                      value={inititalmarketprice}
-                                      onChange={handleInput}
-                                    />
-                                    {inititalmarketpriceErr != "" && (
-                                      <p className="alert-message">
-                                        {inititalmarketpriceErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Price Variance Limit*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="pricelimit"
-                                      name="pricelimit"
-                                      required
-                                      value={pricelimit}
-                                      onChange={handleInput}
-                                    />
-                                    {pricelimitErr != "" && (
-                                      <p className="alert-message">
-                                        {pricelimitErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Base Quantity*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="quantity"
-                                      name="basequantity"
-                                      required
-                                      value={basequantity}
-                                      onChange={handleInput}
-                                    />
-                                    {basequantityErr != "" && (
-                                      <p className="alert-message">
-                                        {basequantityErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Quantity Variance Limit*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="quantitylimit"
-                                      name="quantitylimit"
-                                      required
-                                      value={quantitylimit}
-                                      onChange={handleInput}
-                                    />
-                                    {quantitylimitErr != "" && (
-                                      <p className="alert-message">
-                                        {quantitylimitErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Limit Order Upper Bound*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="upperbonds"
-                                      name="upperbonds"
-                                      required
-                                      value={upperbound}
-                                      onChange={handleInput}
-                                    />
-                                    {upperboundErr != "" && (
-                                      <p className="alert-message">
-                                        {upperboundErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Limit Order Lower Bound*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="lowerbonds"
-                                      name="lowerbonds"
-                                      required
-                                      value={lowerbound}
-                                      onChange={handleInput}
-                                    />
-                                    {lowerboundErr != "" && (
-                                      <p className="alert-message">
-                                        {lowerboundErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                        <div className="left-tables">
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>Scenario Type*</th>
+                                    <th>Crash</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>Initial Market Price*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="price"
+                                        name="inititalmarketprice"
+                                        required
+                                        value={inititalmarketprice}
+                                        onChange={handleInput}
+                                      />
+                                      {inititalmarketpriceErr != "" && (
+                                        <p className="alert-message">
+                                          {inititalmarketpriceErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Price Variance Limit*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="pricelimit"
+                                        name="pricelimit"
+                                        required
+                                        value={pricelimit}
+                                        onChange={handleInput}
+                                      />
+                                      {pricelimitErr != "" && (
+                                        <p className="alert-message">
+                                          {pricelimitErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Base Quantity*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="quantity"
+                                        name="basequantity"
+                                        required
+                                        value={basequantity}
+                                        onChange={handleInput}
+                                      />
+                                      {basequantityErr != "" && (
+                                        <p className="alert-message">
+                                          {basequantityErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Quantity Variance Limit*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="quantitylimit"
+                                        name="quantitylimit"
+                                        required
+                                        value={quantitylimit}
+                                        onChange={handleInput}
+                                      />
+                                      {quantitylimitErr != "" && (
+                                        <p className="alert-message">
+                                          {quantitylimitErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Limit Order Upper Bound*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="upperbonds"
+                                        name="upperbonds"
+                                        required
+                                        value={upperbound}
+                                        onChange={handleInput}
+                                      />
+                                      {upperboundErr != "" && (
+                                        <p className="alert-message">
+                                          {upperboundErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Limit Order Lower Bound*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="lowerbonds"
+                                        name="lowerbonds"
+                                        required
+                                        value={lowerbound}
+                                        onChange={handleInput}
+                                      />
+                                      {lowerboundErr != "" && (
+                                        <p className="alert-message">
+                                          {lowerboundErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <tbody>
-                                <tr>
-                                  <td>Alpha 0*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="alpha0"
-                                      name="alpha0"
-                                      required
-                                      value={alpha0}
-                                      onChange={handleInput}
-                                    />
-                                    {alpha0Err != "" && (
-                                      <p className="alert-message">
-                                        {alpha0Err}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Alpha 1*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="alpha1"
-                                      name="alpha1"
-                                      required
-                                      value={alpha1}
-                                      onChange={handleInput}
-                                    />
-                                    {alpha1Err != "" && (
-                                      <p className="alert-message">
-                                        {alpha1Err}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Theta 0*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="theta0"
-                                      name="theta0"
-                                      required
-                                      value={theta0}
-                                      onChange={handleInput}
-                                    />
-                                    {theta0Err != "" && (
-                                      <p className="alert-message">
-                                        {theta0Err}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Theta 1*</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="theta1"
-                                      name="theta1"
-                                      required
-                                      value={theta1}
-                                      onChange={handleInput}
-                                    />
-                                    {theta1Err != "" && (
-                                      <p className="alert-message">
-                                        {theta1Err}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Distribution*</td>
-                                  <td>
-                                    <select
-                                      name="distribution"
-                                      id="distribution"
-                                      value={distribution}
-                                      onChange={handleInput}
-                                      required
-                                    >
-                                      <option value="">
-                                        Select Distribution Type
-                                      </option>
-                                      {finalDistributions.map((item) => (
-                                        <option
-                                          key={item?.name}
-                                          value={item?.name}
-                                        >
-                                          {item?.name}
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Alpha 0*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="alpha0"
+                                        name="alpha0"
+                                        required
+                                        value={alpha0}
+                                        onChange={handleInput}
+                                      />
+                                      {alpha0Err != "" && (
+                                        <p className="alert-message">
+                                          {alpha0Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Alpha 1*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="alpha1"
+                                        name="alpha1"
+                                        required
+                                        value={alpha1}
+                                        onChange={handleInput}
+                                      />
+                                      {alpha1Err != "" && (
+                                        <p className="alert-message">
+                                          {alpha1Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Theta 0*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="theta0"
+                                        name="theta0"
+                                        required
+                                        value={theta0}
+                                        onChange={handleInput}
+                                      />
+                                      {theta0Err != "" && (
+                                        <p className="alert-message">
+                                          {theta0Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Theta 1*</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="theta1"
+                                        name="theta1"
+                                        required
+                                        value={theta1}
+                                        onChange={handleInput}
+                                      />
+                                      {theta1Err != "" && (
+                                        <p className="alert-message">
+                                          {theta1Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Distribution*</td>
+                                    <td>
+                                      <select
+                                        name="distribution"
+                                        id="distribution"
+                                        value={distribution}
+                                        onChange={handleInput}
+                                        required
+                                      >
+                                        <option value="">
+                                          Select Distribution Type
                                         </option>
-                                      ))}{" "}
-                                    </select>
-                                    {distributionErr != "" && (
-                                      <p className="alert-message">
-                                        {distributionErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                        {finalDistributions.map((item) => (
+                                          <option
+                                            key={item?.name}
+                                            value={item?.name}
+                                          >
+                                            {item?.name}
+                                          </option>
+                                        ))}{" "}
+                                      </select>
+                                      {distributionErr != "" && (
+                                        <p className="alert-message">
+                                          {distributionErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
-
-                        {/* <div className="table-responsive">
-                        <div className="template-content">
-                          <table className="table">
-                            <tbody>
-                              {distribution == "normal" && (
-                                <tr>
-                                  <td>Standard Deviation Price Buy</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="devpricebuy"
-                                      name="devpricebuy"
-                                      required
-                                      value={devpricebuy}
-                                      onChange={handleInput}
-                                    />
-                                    {devpricebuyErr != "" && (
-                                      <p className="alert-message">
-                                        {devpricebuyErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-                              {distribution == "normal" && (
-                                <tr>
-                                  <td>Standard Deviation Price Sell</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="devpricesell"
-                                      name="devpricesell"
-                                      required
-                                      value={devpricesell}
-                                      onChange={handleInput}
-                                    />
-                                    {devpricesellErr != "" && (
-                                      <p className="alert-message">
-                                        {devpricesellErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-                              {distribution == "normal" && (
-                                <tr>
-                                  <td>Standard Deviation Quantity</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="devqty"
-                                      name="devqty"
-                                      required
-                                      value={devqty}
-                                      onChange={handleInput}
-                                    />
-                                    {devqtyErr != "" && (
-                                      <p className="alert-message">
-                                        {devqtyErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-
-                              {(distribution == "poisson" ||
-                                distribution == "normal") && (
-                                <tr>
-                                  <td>Mean Price Buy</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="meanpricebuy"
-                                      name="meanpricebuy"
-                                      required
-                                      value={meanpricebuy}
-                                      onChange={handleInput}
-                                    />
-                                    {meanpricebuyErr != "" && (
-                                      <p className="alert-message">
-                                        {meanpricebuyErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-                              {(distribution == "poisson" ||
-                                distribution == "normal") && (
-                                <tr>
-                                  <td>Mean Price Sell</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="meanpricesell"
-                                      name="meanpricesell"
-                                      required
-                                      value={meanpricesell}
-                                      onChange={handleInput}
-                                    />
-                                    {meanpricesellErr != "" && (
-                                      <p className="alert-message">
-                                        {meanpricesellErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-                              {(distribution == "poisson" ||
-                                distribution == "normal") && (
-                                <tr>
-                                  <td>Mean Price Quantity</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="meanqty"
-                                      name="meanqty"
-                                      required
-                                      value={meanqty}
-                                      onChange={handleInput}
-                                    />
-                                    {meanqtyErr != "" && (
-                                      <p className="alert-message">
-                                        {meanqtyErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div> */}
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <tbody>
-                                <tr>
-                                  <td>Number Of Iterations*</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="iterations"
-                                      name="iterations"
-                                      required
-                                      value={iterations}
-                                      onChange={handleInput}
-                                    />
-                                    {iterationsErr != "" && (
-                                      <p className="alert-message">
-                                        {iterationsErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Number Of Rounds*</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="rounds"
-                                      name="rounds"
-                                      required
-                                      value={rounds}
-                                      onChange={handleInput}
-                                    />
-                                    {roundsErr != "" && (
-                                      <p className="alert-message">
-                                        {roundsErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Number Of Orders In Each Round*</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="ordersRound"
-                                      name="ordersRound"
-                                      required
-                                      value={ordersRound}
-                                      onChange={handleInput}
-                                    />
-                                    {ordersRoundErr != "" && (
-                                      <p className="alert-message">
-                                        {ordersRoundErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Orders Variance</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      id="ordersVar"
-                                      name="ordersVar"
-                                      required
-                                      value={ordersVar}
-                                      onChange={handleInput}
-                                    />
-                                    {ordersVarErr != "" && (
-                                      <p className="alert-message">
-                                        {ordersVarErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                        <div className="right-tables">
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Number Of Iterations*</td>
+                                    <td>
+                                      <input
+                                        type="number"
+                                        id="iterations"
+                                        name="iterations"
+                                        required
+                                        value={iterations}
+                                        onChange={handleInput}
+                                      />
+                                      {iterationsErr != "" && (
+                                        <p className="alert-message">
+                                          {iterationsErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Number Of Rounds*</td>
+                                    <td>
+                                      <input
+                                        type="number"
+                                        id="rounds"
+                                        name="rounds"
+                                        required
+                                        value={rounds}
+                                        onChange={handleInput}
+                                      />
+                                      {roundsErr != "" && (
+                                        <p className="alert-message">
+                                          {roundsErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Number Of Orders In Each Round*</td>
+                                    <td>
+                                      <input
+                                        type="number"
+                                        id="ordersRound"
+                                        name="ordersRound"
+                                        required
+                                        value={ordersRound}
+                                        onChange={handleInput}
+                                      />
+                                      {ordersRoundErr != "" && (
+                                        <p className="alert-message">
+                                          {ordersRoundErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Orders Variance</td>
+                                    <td>
+                                      <input
+                                        type="number"
+                                        id="ordersVar"
+                                        name="ordersVar"
+                                        required
+                                        value={ordersVar}
+                                        onChange={handleInput}
+                                      />
+                                      {ordersVarErr != "" && (
+                                        <p className="alert-message">
+                                          {ordersVarErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
-                        </div>
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <div className="form-control visibility">
-                              <label htmlFor="accessible">Visibility*</label>
-                              <div className="radio-button">
-                                <div className="form-check form-check-inline">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="publickey"
-                                    id="inlineRadio1"
-                                    value={1}
-                                    checked={publickey === 1}
-                                    onChange={handleInput}
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor="inlineRadio1"
-                                  >
-                                    Public
-                                  </label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="publickey"
-                                    id="inlineRadio2"
-                                    value={0}
-                                    checked={publickey === 0}
-                                    onChange={handleInput}
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor="inlineRadio2"
-                                  >
-                                    Private
-                                  </label>
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <div className="form-control visibility">
+                                <label htmlFor="accessible">Visibility*</label>
+                                <div className="radio-button">
+                                  <div className="form-check form-check-inline">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="publickey"
+                                      id="inlineRadio1"
+                                      value={1}
+                                      checked={publickey === 1}
+                                      onChange={handleInput}
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor="inlineRadio1"
+                                    >
+                                      Public
+                                    </label>
+                                  </div>
+                                  <div className="form-check form-check-inline">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="publickey"
+                                      id="inlineRadio2"
+                                      value={0}
+                                      checked={publickey === 0}
+                                      onChange={handleInput}
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor="inlineRadio2"
+                                    >
+                                      Private
+                                    </label>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="modal-comment">
-                        <div className="form-content comment">
-                          <label htmlFor="comment">
-                            Comment <span>(Optional)</span>
-                          </label>
-                          <textarea
-                            class="form-control"
-                            id="comment"
-                            rows={2}
-                            value={comment}
-                            onChange={handleInput}
-                          ></textarea>
+                        <div className="modal-comment">
+                          <div className="form-content comment">
+                            <label htmlFor="comment">
+                              Comment <span>(Optional)</span>
+                            </label>
+                            <textarea
+                              className="form-control"
+                              id="comment"
+                              rows={2}
+                              value={comment}
+                              onChange={handleInput}
+                            ></textarea>
+                          </div>
                         </div>
+                        {runLoading == true && <Loader></Loader>}
                       </div>
-                      {runLoading==true && <Loader></Loader>}
+
                       <div className="modal-buttons">
                         <button
                           className="run-simulation"
@@ -1477,13 +1335,20 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
+                  <div className="modal-footer">
+                    <img
+                      src={isExpanded ? "imgs/compress.svg" : "imgs/expand.svg"}
+                      alt=""
+                      onClick={toggleColumn}
+                    />
+                  </div>
                 </div>
               </div>
               <div
-                className="col-md-8"
+                className="rightArea"
                 style={{
-                  width: isExpanded ? "65%" : "94%",
-                  marginLeft: "15px",
+                  // width: isExpanded ? "65%" : "94%",
+                  marginLeft: "30px",
                   paddingTop: "10px",
                 }}
               >
@@ -1682,7 +1547,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1725,25 +1590,25 @@ export default function Home() {
                                     </tr>
                                   </tbody> */}
 
-                                  {orderWsbuy.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderWsbuy.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody className="scrollable">
                                     {orderWsbuy.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
-
                                 </table>{" "}
                               </div>
                             </div>
@@ -1754,7 +1619,7 @@ export default function Home() {
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
-                            {loading==true && <Loader/>}
+                            {loading == true && <Loader />}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -1764,7 +1629,7 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                {/*   <tbody className="scrollable">
+                                  {/*   <tbody className="scrollable">
                                     <tr>
                                       <td>9.87</td>
                                       <td>54</td>
@@ -1778,25 +1643,25 @@ export default function Home() {
                                       <td>54</td>
                                     </tr>
                                   </tbody> */}
-                                   {orderWssell.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderWssell.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody className="scrollable">
                                     {orderWssell.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
-                              
                                 </table>
                               </div>
                             </div>
@@ -1852,37 +1717,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/next-arrow.svg"
-                                          alt=""
-                                          onClick={() =>
-                                            handleIncrementIteration()
-                                          }
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleIncrementIteration()
+                                        }
+                                      />
+                                    )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-paging-gray.svg"
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrow.svg"
-                                          alt=""
-                                          onClick={() => handleLastIteration()}
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastIteration()}
+                                      />
+                                    )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrowg.svg"
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -1958,7 +1823,7 @@ export default function Home() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="search-controls">
+                                <div className="search-controls ms-5">
                                   <button
                                     className="search"
                                     onClick={() => handleSearch()}
@@ -2119,7 +1984,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -2136,7 +2001,7 @@ export default function Home() {
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
-                            {loading==true && <Loader/>}
+                            {loading == true && <Loader />}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -2146,25 +2011,25 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  {orderNsbuy.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderNsbuy.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderNsbuy.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
-                               
                                 </table>{" "}
                               </div>
                             </div>
@@ -2184,21 +2049,22 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {orderNssell.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderNssell.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderNssell.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
@@ -2257,37 +2123,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/next-arrow.svg"
-                                          alt=""
-                                          onClick={() =>
-                                            handleIncrementIteration()
-                                          }
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleIncrementIteration()
+                                        }
+                                      />
+                                    )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-paging-gray.svg"
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrow.svg"
-                                          alt=""
-                                          onClick={() => handleLastIteration()}
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastIteration()}
+                                      />
+                                    )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrowg.svg"
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -2363,7 +2229,7 @@ export default function Home() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="search-controls">
+                                <div className="search-controls ms-5">
                                   <button
                                     className="search"
                                     onClick={() => handleSearch()}
@@ -2546,7 +2412,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -2566,7 +2432,7 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {loading==true && <Loader/>}
+                                  {loading == true && <Loader />}
                                   {tradeHistoryWS.length == 0 && (
                                     <tbody>
                                       <tr>
@@ -2756,7 +2622,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -2924,7 +2790,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -2933,7 +2799,7 @@ export default function Home() {
                               </button>
                             </div>
                           </div>
-                          {loading==true && <Loader/>}
+                          {loading == true && <Loader />}
                           <div className="ns-table">
                             <div className="table-responsive">
                               <div className="table-content">
@@ -3119,7 +2985,7 @@ export default function Home() {
                                 )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -3130,7 +2996,7 @@ export default function Home() {
                           </div>
                         </div>
                       </TabPanel>
-                     {/*  <TabPanel className="simulation-result">
+                      {/*  <TabPanel className="simulation-result">
                         <div className="simulation">
                           <div className="tabs">
                             {" "}
@@ -3303,27 +3169,28 @@ export default function Home() {
                           </div>
                         </div>
                       </TabPanel> */}
-                          <TabPanel className="simulation-result">
+                      <TabPanel className="simulation-result">
                         <div className="simulation">
                           <div className="tabs">
                             <Tabs
                               selectedIndex={stablization}
-                              onSelect={(stablization: SetStateAction<number>) =>
-                                setStablization(stablization)
-                              } >
+                              onSelect={(
+                                stablization: SetStateAction<number>
+                              ) => setStablization(stablization)}
+                            >
                               <TabList>
                                 <Tab>Stabilization</Tab>
                                 <Tab>Without Stablization</Tab>
                               </TabList>{" "}
-
                               <TabPanel>
                                 <div className="tabs">
                                   {" "}
                                   <Tabs
                                     selectedIndex={tabName}
-                                    onSelect={(tabName: SetStateAction<number>) =>
-                                      setTabName(tabName)
-                                    }>
+                                    onSelect={(
+                                      tabName: SetStateAction<number>
+                                    ) => setTabName(tabName)}
+                                  >
                                     <TabList>
                                       <Tab>Price</Tab>
                                       <Tab>Volume</Tab>
@@ -3331,15 +3198,16 @@ export default function Home() {
                                     </TabList>{" "}
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {graphDataWsIteration.length != 0 && graphDataWsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataWsIteration}
-                                        round={graphDataWsRound} 
-                                        noofiterations={iterations}
-                                        noofrounds={rounds}/>
-                                      }
+                                      {graphDataWsIteration.length != 0 &&
+                                        graphDataWsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataWsIteration}
+                                            round={graphDataWsRound}
+                                            noofiterations={iterations}
+                                            noofrounds={rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -3360,12 +3228,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3391,13 +3263,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {simulationVolumeData.length != 0 && <BarGraph
-                                        bardata={simulationVolumeData}
-                                        type={"volume"} />
-                                      }
+                                      {simulationVolumeData.length != 0 && (
+                                        <BarGraph
+                                          bardata={simulationVolumeData}
+                                          type={"volume"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         VOLUME UPDATES
                                       </div>
@@ -3418,12 +3290,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3449,13 +3325,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {simulationQuantityData.length != 0 && <BarGraph
-                                        bardata={simulationQuantityData}
-                                        type={"quantity"} />
-                                      }
+                                      {simulationQuantityData.length != 0 && (
+                                        <BarGraph
+                                          bardata={simulationQuantityData}
+                                          type={"quantity"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         QUANTITY UPDATES
                                       </div>
@@ -3476,12 +3352,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3514,9 +3394,10 @@ export default function Home() {
                                   {" "}
                                   <Tabs
                                     selectedIndex={tabName}
-                                    onSelect={(tabName: SetStateAction<number>) =>
-                                      setTabName(tabName)
-                                    }>
+                                    onSelect={(
+                                      tabName: SetStateAction<number>
+                                    ) => setTabName(tabName)}
+                                  >
                                     <TabList>
                                       <Tab>Price</Tab>
                                       <Tab>Volume</Tab>
@@ -3524,15 +3405,16 @@ export default function Home() {
                                     </TabList>{" "}
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {graphDataNsIteration.length != 0 && graphDataNsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataNsIteration}
-                                        round={graphDataNsRound}
-                                        noofiterations={iterations}
-                                        noofrounds={rounds}/>
-                                      }
+                                      {graphDataNsIteration.length != 0 &&
+                                        graphDataNsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataNsIteration}
+                                            round={graphDataNsRound}
+                                            noofiterations={iterations}
+                                            noofrounds={rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -3553,12 +3435,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3584,13 +3470,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {nsimulationVolumeData.length != 0 && <BarGraph
-                                        bardata={nsimulationVolumeData}
-                                        type={"volume"} />
-                                      }
+                                      {nsimulationVolumeData.length != 0 && (
+                                        <BarGraph
+                                          bardata={nsimulationVolumeData}
+                                          type={"volume"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         VOLUME UPDATES
                                       </div>
@@ -3611,12 +3497,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3642,13 +3532,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {nsimulationQuantityData.length != 0 && <BarGraph
-                                        bardata={nsimulationQuantityData}
-                                        type={"quantity"} />
-                                      }
+                                      {nsimulationQuantityData.length != 0 && (
+                                        <BarGraph
+                                          bardata={nsimulationQuantityData}
+                                          type={"quantity"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         QUANTITY UPDATES
                                       </div>
@@ -3669,12 +3559,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -3703,7 +3597,6 @@ export default function Home() {
                               </TabPanel>
                             </Tabs>
                           </div>
-
                         </div>
                       </TabPanel>
                       <TabPanel className="stabilization-fund">

@@ -13,9 +13,10 @@ const AppLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [totalNotifications, setTotalNotifications] = useState([]);
+  const [tooltipVisible1, setTooltipVisible1] = useState(false);
 
-  const [key, setKey] = useState("superadmin"); //superadmin
-  // const [key, setKey] = useState("admin"); //admin
+  // const [key, setKey] = useState("superadmin"); //superadmin
+  const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
@@ -26,7 +27,7 @@ const AppLayout = ({ children }: LayoutProps) => {
     const data = localStorage.getItem("useremail");
     console.log("email", loginuseremail);
 
-   /*  const handleScroll = () => {
+    /*  const handleScroll = () => {
       console.log(window.scrollY);
       if (window.scrollY >= 100) {
         setIsNavFixed(true);
@@ -79,6 +80,52 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <img src="/imgs/isdb-logo-layout.png" alt="" />
                 </Link>
               </div>
+              <div
+                className="nav-user  us-1"
+                onMouseEnter={() => setTooltipVisible1(true)}
+                onMouseLeave={() => setTooltipVisible1(false)}
+              >
+                <div className="use">
+                  <img src="/imgs/add.png" alt="" width={30} height={30} />
+                </div>
+              </div>
+              {key == "superadmin" && (
+                <ul className="menu-dropdown dp">
+                  <li
+                    className={
+                      router.pathname === "/createtemplate" ||
+                      router.pathname === "/createadmin" ||
+                      router.pathname === "/runSimulation"
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    <a href="createtemplate" className="icn">
+                      <img src="imgs/template.svg" alt="" />
+                      Create Template
+                    </a>
+                  </li>
+                  {router.route === "/runSimulation" ? (
+                    <li
+                      className={
+                        router.pathname === "/runSimulation" ? "active" : ""
+                      }
+                    >
+                      <a href="runSimulation" className="icn">
+                        <img src="imgs/run.svg" alt="" />
+                        Run Simulation
+                      </a>
+                    </li>
+                  ) : (
+                    <li className="active">
+                      <a href="createadmin" className="icn">
+                        <img src="imgs/admin.svg" alt="" />
+                        Create Admin
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              )}
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
               key == "superadmin" ? (
@@ -107,38 +154,9 @@ const AppLayout = ({ children }: LayoutProps) => {
                       </li>
                     </ul>
                   </div>
-                  <div
-                    className="menu create"
-                    onMouseEnter={() => setTooltipVisible(true)}
-                    onMouseLeave={() => setTooltipVisible(false)}
-                  >
-                    <img src="/imgs/create.svg" alt="" />
-                  </div>
-                  <ul className="menu-list create">
-                    <li
-                      className={
-                        router.pathname === "/createtemplate" ? "active" : ""
-                      }
-                    >
-                      <a href="createtemplate">
-                        <img src="imgs/template.svg" alt="" />
-                        Create Template
-                      </a>
-                    </li>
-                    <li
-                      className={
-                        router.pathname === "/createadmin" ? "active" : ""
-                      }
-                    >
-                      <a href="createadmin">
-                        <img src="imgs/admin.svg" alt="" />
-                        Create Admin
-                      </a>
-                    </li>
-                  </ul>
                 </>
               ) : (
-                <div></div>
+                <></>
               )}
 
               {(router.route === "/createtemplate" ||
@@ -171,7 +189,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </div>
                 </>
               ) : (
-                <div></div>
+                <div style={{ display: "none" }}></div>
               )}
               <div className="nav-right">
                 <div

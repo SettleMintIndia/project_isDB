@@ -21,7 +21,7 @@ export default function Home() {
   const router = useRouter();
   const [totalTempName, setTotalTempName] = useState(router.query.temp_name);
   const [ex_id, setExid] = useState(router.query.exe_id);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -92,36 +92,43 @@ export default function Home() {
   const handleEdit = () => {
     router.push("/simulation_history_info");
   };
-  const [orderWsbuy, setorderWsbuy] = useState([{
-    quantity: '', price: ''
+  const [orderWsbuy, setorderWsbuy] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
+  const [orderWssell, setorderWssell] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
 
-  }]);
-  const [orderWssell, setorderWssell] = useState([{
-    quantity: '', price: ''
+  const [orderNsbuy, setorderNsbuy] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
+  const [orderNssell, setorderNssell] = useState([
+    {
+      quantity: "",
+      price: "",
+    },
+  ]);
 
-  }]);
-
-  const [orderNsbuy, setorderNsbuy] = useState([{
-    quantity: '', price: ''
-
-  }]);
-  const [orderNssell, setorderNssell] = useState([{
-    quantity: '', price: ''
-
-  }]);
-
-  const [graphDataWsIteration, setgraphDataWsIteration] = useState([])
-  const [graphDataWsRound, setgraphDataWsRound] = useState([])
-  const [graphDataNsIteration, setgraphDataNsIteration] = useState([])
-  const [graphDataNsRound, setgraphDataNsRound] = useState([])
+  const [graphDataWsIteration, setgraphDataWsIteration] = useState([]);
+  const [graphDataWsRound, setgraphDataWsRound] = useState([]);
+  const [graphDataNsIteration, setgraphDataNsIteration] = useState([]);
+  const [graphDataNsRound, setgraphDataNsRound] = useState([]);
   const [tabName, setTabName] = useState(0);
-  const [stablization, setStablization] = useState(0)
-  const [simulationQuantityData, setSimulationQuantityData] = useState([])
-  const [simulationVolumeData, setSimulationVolumeData] = useState([])
+  const [stablization, setStablization] = useState(0);
+  const [simulationQuantityData, setSimulationQuantityData] = useState([]);
+  const [simulationVolumeData, setSimulationVolumeData] = useState([]);
 
-  const [nsimulationQuantityData, setNSimulationQuantityData] = useState([])
-  const [nsimulationVolumeData, setNSimulationVolumeData] = useState([])
-
+  const [nsimulationQuantityData, setNSimulationQuantityData] = useState([]);
+  const [nsimulationVolumeData, setNSimulationVolumeData] = useState([]);
 
   useEffect(() => {
     console.log(totalTempName);
@@ -150,7 +157,7 @@ export default function Home() {
       getTradeHistoryNS(ex_id, 1, 1);
     }
     if (tabIndex == 5) {
-      console.log("tab-------------------", tabName)
+      console.log("tab-------------------", tabName);
       if (tabName === 0) {
         getSimulationResultDetails(ex_id);
       }
@@ -168,74 +175,62 @@ export default function Home() {
     console.log("tabIndex", tabIndex, graphDataWsIteration, graphDataWsRound);
   }, [totalTempName, tabIndex, ex_id, tabName, stablization]);
   const getStablizationFund = async (id: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
     setgraphDataWsIteration(result.graphDataWS.byiter);
     setgraphDataWsRound(result.graphDataWS.byround);
-    setLoading(false)
-
+    setLoading(false);
   };
   const getSimulationResultDetails = async (id: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
     setgraphDataWsIteration(result.graphDataWS.byiter);
     setgraphDataWsRound(result.graphDataWS.byround);
-    setgraphDataNsIteration(result.graphDataNS.byiter)
-    setgraphDataNsRound(result.graphDataNS.byround)
-    setLoading(false)
-
-
+    setgraphDataNsIteration(result.graphDataNS.byiter);
+    setgraphDataNsRound(result.graphDataNS.byround);
+    setLoading(false);
   };
 
   const getSimulationQuantityResultDetails = async (executionId: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "quantity");
     console.log("quantityresult", result);
-    console.log("quantity--------------------------->")
+    console.log("quantity--------------------------->");
 
-    setSimulationQuantityData(result.graphDataWS[0])
-    setNSimulationQuantityData(result.graphDataNS[0])
-    setLoading(false)
-
-
+    setSimulationQuantityData(result.graphDataWS[0]);
+    setNSimulationQuantityData(result.graphDataNS[0]);
+    setLoading(false);
   };
 
   const getSimulationVolumeResultDetails = async (executionId: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "volume");
     console.log("volumeresult", result);
-    console.log("volume--------------------------->")
-    setSimulationVolumeData(result.graphDataWS[0])
-    setNSimulationVolumeData(result.graphDataNS[0])
+    console.log("volume--------------------------->");
+    setSimulationVolumeData(result.graphDataWS[0]);
+    setNSimulationVolumeData(result.graphDataNS[0]);
 
-    setLoading(false)
-
-    
-
-
-
+    setLoading(false);
   };
   const getOrderBook = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getOrderDetails(id, siteration, sround);
     console.log("orderresult", result);
     /*  setorderNs(result.ordersNS);
      setorderWs(result.ordersWS); */
-     setLoading(false)
+    setLoading(false);
 
     setorderWsbuy(result.ordersWSBuy);
-    setorderWssell(result.ordersWSSell)
+    setorderWssell(result.ordersWSSell);
     setorderNsbuy(result.ordersNSBuy);
-    setorderNssell(result.ordersNSSell)
-
-
+    setorderNssell(result.ordersNSSell);
   };
   const getTradeHistoryWS = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getTradeHistoryWithStablization(
       id,
@@ -243,12 +238,12 @@ export default function Home() {
       sround
     );
     console.log("tadingws", result.trades);
-    setLoading(false)
+    setLoading(false);
 
     setTradeHistoryWS(result.trades);
   };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.getTradeHistoryWithoutStablization(
       id,
@@ -256,7 +251,7 @@ export default function Home() {
       sround
     );
     console.log("tadingws", result.trade);
-    setLoading(false)
+    setLoading(false);
 
     setTradeHistoryNS(result.trade);
   };
@@ -270,7 +265,7 @@ export default function Home() {
       dateto: "",
       resultPerPage: 1,
       pgNo: 1,
-      execution_id: id
+      execution_id: id,
     };
     const result = await API_Auth.getSimulationHistory(body);
     console.log(
@@ -460,12 +455,11 @@ export default function Home() {
     }
   };
   const handleFirstIteration = () => {
-    setSIteration(1)
-  }
+    setSIteration(1);
+  };
   const handleLastIteration = () => {
-    setSIteration(executionData.iterations)
-
-  }
+    setSIteration(executionData.iterations);
+  };
   const handleIncrementIteration = () => {
     if (Number(siteration) > Number(executionData.iterations)) {
       toast.error(
@@ -473,23 +467,23 @@ export default function Home() {
       );
     } else {
       let x = siteration + 1;
-      setSIteration(x)
+      setSIteration(x);
     }
-  }
+  };
   const handleDecrementIteration = () => {
-    if (Number(siteration) < 1) { } else {
+    if (Number(siteration) < 1) {
+    } else {
       let x = Number(siteration) - 1;
-      setSIteration(x)
+      setSIteration(x);
     }
-  }
+  };
 
   const handleFirstRound = () => {
-    setSRound(1)
-  }
+    setSRound(1);
+  };
   const handleLastRound = () => {
-    setSRound(executionData.nb_rounds)
-
-  }
+    setSRound(executionData.nb_rounds);
+  };
   const handleIncrementRound = () => {
     if (Number(sround) > Number(executionData.nb_rounds)) {
       toast.error(
@@ -497,22 +491,26 @@ export default function Home() {
       );
     } else {
       let x = sround + 1;
-      setSRound(x)
+      setSRound(x);
     }
-  }
+  };
   const handleDecrementRound = () => {
-    if (Number(sround) < 1) { } else {
+    if (Number(sround) < 1) {
+    } else {
       let x = Number(sround) - 1;
-      setSRound(x)
+      setSRound(x);
     }
-  }
-
+  };
 
   const handleBack = () => {
-    router.back()
-  }
+    router.back();
+  };
 
-  console.log("------------------------", graphDataWsIteration.length, graphDataWsRound.length)
+  console.log(
+    "------------------------",
+    graphDataWsIteration.length,
+    graphDataWsRound.length
+  );
   return (
     <AppLayout>
       <div className="container-fluid">
@@ -544,10 +542,10 @@ export default function Home() {
           </div>
 
           <div className="simulation-section">
-            <div className="row">
+            <div className="frame-area">
               <div
                 className={
-                  isExpanded ? "col-md-4 expanded" : "col-sm-1 compressed"
+                  isExpanded ? "leftArea expanded" : "leftArea compressed"
                 }
               >
                 <div className="template-modal">
@@ -566,7 +564,9 @@ export default function Home() {
                       <div className="title">{templatename}</div>
                       <div className="simulation-time">
                         <div className="time">
-                          <label htmlFor="simulationtime">Simulation Time</label>
+                          <label htmlFor="simulationtime">
+                            Simulation Time
+                          </label>
                           <span>
                             {" "}
                             {moment(executionData.created_timestamp).format(
@@ -578,207 +578,216 @@ export default function Home() {
                     </div>
                     <div className="details-section">
                       <div className="template-details">
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <thead>
-                                <tr>
-                                  <th>Scenario Type</th>
-                                  <th>{scenarioType}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Initial Market Price</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="price"
-                                      name="inititalmarketprice"
-                                      required
-                                      value={inititalmarketprice}
-                                      onChange={handleInput}
-                                    />
-                                    {inititalmarketpriceErr != "" && (
-                                      <p className="alert-message">
-                                        {inititalmarketpriceErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Price Variance Limit</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="pricelimit"
-                                      name="pricelimit"
-                                      required
-                                      value={pricelimit}
-                                      onChange={handleInput}
-                                    />
-                                    {pricelimitErr != "" && (
-                                      <p className="alert-message">
-                                        {pricelimitErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Base Quantity</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="quantity"
-                                      name="basequantity"
-                                      required
-                                      value={basequantity}
-                                      onChange={handleInput}
-                                    />
-                                    {basequantityErr != "" && (
-                                      <p className="alert-message">
-                                        {basequantityErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Quantity Variance Limit</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="quantitylimit"
-                                      name="quantitylimit"
-                                      required
-                                      value={quantitylimit}
-                                      onChange={handleInput}
-                                    />
-                                    {quantitylimitErr != "" && (
-                                      <p className="alert-message">
-                                        {quantitylimitErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Limit Order Upper Bound</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="upperbonds"
-                                      name="upperbonds"
-                                      required
-                                      value={upperbound}
-                                      onChange={handleInput}
-                                    />
-                                    {upperboundErr != "" && (
-                                      <p className="alert-message">
-                                        {upperboundErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Limit Order Lower Bound</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="lowerbonds"
-                                      name="lowerbonds"
-                                      required
-                                      value={lowerbound}
-                                      onChange={handleInput}
-                                    />
-                                    {lowerboundErr != "" && (
-                                      <p className="alert-message">
-                                        {lowerboundErr}
-                                      </p>
-                                    )}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                        <div className="left-tables">
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>Scenario Type</th>
+                                    <th>{scenarioType}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>Initial Market Price</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="price"
+                                        name="inititalmarketprice"
+                                        required
+                                        value={inititalmarketprice}
+                                        onChange={handleInput}
+                                      />
+                                      {inititalmarketpriceErr != "" && (
+                                        <p className="alert-message">
+                                          {inititalmarketpriceErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Price Variance Limit</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="pricelimit"
+                                        name="pricelimit"
+                                        required
+                                        value={pricelimit}
+                                        onChange={handleInput}
+                                      />
+                                      {pricelimitErr != "" && (
+                                        <p className="alert-message">
+                                          {pricelimitErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Base Quantity</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="quantity"
+                                        name="basequantity"
+                                        required
+                                        value={basequantity}
+                                        onChange={handleInput}
+                                      />
+                                      {basequantityErr != "" && (
+                                        <p className="alert-message">
+                                          {basequantityErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Quantity Variance Limit</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="quantitylimit"
+                                        name="quantitylimit"
+                                        required
+                                        value={quantitylimit}
+                                        onChange={handleInput}
+                                      />
+                                      {quantitylimitErr != "" && (
+                                        <p className="alert-message">
+                                          {quantitylimitErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Limit Order Upper Bound</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="upperbonds"
+                                        name="upperbonds"
+                                        required
+                                        value={upperbound}
+                                        onChange={handleInput}
+                                      />
+                                      {upperboundErr != "" && (
+                                        <p className="alert-message">
+                                          {upperboundErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Limit Order Lower Bound</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="lowerbonds"
+                                        name="lowerbonds"
+                                        required
+                                        value={lowerbound}
+                                        onChange={handleInput}
+                                      />
+                                      {lowerboundErr != "" && (
+                                        <p className="alert-message">
+                                          {lowerboundErr}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
-                        </div>
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <tbody>
-                                <tr>
-                                  <td>Alpha 0</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="alpha0"
-                                      name="alpha0"
-                                      required
-                                      value={alpha0}
-                                      onChange={handleInput}
-                                    />
-                                    {alpha0Err != "" && (
-                                      <p className="alert-message">{alpha0Err}</p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Alpha 1</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="alpha1"
-                                      name="alpha1"
-                                      required
-                                      value={alpha1}
-                                      onChange={handleInput}
-                                    />
-                                    {alpha1Err != "" && (
-                                      <p className="alert-message">{alpha1Err}</p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Theta 0</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="theta0"
-                                      name="theta0"
-                                      required
-                                      value={theta0}
-                                      onChange={handleInput}
-                                    />
-                                    {theta0Err != "" && (
-                                      <p className="alert-message">{theta0Err}</p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Theta 1</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="theta1"
-                                      name="theta1"
-                                      required
-                                      value={theta1}
-                                      onChange={handleInput}
-                                    />
-                                    {theta1Err != "" && (
-                                      <p className="alert-message">{theta1Err}</p>
-                                    )}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Distribution</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      id="distribution"
-                                      name="distribution"
-                                      required
-                                      value={distribution}
-                                    />
-                                    {/*  <select
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Alpha 0</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="alpha0"
+                                        name="alpha0"
+                                        required
+                                        value={alpha0}
+                                        onChange={handleInput}
+                                      />
+                                      {alpha0Err != "" && (
+                                        <p className="alert-message">
+                                          {alpha0Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Alpha 1</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="alpha1"
+                                        name="alpha1"
+                                        required
+                                        value={alpha1}
+                                        onChange={handleInput}
+                                      />
+                                      {alpha1Err != "" && (
+                                        <p className="alert-message">
+                                          {alpha1Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Theta 0</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="theta0"
+                                        name="theta0"
+                                        required
+                                        value={theta0}
+                                        onChange={handleInput}
+                                      />
+                                      {theta0Err != "" && (
+                                        <p className="alert-message">
+                                          {theta0Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Theta 1</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="theta1"
+                                        name="theta1"
+                                        required
+                                        value={theta1}
+                                        onChange={handleInput}
+                                      />
+                                      {theta1Err != "" && (
+                                        <p className="alert-message">
+                                          {theta1Err}
+                                        </p>
+                                      )}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Distribution</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="distribution"
+                                        name="distribution"
+                                        required
+                                        value={distribution}
+                                      />
+                                      {/*  <select
                                     name="distribution"
                                     id="distribution"
                                     value={distribution}
@@ -798,73 +807,81 @@ export default function Home() {
                                       {distributionErr}
                                     </p>
                                   )} */}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
-                        <div className="table-responsive">
-                          <div className="template-content">
-                            <table className="table">
-                              <tbody>
-                                <tr>
-                                  <td>Number Of Iterations</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      value={executionData.iterations}
-                                    />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Number Of Rounds</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      value={executionData.nb_rounds}
-                                    />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Number Of Orders In Each Round</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      value={executionData.nb_orders}
-                                    />
-                                  </td>
-                                </tr>
+                        <div className="right-tables">
+                          <div className="table-responsive">
+                            <div className="template-content">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Number Of Iterations</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        value={executionData.iterations}
+                                      />
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Number Of Rounds</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        value={executionData.nb_rounds}
+                                      />
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Number Of Orders In Each Round</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        value={executionData.nb_orders}
+                                      />
+                                    </td>
+                                  </tr>
 
-                                <tr>
-                                  <td>Orders Variance</td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                     
-                                      value={executionData.nb_orders_var}
-                                    />
-                                    
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                  <tr>
+                                    <td>Orders Variance</td>
+                                    <td>
+                                      <input
+                                        type="number"
+                                        value={executionData.nb_orders_var}
+                                      />
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <div className="modal-comment">
+                            <label htmlFor="comment">Comment</label>
+                            <p>{comment}</p>
                           </div>
                         </div>
-                      </div>
-                      <div className="modal-comment">
-                        <label htmlFor="comment">Comment</label>
-                        <p>{comment}</p>
                       </div>
                     </div>
+                  </div>
+                  <div className="modal-footer">
+                    <img
+                      src={isExpanded ? "imgs/compress.svg" : "imgs/expand.svg"}
+                      alt=""
+                      onClick={toggleColumn}
+                    />
                   </div>
                 </div>
               </div>
               <div
-                className="col-md-8"
+                className="rightArea"
                 style={{
-                  width: isExpanded ? "65%" : "94%",
-                  marginLeft: "15px",
+                  // width: isExpanded ? "65%" : "94%",
+                  marginLeft: "30px",
                   paddingTop: "10px",
                 }}
               >
@@ -907,8 +924,8 @@ export default function Home() {
                       </TabList>
                       <TabPanel className="info">
                         Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industry's
-                        standard dummy text ever since the 1500s
+                        typesetting industry. Lorem Ipsum has been the
+                        industry's standard dummy text ever since the 1500s
                       </TabPanel>
                       <TabPanel className="order-book">
                         <div className="orderbook-header">
@@ -916,13 +933,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -940,24 +974,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -973,16 +1045,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1010,21 +1102,22 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  {orderWsbuy.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderWsbuy.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderWsbuy.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
@@ -1047,21 +1140,22 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {orderWssell.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderWssell.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderWssell.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
@@ -1075,12 +1169,32 @@ export default function Home() {
                                 <div className="controls">
                                   <h3>Iteration</h3>
                                   <div className="previous">
-                                    {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                    {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                      handleFirstIteration()} />}
+                                    {siteration == 1 && (
+                                      <img
+                                        src="imgs/left-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
+                                    {siteration != 1 && (
+                                      <img
+                                        src="imgs/left-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleFirstIteration()}
+                                      />
+                                    )}
 
-                                    {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                    {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
+                                    {siteration != 1 && (
+                                      <img
+                                        src="imgs/left-paging.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleDecrementIteration()
+                                        }
+                                      />
+                                    )}
+                                    {siteration == 1 && (
+                                      <img src="imgs/previous.svg" alt="" />
+                                    )}
                                   </div>
                                   <div className="iteration">
                                     <div className="tooldrop">
@@ -1098,24 +1212,64 @@ export default function Home() {
                                     <span>of {executionData.iterations}</span>
                                   </div>
                                   <div className="next">
-                                    {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                    {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                    {siteration != executionData.iterations && (
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleIncrementIteration()
+                                        }
+                                      />
+                                    )}
+                                    {siteration == executionData.iterations && (
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
-                                    {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                    {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                    {siteration != executionData.iterations && (
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastIteration()}
+                                      />
+                                    )}
+                                    {siteration == executionData.iterations && (
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
                                 <div className="round">
                                   <h3>Round</h3>
                                   <div className="previous">
-                                    {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                    {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                      handleFirstRound()} />}
+                                    {sround == 1 && (
+                                      <img
+                                        src="imgs/left-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
+                                    {sround != 1 && (
+                                      <img
+                                        src="imgs/left-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleFirstRound()}
+                                      />
+                                    )}
 
-                                    {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                      onClick={() => handleDecrementRound()} />}
-                                    {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                    {sround != 1 && (
+                                      <img
+                                        src="imgs/left-paging.svg"
+                                        alt=""
+                                        onClick={() => handleDecrementRound()}
+                                      />
+                                    )}
+                                    {sround == 1 && (
+                                      <img src="imgs/previous.svg" alt="" />
+                                    )}
                                   </div>
                                   <div className="iteration">
                                     <div className="tooldrop">
@@ -1133,17 +1287,36 @@ export default function Home() {
                                     <span>of {executionData.nb_rounds}</span>
                                   </div>
                                   <div className="next">
-                                    {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                      onClick={() => handleIncrementRound()} />}
-                                    {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                    {sround != executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() => handleIncrementRound()}
+                                      />
+                                    )}
+                                    {sround == executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
-                                    {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                      onClick={() => handleLastRound()} />}
-                                    {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                    {sround != executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastRound()}
+                                      />
+                                    )}
+                                    {sround == executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
-                                <div className="search-controls">
+                                <div className="search-controls ms-5">
                                   <button
                                     className="search"
                                     onClick={() => handleSearch()}
@@ -1163,13 +1336,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1187,24 +1377,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1220,16 +1448,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1257,25 +1505,25 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  {orderNsbuy.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderNsbuy.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderNsbuy.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
-
                                 </table>{" "}
                               </div>
                             </div>
@@ -1295,21 +1543,22 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {orderNssell.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {orderNssell.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {orderNssell.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
-
-
                                       </tr>
                                     ))}
                                   </tbody>
@@ -1323,13 +1572,32 @@ export default function Home() {
                                 <div className="controls">
                                   <h3>Iteration</h3>
                                   <div className="previous">
-                                    {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                    {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                      handleFirstIteration()} />}
+                                    {siteration == 1 && (
+                                      <img
+                                        src="imgs/left-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
+                                    {siteration != 1 && (
+                                      <img
+                                        src="imgs/left-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleFirstIteration()}
+                                      />
+                                    )}
 
-                                    {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                    {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                    {siteration != 1 && (
+                                      <img
+                                        src="imgs/left-paging.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleDecrementIteration()
+                                        }
+                                      />
+                                    )}
+                                    {siteration == 1 && (
+                                      <img src="imgs/previous.svg" alt="" />
+                                    )}
                                   </div>
                                   <div className="iteration">
                                     <div className="tooldrop">
@@ -1347,24 +1615,64 @@ export default function Home() {
                                     <span>of {executionData.iterations}</span>
                                   </div>
                                   <div className="next">
-                                    {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                    {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                    {siteration != executionData.iterations && (
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() =>
+                                          handleIncrementIteration()
+                                        }
+                                      />
+                                    )}
+                                    {siteration == executionData.iterations && (
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
-                                    {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                    {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                    {siteration != executionData.iterations && (
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastIteration()}
+                                      />
+                                    )}
+                                    {siteration == executionData.iterations && (
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
                                 <div className="round">
                                   <h3>Round</h3>
                                   <div className="previous">
-                                    {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                    {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                      handleFirstRound()} />}
+                                    {sround == 1 && (
+                                      <img
+                                        src="imgs/left-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
+                                    {sround != 1 && (
+                                      <img
+                                        src="imgs/left-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleFirstRound()}
+                                      />
+                                    )}
 
-                                    {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                      onClick={() => handleDecrementRound()} />}
-                                    {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                    {sround != 1 && (
+                                      <img
+                                        src="imgs/left-paging.svg"
+                                        alt=""
+                                        onClick={() => handleDecrementRound()}
+                                      />
+                                    )}
+                                    {sround == 1 && (
+                                      <img src="imgs/previous.svg" alt="" />
+                                    )}
                                   </div>
                                   <div className="iteration">
                                     <div className="tooldrop">
@@ -1382,16 +1690,36 @@ export default function Home() {
                                     <span>of {executionData.nb_rounds}</span>
                                   </div>
                                   <div className="next">
-                                    {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                      onClick={() => handleIncrementRound()} />}
-                                    {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                    {sround != executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/next-arrow.svg"
+                                        alt=""
+                                        onClick={() => handleIncrementRound()}
+                                      />
+                                    )}
+                                    {sround == executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-paging-gray.svg"
+                                        alt=""
+                                      />
+                                    )}
 
-                                    {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                      onClick={() => handleLastRound()} />}
-                                    {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                    {sround != executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-doublearrow.svg"
+                                        alt=""
+                                        onClick={() => handleLastRound()}
+                                      />
+                                    )}
+                                    {sround == executionData.nb_rounds && (
+                                      <img
+                                        src="imgs/right-doublearrowg.svg"
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                 </div>
-                                <div className="search-controls">
+                                <div className="search-controls ms-5">
                                   <button
                                     className="search"
                                     onClick={() => handleSearch()}
@@ -1428,13 +1756,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1457,24 +1802,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1490,16 +1873,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1521,14 +1924,17 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {tradeHistoryWS.length == 0 && <tbody>
-                                    <tr >
-                                      <td colSpan={12}>
-                                        <p className="no_Data_table">No Data Found</p>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                  }
+                                  {tradeHistoryWS.length == 0 && (
+                                    <tbody>
+                                      <tr>
+                                        <td colSpan={12}>
+                                          <p className="no_Data_table">
+                                            No Data Found
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  )}
                                   <tbody>
                                     {tradeHistoryWS.map((item) => (
                                       <tr>
@@ -1550,13 +1956,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1579,24 +2002,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1612,16 +2073,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1638,13 +2119,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1667,24 +2165,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1705,16 +2241,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1737,14 +2293,17 @@ export default function Home() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {tradeHistoryNS.length == 0 && <tbody>
-                                      <tr >
-                                        <td colSpan={12}>
-                                          <p className="no_Data_table">No Data Found</p>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                    }
+                                    {tradeHistoryNS.length == 0 && (
+                                      <tbody>
+                                        <tr>
+                                          <td colSpan={12}>
+                                            <p className="no_Data_table">
+                                              No Data Found
+                                            </p>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    )}
                                     {tradeHistoryNS.map((item) => (
                                       <tr>
                                         <td>
@@ -1765,13 +2324,30 @@ export default function Home() {
                             <div className="controls">
                               <h3>Iteration</h3>
                               <div className="previous">
-                                {siteration == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {siteration != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstIteration()} />}
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                {siteration != 1 && <img src="imgs/left-paging.svg" alt="" onClick={() => handleDecrementIteration()} />}
-                                {siteration == 1 && <img src="imgs/previous.svg" alt="" />}
-
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1789,24 +2365,62 @@ export default function Home() {
                                 <span>of {executionData.iterations}</span>
                               </div>
                               <div className="next">
-                                {siteration != executionData.iterations && <img src="imgs/next-arrow.svg" alt="" onClick={() => handleIncrementIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {siteration != executionData.iterations && <img src="imgs/right-doublearrow.svg" alt="" onClick={() => handleLastIteration()} />}
-                                {siteration == executionData.iterations && <img src="imgs/right-doublearrowg.svg" alt="" />}
-
+                                {siteration != executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {siteration == executionData.iterations && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className="round">
                               <h3>Round</h3>
                               <div className="previous">
-                                {sround == 1 && <img src="imgs/left-doublearrowg.svg" alt="" />}
-                                {sround != 1 && <img src="imgs/left-doublearrow.svg" alt="" onClick={() =>
-                                  handleFirstRound()} />}
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
 
-                                {sround != 1 && <img src="imgs/left-paging.svg" alt=""
-                                  onClick={() => handleDecrementRound()} />}
-                                {sround == 1 && <img src="imgs/previous.svg" alt="" />}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
                               <div className="iteration">
                                 <div className="tooldrop">
@@ -1822,16 +2436,36 @@ export default function Home() {
                                 <span>of {executionData.nb_rounds}</span>
                               </div>
                               <div className="next">
-                                {sround != executionData.nb_rounds && <img src="imgs/next-arrow.svg" alt=""
-                                  onClick={() => handleIncrementRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-paging-gray.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
 
-                                {sround != executionData.nb_rounds && <img src="imgs/right-doublearrow.svg" alt=""
-                                  onClick={() => handleLastRound()} />}
-                                {sround == executionData.nb_rounds && <img src="imgs/right-doublearrowg.svg" alt="" />}
+                                {sround != executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {sround == executionData.nb_rounds && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
-                            <div className="search-controls">
+                            <div className="search-controls ms-5">
                               <button
                                 className="search"
                                 onClick={() => handleSearch()}
@@ -1842,28 +2476,29 @@ export default function Home() {
                           </div>
                         </div>
                       </TabPanel>
-                   
+
                       <TabPanel className="simulation-result">
                         <div className="simulation">
                           <div className="tabs">
                             <Tabs
                               selectedIndex={stablization}
-                              onSelect={(stablization: SetStateAction<number>) =>
-                                setStablization(stablization)
-                              } >
+                              onSelect={(
+                                stablization: SetStateAction<number>
+                              ) => setStablization(stablization)}
+                            >
                               <TabList>
                                 <Tab>Stabilization</Tab>
                                 <Tab>Without Stablization</Tab>
                               </TabList>{" "}
-
                               <TabPanel>
                                 <div className="tabs">
                                   {" "}
                                   <Tabs
                                     selectedIndex={tabName}
-                                    onSelect={(tabName: SetStateAction<number>) =>
-                                      setTabName(tabName)
-                                    }>
+                                    onSelect={(
+                                      tabName: SetStateAction<number>
+                                    ) => setTabName(tabName)}
+                                  >
                                     <TabList>
                                       <Tab>Price</Tab>
                                       <Tab>Volume</Tab>
@@ -1871,15 +2506,18 @@ export default function Home() {
                                     </TabList>{" "}
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {graphDataWsIteration.length != 0 && graphDataWsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataWsIteration}
-                                        round={graphDataWsRound} 
-                                        noofiterations={executionData.iterations}
-                                        noofrounds={executionData.nb_rounds}/>
-                                      }
+                                      {graphDataWsIteration.length != 0 &&
+                                        graphDataWsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataWsIteration}
+                                            round={graphDataWsRound}
+                                            noofiterations={
+                                              executionData.iterations
+                                            }
+                                            noofrounds={executionData.nb_rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -1900,12 +2538,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -1931,13 +2573,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {simulationVolumeData.length != 0 && <BarGraph
-                                        bardata={simulationVolumeData}
-                                        type={"volume"} />
-                                      }
+                                      {simulationVolumeData.length != 0 && (
+                                        <BarGraph
+                                          bardata={simulationVolumeData}
+                                          type={"volume"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         VOLUME UPDATES
                                       </div>
@@ -1958,12 +2600,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -1989,13 +2635,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {simulationQuantityData.length != 0 && <BarGraph
-                                        bardata={simulationQuantityData}
-                                        type={"quantity"} />
-                                      }
+                                      {simulationQuantityData.length != 0 && (
+                                        <BarGraph
+                                          bardata={simulationQuantityData}
+                                          type={"quantity"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         QUANTITY UPDATES
                                       </div>
@@ -2016,12 +2662,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -2054,9 +2704,10 @@ export default function Home() {
                                   {" "}
                                   <Tabs
                                     selectedIndex={tabName}
-                                    onSelect={(tabName: SetStateAction<number>) =>
-                                      setTabName(tabName)
-                                    }>
+                                    onSelect={(
+                                      tabName: SetStateAction<number>
+                                    ) => setTabName(tabName)}
+                                  >
                                     <TabList>
                                       <Tab>Price</Tab>
                                       <Tab>Volume</Tab>
@@ -2064,15 +2715,18 @@ export default function Home() {
                                     </TabList>{" "}
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {graphDataNsIteration.length != 0 && graphDataNsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataNsIteration}
-                                        round={graphDataNsRound}
-                                        noofiterations={executionData.iterations}
-                                        noofrounds={executionData.nb_rounds}/>
-                                      }
+                                      {graphDataNsIteration.length != 0 &&
+                                        graphDataNsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataNsIteration}
+                                            round={graphDataNsRound}
+                                            noofiterations={
+                                              executionData.iterations
+                                            }
+                                            noofrounds={executionData.nb_rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -2093,12 +2747,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -2124,13 +2782,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {nsimulationVolumeData.length != 0 && <BarGraph
-                                        bardata={nsimulationVolumeData}
-                                        type={"volume"} />
-                                      }
+                                      {nsimulationVolumeData.length != 0 && (
+                                        <BarGraph
+                                          bardata={nsimulationVolumeData}
+                                          type={"volume"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         VOLUME UPDATES
                                       </div>
@@ -2151,12 +2809,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -2182,13 +2844,13 @@ export default function Home() {
                                     </TabPanel>
                                     <TabPanel>
                                       {" "}
-
                                       {loading == true && <Loader />}
-
-                                      {nsimulationQuantityData.length != 0 && <BarGraph
-                                        bardata={nsimulationQuantityData}
-                                        type={"quantity"} />
-                                      }
+                                      {nsimulationQuantityData.length != 0 && (
+                                        <BarGraph
+                                          bardata={nsimulationQuantityData}
+                                          type={"quantity"}
+                                        />
+                                      )}
                                       <div className="simulation-graph">
                                         QUANTITY UPDATES
                                       </div>
@@ -2209,12 +2871,16 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>105.77</td>
                                                   <td>615.00</td>
                                                 </tr>
@@ -2243,7 +2909,6 @@ export default function Home() {
                               </TabPanel>
                             </Tabs>
                           </div>
-
                         </div>
                       </TabPanel>
                       <TabPanel className="stabilization-fund">
