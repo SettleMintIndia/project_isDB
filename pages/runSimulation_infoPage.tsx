@@ -91,7 +91,7 @@ export default function Home() {
   const [ordersRoundErr, setordersRoundErr] = useState("");
   const [ordersVar, setordersVar] = useState("");
   const [ordersVarErr, setordersVarErr] = useState("");
-  const [executionId, setExecutionId] = useState("");
+  const [executionId, setExecutionId] = useState(106);
   const [siteration, setSIteration] = useState(1);
 
   const [siterationErr, setSIterationErr] = useState("");
@@ -153,7 +153,7 @@ export default function Home() {
     getTemplateDetails(totalTempName);
     getDistributions();
     console.log(tabIndex);
-    //let executionId = 18;
+    let executionId = 106;
     console.log("executionId", executionId);
 
     if (tabIndex == 1) {
@@ -827,7 +827,7 @@ export default function Home() {
   return (
     <AppLayout>
       <div className="container-fluid">
-        <div className="simulation-info">
+        <div className="simulation-info run">
           <div
             className="template-header"
             style={{ display: "flex", justifyContent: "space-between" }}

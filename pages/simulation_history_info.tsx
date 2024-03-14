@@ -177,11 +177,11 @@ export default function Home() {
   const getStablizationFund = async (id: any) => {
     setLoading(true);
 
-    const result = await API_Auth.getStablizationFundDetails(id);
-    console.log("StablizationFund", result);
-    setgraphDataWsIteration(result.graphDataWS.byiter);
-    setgraphDataWsRound(result.graphDataWS.byround);
-    setLoading(false);
+    // const result = await API_Auth.getStablizationFundDetails(id);
+    // console.log("StablizationFund", result);
+    // setgraphDataWsIteration(result.graphDataWS.byiter);
+    // setgraphDataWsRound(result.graphDataWS.byround);
+    // setLoading(false);
   };
   const getSimulationResultDetails = async (id: any) => {
     setLoading(true);
@@ -1163,170 +1163,166 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="footer">
-                            <div className="orderbook-header">
-                              <div className="search-round">
-                                <div className="controls">
-                                  <h3>Iteration</h3>
-                                  <div className="previous">
-                                    {siteration == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstIteration()}
-                                      />
-                                    )}
+                        </div>
+                        <div className="footer">
+                          <div className="orderbook-header">
+                            <div className="search-round">
+                              <div className="controls">
+                                <h3>Iteration</h3>
+                                <div className="previous">
+                                  {siteration == 1 && (
+                                    <img
+                                      src="imgs/left-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                  {siteration != 1 && (
+                                    <img
+                                      src="imgs/left-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleFirstIteration()}
+                                    />
+                                  )}
 
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleDecrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={siteration}
-                                        name="siteration"
-                                        onChange={handleInput}
-                                      />
-                                      {siterationErr != "" && (
-                                        <p className="alert-message">
-                                          {siterationErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {executionData.iterations}</span>
-                                  </div>
-                                  <div className="next">
-                                    {siteration != executionData.iterations && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == executionData.iterations && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {siteration != executionData.iterations && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
-                                    {siteration == executionData.iterations && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
+                                  {siteration != 1 && (
+                                    <img
+                                      src="imgs/left-paging.svg"
+                                      alt=""
+                                      onClick={() => handleDecrementIteration()}
+                                    />
+                                  )}
+                                  {siteration == 1 && (
+                                    <img src="imgs/previous.svg" alt="" />
+                                  )}
                                 </div>
-                                <div className="round">
-                                  <h3>Round</h3>
-                                  <div className="previous">
-                                    {sround == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstRound()}
-                                      />
-                                    )}
-
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() => handleDecrementRound()}
-                                      />
-                                    )}
-                                    {sround == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}{" "}
                                   </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={sround}
-                                        name="sround"
-                                        onChange={handleInput}
-                                      />
-                                      {sroundErr != "" && (
-                                        <p className="alert-message">
-                                          {sroundErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {executionData.nb_rounds}</span>
-                                  </div>
-                                  <div className="next">
-                                    {sround != executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() => handleIncrementRound()}
-                                      />
-                                    )}
-                                    {sround == executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {sround != executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastRound()}
-                                      />
-                                    )}
-                                    {sround == executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
+                                  <span>of {executionData.iterations}</span>
                                 </div>
-                                <div className="search-controls ms-5">
-                                  <button
-                                    className="search"
-                                    onClick={() => handleSearch()}
-                                  >
-                                    Search
-                                  </button>
+                                <div className="next">
+                                  {siteration != executionData.iterations && (
+                                    <img
+                                      src="imgs/next-arrow.svg"
+                                      alt=""
+                                      onClick={() => handleIncrementIteration()}
+                                    />
+                                  )}
+                                  {siteration == executionData.iterations && (
+                                    <img
+                                      src="imgs/right-paging-gray.svg"
+                                      alt=""
+                                    />
+                                  )}
+
+                                  {siteration != executionData.iterations && (
+                                    <img
+                                      src="imgs/right-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleLastIteration()}
+                                    />
+                                  )}
+                                  {siteration == executionData.iterations && (
+                                    <img
+                                      src="imgs/right-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
                                 </div>
                               </div>
-                              {/* <div className="tabs"></div> */}
+                              <div className="round">
+                                <h3>Round</h3>
+                                <div className="previous">
+                                  {sround == 1 && (
+                                    <img
+                                      src="imgs/left-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                  {sround != 1 && (
+                                    <img
+                                      src="imgs/left-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleFirstRound()}
+                                    />
+                                  )}
+
+                                  {sround != 1 && (
+                                    <img
+                                      src="imgs/left-paging.svg"
+                                      alt=""
+                                      onClick={() => handleDecrementRound()}
+                                    />
+                                  )}
+                                  {sround == 1 && (
+                                    <img src="imgs/previous.svg" alt="" />
+                                  )}
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
+                                  <span>of {executionData.nb_rounds}</span>
+                                </div>
+                                <div className="next">
+                                  {sround != executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/next-arrow.svg"
+                                      alt=""
+                                      onClick={() => handleIncrementRound()}
+                                    />
+                                  )}
+                                  {sround == executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-paging-gray.svg"
+                                      alt=""
+                                    />
+                                  )}
+
+                                  {sround != executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleLastRound()}
+                                    />
+                                  )}
+                                  {sround == executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              <div className="search-controls ms-5">
+                                <button
+                                  className="search"
+                                  onClick={() => handleSearch()}
+                                >
+                                  Search
+                                </button>
+                              </div>
                             </div>
+                            {/* <div className="tabs"></div> */}
                           </div>
                         </div>
                       </TabPanel>
@@ -1566,170 +1562,166 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="footer">
-                            <div className="orderbook-header">
-                              <div className="search-round">
-                                <div className="controls">
-                                  <h3>Iteration</h3>
-                                  <div className="previous">
-                                    {siteration == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstIteration()}
-                                      />
-                                    )}
+                        </div>
+                        <div className="footer">
+                          <div className="orderbook-header">
+                            <div className="search-round">
+                              <div className="controls">
+                                <h3>Iteration</h3>
+                                <div className="previous">
+                                  {siteration == 1 && (
+                                    <img
+                                      src="imgs/left-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                  {siteration != 1 && (
+                                    <img
+                                      src="imgs/left-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleFirstIteration()}
+                                    />
+                                  )}
 
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleDecrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={siteration}
-                                        name="siteration"
-                                        onChange={handleInput}
-                                      />
-                                      {siterationErr != "" && (
-                                        <p className="alert-message">
-                                          {siterationErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {executionData.iterations}</span>
-                                  </div>
-                                  <div className="next">
-                                    {siteration != executionData.iterations && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == executionData.iterations && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {siteration != executionData.iterations && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
-                                    {siteration == executionData.iterations && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
+                                  {siteration != 1 && (
+                                    <img
+                                      src="imgs/left-paging.svg"
+                                      alt=""
+                                      onClick={() => handleDecrementIteration()}
+                                    />
+                                  )}
+                                  {siteration == 1 && (
+                                    <img src="imgs/previous.svg" alt="" />
+                                  )}
                                 </div>
-                                <div className="round">
-                                  <h3>Round</h3>
-                                  <div className="previous">
-                                    {sround == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstRound()}
-                                      />
-                                    )}
-
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() => handleDecrementRound()}
-                                      />
-                                    )}
-                                    {sround == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input
+                                      value={siteration}
+                                      name="siteration"
+                                      onChange={handleInput}
+                                    />
+                                    {siterationErr != "" && (
+                                      <p className="alert-message">
+                                        {siterationErr}
+                                      </p>
+                                    )}{" "}
                                   </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={sround}
-                                        name="sround"
-                                        onChange={handleInput}
-                                      />
-                                      {sroundErr != "" && (
-                                        <p className="alert-message">
-                                          {sroundErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {executionData.nb_rounds}</span>
-                                  </div>
-                                  <div className="next">
-                                    {sround != executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() => handleIncrementRound()}
-                                      />
-                                    )}
-                                    {sround == executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {sround != executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastRound()}
-                                      />
-                                    )}
-                                    {sround == executionData.nb_rounds && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
+                                  <span>of {executionData.iterations}</span>
                                 </div>
-                                <div className="search-controls ms-5">
-                                  <button
-                                    className="search"
-                                    onClick={() => handleSearch()}
-                                  >
-                                    Search
-                                  </button>
+                                <div className="next">
+                                  {siteration != executionData.iterations && (
+                                    <img
+                                      src="imgs/next-arrow.svg"
+                                      alt=""
+                                      onClick={() => handleIncrementIteration()}
+                                    />
+                                  )}
+                                  {siteration == executionData.iterations && (
+                                    <img
+                                      src="imgs/right-paging-gray.svg"
+                                      alt=""
+                                    />
+                                  )}
+
+                                  {siteration != executionData.iterations && (
+                                    <img
+                                      src="imgs/right-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleLastIteration()}
+                                    />
+                                  )}
+                                  {siteration == executionData.iterations && (
+                                    <img
+                                      src="imgs/right-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
                                 </div>
                               </div>
-                              {/* <div className="tabs"></div> */}
+                              <div className="round">
+                                <h3>Round</h3>
+                                <div className="previous">
+                                  {sround == 1 && (
+                                    <img
+                                      src="imgs/left-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                  {sround != 1 && (
+                                    <img
+                                      src="imgs/left-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleFirstRound()}
+                                    />
+                                  )}
+
+                                  {sround != 1 && (
+                                    <img
+                                      src="imgs/left-paging.svg"
+                                      alt=""
+                                      onClick={() => handleDecrementRound()}
+                                    />
+                                  )}
+                                  {sround == 1 && (
+                                    <img src="imgs/previous.svg" alt="" />
+                                  )}
+                                </div>
+                                <div className="iteration">
+                                  <div className="tooldrop">
+                                    <input
+                                      value={sround}
+                                      name="sround"
+                                      onChange={handleInput}
+                                    />
+                                    {sroundErr != "" && (
+                                      <p className="alert-message">
+                                        {sroundErr}
+                                      </p>
+                                    )}{" "}
+                                  </div>
+                                  <span>of {executionData.nb_rounds}</span>
+                                </div>
+                                <div className="next">
+                                  {sround != executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/next-arrow.svg"
+                                      alt=""
+                                      onClick={() => handleIncrementRound()}
+                                    />
+                                  )}
+                                  {sround == executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-paging-gray.svg"
+                                      alt=""
+                                    />
+                                  )}
+
+                                  {sround != executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-doublearrow.svg"
+                                      alt=""
+                                      onClick={() => handleLastRound()}
+                                    />
+                                  )}
+                                  {sround == executionData.nb_rounds && (
+                                    <img
+                                      src="imgs/right-doublearrowg.svg"
+                                      alt=""
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              <div className="search-controls ms-5">
+                                <button
+                                  className="search"
+                                  onClick={() => handleSearch()}
+                                >
+                                  Search
+                                </button>
+                              </div>
                             </div>
+                            {/* <div className="tabs"></div> */}
                           </div>
                         </div>
                       </TabPanel>
