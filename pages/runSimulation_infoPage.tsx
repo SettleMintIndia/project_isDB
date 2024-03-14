@@ -1140,7 +1140,7 @@ export default function Home() {
   return (
     <AppLayout>
       <div className="container-fluid">
-        <div className="simulation-info">
+        <div className="simulation-info run">
           <div
             className="template-header"
             style={{ display: "flex", justifyContent: "space-between" }}
@@ -3318,38 +3318,47 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
                                                   <th className="with">
                                                     With Stabilization
                                                   </th>
-                                                  {/*   <th className="without">
+                                                  <th className="without">
                                                     Without Stabilization
-                                                  </th> */}
+                                                  </th>
                                                 </tr>
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>{meanPriceSimulation.mean_price_ws}</td>
+                                                  <td>{meanPriceSimulation.mean_price_ns}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
-                                                  <td>{meanPriceSimulation.mean_price_ws}</td>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>{meanPriceSimulation.median_price_ws}</td>
+                                                  <td>{meanPriceSimulation.median_price_ns}</td>
+
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
                                                   <td>{meanPriceSimulation.std_price_ws}</td>
+                                                  <td>{meanPriceSimulation.std_price_ns}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
                                                   <td>{meanPriceSimulation.inter_10_price_ws}-{meanPriceSimulation.inter_90_price_ws}</td>
+                                                  <td>{meanPriceSimulation.inter_10_price_ns}-{meanPriceSimulation.inter_90_price_ns}</td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3372,25 +3381,31 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
                                                   <th className="with">
                                                     With Stabilization
                                                   </th>
-                                                  {/*  <th className="without">
+                                                  <th className="without">
                                                     Without Stabilization
-                                                  </th> */}
+                                                  </th>
                                                 </tr>
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
                                                   <td>{meanVolumeSimulation.mean_amt_ws}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
                                                   <td>{meanVolumeSimulation.median_amt_ws}</td>
                                                 </tr>
                                                 <tr>
@@ -3398,12 +3413,14 @@ export default function Home() {
                                                     Standard deviation
                                                   </th>
                                                   <td>{meanVolumeSimulation.std_amt_ws}</td>
+                                                  <td>{meanVolumeSimulation.std_amt_ns}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
                                                   <td>{meanVolumeSimulation.inter_10_amt_ws}-{meanVolumeSimulation.inter_90_amt_ws}</td>
+                                                  <td>{meanVolumeSimulation.inter_10_amt_ns}-{meanVolumeSimulation.inter_90_amt_ns}</td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3426,39 +3443,46 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
                                                   <th className="with">
                                                     With Stabilization
                                                   </th>
-                                                
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
                                                 </tr>
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
                                                   <td>{meanQuantitySimulation.mean_quant_ws}</td>
+                                                  <td>{meanQuantitySimulation.mean_quant_ns}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
                                                   <td>{meanQuantitySimulation.median_quant_ws}</td>
-
+                                                  <td>{meanQuantitySimulation.median_quant_ns}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
                                                   <td>{meanQuantitySimulation.std_quant_ws}</td>
-
+                                                  <td>{meanQuantitySimulation.std_quant_ns}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
                                                   <td>{meanQuantitySimulation.inter_10_quant_ws}-{meanQuantitySimulation.inter_90_quant_ws}</td>
-
+                                                  <td>{meanQuantitySimulation.inter_10_quant_ns}-{meanQuantitySimulation.inter_90_quant_ns}</td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3500,13 +3524,13 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
-                                                  {/*   <th className="with">
+                                                  <th className="with">
                                                     With Stabilization
-                                                  </th> */}
+                                                  </th>
                                                   <th className="without">
                                                     Without Stabilization
                                                   </th>
@@ -3514,11 +3538,17 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>{meanPriceSimulation.mean_price_ws}</td>
                                                   <td>{meanPriceSimulation.mean_price_ns}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>{meanPriceSimulation.median_price_ws}</td>
                                                   <td>{meanPriceSimulation.median_price_ns}</td>
 
                                                 </tr>
@@ -3526,15 +3556,15 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
+                                                  <td>{meanPriceSimulation.std_price_ws}</td>
                                                   <td>{meanPriceSimulation.std_price_ns}</td>
-
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
+                                                  <td>{meanPriceSimulation.inter_10_price_ws}-{meanPriceSimulation.inter_90_price_ws}</td>
                                                   <td>{meanPriceSimulation.inter_10_price_ns}-{meanPriceSimulation.inter_90_price_ns}</td>
-
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3557,11 +3587,13 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
-
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
                                                   <th className="without">
                                                     Without Stabilization
                                                   </th>
@@ -3569,27 +3601,32 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
-                                                  <td>{meanVolumeSimulation.mean_amt_ns}</td>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
+                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
-                                                  <td>{meanVolumeSimulation.median_amt_ns}</td>
-
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
+                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
+                                                  <td>{meanVolumeSimulation.std_amt_ws}</td>
                                                   <td>{meanVolumeSimulation.std_amt_ns}</td>
-
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
+                                                  <td>{meanVolumeSimulation.inter_10_amt_ws}-{meanVolumeSimulation.inter_90_amt_ws}</td>
                                                   <td>{meanVolumeSimulation.inter_10_amt_ns}-{meanVolumeSimulation.inter_90_amt_ns}</td>
-
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3612,13 +3649,13 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                            <table className="table">
+                                          <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
-                                                {/*   <th className="with">
+                                                  <th className="with">
                                                     With Stabilization
-                                                  </th> */}
+                                                  </th>
                                                   <th className="without">
                                                     Without Stabilization
                                                   </th>
@@ -3626,27 +3663,32 @@ export default function Home() {
                                               </thead>
                                               <tbody>
                                                 <tr>
-                                                  <th className="emptycell">Mean</th>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>{meanQuantitySimulation.mean_quant_ws}</td>
                                                   <td>{meanQuantitySimulation.mean_quant_ns}</td>
                                                 </tr>
                                                 <tr>
-                                                  <th className="emptycell">Median</th>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>{meanQuantitySimulation.median_quant_ws}</td>
                                                   <td>{meanQuantitySimulation.median_quant_ns}</td>
-
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
                                                   <td>{meanQuantitySimulation.std_quant_ws}</td>
-
+                                                  <td>{meanQuantitySimulation.std_quant_ns}</td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
                                                   <td>{meanQuantitySimulation.inter_10_quant_ws}-{meanQuantitySimulation.inter_90_quant_ws}</td>
-
+                                                  <td>{meanQuantitySimulation.inter_10_quant_ns}-{meanQuantitySimulation.inter_90_quant_ns}</td>
                                                 </tr>
                                               </tbody>
                                             </table>
