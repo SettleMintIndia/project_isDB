@@ -242,31 +242,44 @@ export default function Home() {
     setLoading(true)
     const result = await API_Auth.getStablizationFundDetails(id);
     console.log("StablizationFund", result);
-    setStablizationFundData(result.stab == undefined ? StablizationFundData : result.stab)
-    setStablizationTotal(result.stab_totals.stab_totals)
-
     setLoading(false)
+    if(result.status==400){
+
+    }else{
+    setStablizationFundData(result.stab == undefined ? StablizationFundData : result.stab)
+    setStablizationTotal(result.stab_totals.stab_totals==undefined ? StablizationTotal :result.stab_totals.stab_totals)
+    }
   };
   const getSimulationResultDetails = async (id: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
+    setLoading(false);
+
+    if(result.status==400){
+
+    }else{
     setgraphDataWsIteration(result.graphDataWS.byiter);
     setgraphDataWsRound(result.graphDataWS.byround);
     setgraphDataNsIteration(result.graphDataNS.byiter);
     setgraphDataNsRound(result.graphDataNS.byround);
     setMeanPriceSimulation(result.sim == undefined ? meanPriceSimulation : result.sim)
-    setLoading(false);
+    }
   };
 
   const getSimulationQuantityResultDetails = async (executionId: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "quantity");
     console.log("quantityresult", result);
+    setLoading(false);
+    status
+    if(result.status==400){
+      setSimulationQuantityData([])
+    }else{
     setSimulationQuantityData(result.graphDataWS[0]);
     setNSimulationQuantityData(result.graphDataNS[0]);
     setMeanQuantitySimulation(result.sim == undefined ? meanQuantitySimulation : result.sim)
-    setLoading(false);
+    }
   };
 
   const getSimulationVolumeResultDetails = async (executionId: any) => {
@@ -274,10 +287,15 @@ export default function Home() {
     const result = await API_Auth.getSimulationResult(executionId, "volume");
     console.log("volumeresult", result);
     console.log("volume--------------------------->");
+    setLoading(false);
+
+    if(result.status==400){
+      setSimulationVolumeData([])
+    }else{
     setSimulationVolumeData(result.graphDataWS[0]);
     setNSimulationVolumeData(result.graphDataNS[0]);
     setMeanVolumeSimulation(result.sim == undefined ? meanVolumeSimulation : result.sim)
-    setLoading(false);
+    }
   };
   const getOrderBook = async (id: any, siteration: any, sround: any) => {
     setLoading(true);

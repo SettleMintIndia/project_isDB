@@ -22,8 +22,8 @@ const MainLayout = ({ children }: LayoutProps) => {
   const [loginKey, setLoginKey] = useState(false);
 
   useEffect(() => {
-    let admin_id = 1;
-    getNotifications(admin_id);
+   /*  let admin_id = 1;
+    getNotifications(admin_id); */
     const data = localStorage.getItem("useremail");
     console.log("email", loginuseremail);
 

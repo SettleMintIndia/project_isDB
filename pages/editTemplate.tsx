@@ -389,8 +389,32 @@ export default function Home() {
 
     console.log(error);
     if (error == 0) {
+
+      if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
+        toast.error("price or quant variance should be less than 1")
+      } else if (Number(upperbound) > 1) {
+        toast.error("upper lmt order price variance should be less than 1")
+      }
+      else if (Number(lowerbound) < 1) {
+        toast.error("lower lmt order price variance should be greater than 1")
+      } 
+      else if((Number(alpha0) >1) ){
+        toast.error("alpha0 value should be less than 1");
+      }
+      else if(Number(alpha0)>Number(alpha1)){
+        toast.error("alpha1 value should be greater than alpha0");
+      }
+      else if((Number(theta0) >1) ){
+        toast.error("theta0 value should be less than 1");
+      }
+      else if(Number(theta0)>Number(theta1)){
+        toast.error("theta1 value should be greater than theta0");
+      
+      }
+      else {
       setShowModal(true);
     }
+  }
   };
 
   const handleSaveTemplate = async () => {
@@ -434,16 +458,7 @@ export default function Home() {
 
       }
       console.log("finalbody", finalbody);
-      if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        setFinalErr("price or quant variance should be less than 1")
-      } else if (Number(upperbound) > 1) {
-        setFinalErr("upper lmt order price variance should be less than 1")
-      }
-      else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1")
-
-
-      } else {
+    
         console.log("finalbody", finalbody);
 
         const template_exist = await API_Auth.getTemplateExists(newtemplateName)
@@ -483,7 +498,7 @@ export default function Home() {
           }
         }
       }
-    }
+    
   };
   const handleBack = () => {
     router.back();

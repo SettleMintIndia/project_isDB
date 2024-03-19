@@ -285,21 +285,25 @@ export default function templateDetails() {
 
   const [activeButton, setActiveButton] = useState("Static");
 
-  const handleButtonClick = async (data: any) => {
+  const handleButtonClick = async (data: any,key:any) => {
     console.log(data);
-    let body = {
+    console.log("key",key)
+     let body = {
       template_name: data.temp_name,
-      make_public: data.is_public == 1 ? false : true,
+      make_public: key == "public" ? true : false,
     };
+    console.log(body)
+    setLoading(true);
     const result = await API_Auth.getChangeVisiblityTemplate(body);
     console.log("visibilityresult", result);
+    setLoading(false);
     if (result.status == 400) {
       toast.error(result.error);
     } else {
       toast.success(result.message);
       handlegetAllTemplateDetails("", "", "", "", perPage, 1);
       setCurrentPage(0);
-    }
+    }  
   };
   const handleAllData = () => {
     setSType("");
@@ -459,7 +463,7 @@ export default function templateDetails() {
                                         ? "btn active"
                                         : "btn"
                                     }
-                                    onClick={() => handleButtonClick(data)}
+                                    onClick={() => handleButtonClick(data,"public")}
                                   >
                                     Public
                                   </button>
@@ -469,7 +473,7 @@ export default function templateDetails() {
                                         ? "btn active"
                                         : "btn"
                                     }
-                                    onClick={() => handleButtonClick(data)}
+                                    onClick={() => handleButtonClick(data,"private")}
                                   >
                                     Private
                                   </button>

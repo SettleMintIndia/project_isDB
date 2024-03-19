@@ -199,7 +199,7 @@ export default function Home() {
     round_assets: 0, round_cash: 0, round_tk: 0
   })
 
-  const[userId,setUserId]=useState('');
+  const [userId, setUserId] = useState('');
 
 
 
@@ -208,67 +208,67 @@ export default function Home() {
 
   useEffect(() => {
     console.log(totalTempName);
-    if(totalTempName==undefined || totalTempName =='' || totalTempName ==null){
+    if (totalTempName == undefined || totalTempName == '' || totalTempName == null) {
       router.push("/runSimulation")
 
-    }else{
-    let email = localStorage.getItem('useremail')
-    console.log("email");
-    getEmailInfo(email)
+    } else {
+      let email = localStorage.getItem('useremail')
+      console.log("email");
+      getEmailInfo(email)
 
-    getTemplateDetails(totalTempName);
-    getDistributions();
-    console.log(tabIndex);
-   // let executionId = 106;
-    console.log("executionId", executionId);
+      getTemplateDetails(totalTempName);
+      getDistributions();
+      console.log(tabIndex);
+      // let executionId = 106;
+      console.log("executionId", executionId);
 
-    if(executionId!=""){
-      getSimulationResultDetails(executionId);
-      getSimulationVolumeResultDetails(executionId);
-      getSimulationQuantityResultDetails(executionId);
-      getStablizationFund(executionId);
-
-    }
-
-    if (tabIndex == 1) {
-      setSIteration(1);
-      setSRound(1);
-      getOrderBook(executionId, 1, 1);
-    }
-    if (tabIndex == 2) {
-      setSIteration(1);
-      setSRound(1);
-      getOrderBook(executionId, 1, 1);
-    }
-
-    if (tabIndex == 3) {
-      setSIteration(1);
-      setSRound(1);
-      getTradeHistoryWS(executionId, 1, 1);
-    }
-    if (tabIndex == 4) {
-      setSIteration(1);
-      setSRound(1);
-      getTradeHistoryNS(executionId, 1, 1);
-    }
-    if (tabIndex == 5) {
-      console.log("tab-------------------", tabName);
-      if (tabName === 0) {
+      if (executionId != "") {
         getSimulationResultDetails(executionId);
-      }
-      if (tabName === 1) {
         getSimulationVolumeResultDetails(executionId);
-      }
-      if (tabName === 2) {
         getSimulationQuantityResultDetails(executionId);
-      }
-    }
+        getStablizationFund(executionId);
 
-    if (tabIndex == 6) {
-      getStablizationFund(executionId);
+      }
+
+      if (tabIndex == 1) {
+        setSIteration(1);
+        setSRound(1);
+        getOrderBook(executionId, 1, 1);
+      }
+      if (tabIndex == 2) {
+        setSIteration(1);
+        setSRound(1);
+        getOrderBook(executionId, 1, 1);
+      }
+
+      if (tabIndex == 3) {
+        setSIteration(1);
+        setSRound(1);
+        getTradeHistoryWS(executionId, 1, 1);
+      }
+      if (tabIndex == 4) {
+        setSIteration(1);
+        setSRound(1);
+        getTradeHistoryNS(executionId, 1, 1);
+      }
+      if (tabIndex == 5) {
+        console.log("tab-------------------", tabName);
+        if (tabName === 0) {
+          getSimulationResultDetails(executionId);
+        }
+        if (tabName === 1) {
+          getSimulationVolumeResultDetails(executionId);
+        }
+        if (tabName === 2) {
+          getSimulationQuantityResultDetails(executionId);
+        }
+      }
+
+      if (tabIndex == 6) {
+        getStablizationFund(executionId);
+      }
+      console.log("tabIndex", tabIndex);
     }
-    console.log("tabIndex", tabIndex);
-  }
   }, [totalTempName, tabIndex, executionId, tabName, stablization]);
 
   const getEmailInfo = async (email: any) => {
@@ -278,26 +278,38 @@ export default function Home() {
   }
   const getStablizationFund = async (id: any) => {
     setLoading(true);
-
     const result = await API_Auth.getStablizationFundDetails(id);
-    console.log("StablizationFund", result);
-    setStablizationFundData(result.stab)
-    setStablizationTotal(result.stab_totals.stab_totals)
     setLoading(false)
+    if (result.status == 400) {
+      setStablizationFundData(StablizationFundData);
+      setStablizationTotal(StablizationTotal)
+    } else {
+
+      console.log("StablizationFund", result);
+      setStablizationFundData(result.stab == undefined ? StablizationFundData : result.stab)
+      setStablizationTotal(result.stab_totals.stab_totals)
+    }
 
   };
   const getSimulationResultDetails = async (id: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
-
-    setgraphDataWsIteration(result.graphDataWS.byiter);
-    setgraphDataWsRound(result.graphDataWS.byround);
-    setgraphDataNsIteration(result.graphDataNS.byiter)
-    setgraphDataNsRound(result.graphDataNS.byround)
-    setMeanPriceSimulation(result.sim)
-
     setLoading(false)
+
+    if (result.status == 400) {
+      setgraphDataWsIteration([]);
+      setgraphDataWsRound([]);
+      setgraphDataNsIteration([])
+      setgraphDataNsRound([])
+    } else {
+
+      setgraphDataWsIteration(result.graphDataWS.byiter);
+      setgraphDataWsRound(result.graphDataWS.byround);
+      setgraphDataNsIteration(result.graphDataNS.byiter)
+      setgraphDataNsRound(result.graphDataNS.byround)
+      setMeanPriceSimulation(result.sim == undefined ? meanPriceSimulation : result.sim)
+    }
 
   };
   const getSimulationQuantityResultDetails = async (executionId: any) => {
@@ -305,34 +317,36 @@ export default function Home() {
     const result = await API_Auth.getSimulationResult(executionId, "quantity");
     console.log("quantityresult", result);
     console.log("quantity--------------------------->")
-
-    setSimulationQuantityData(result.graphDataWS[0])
-    setNSimulationQuantityData(result.graphDataNS[0])
-    setMeanQuantitySimulation(result.sim)
-
     setLoading(false)
 
+    if (result.status == 400) {
+      setSimulationQuantityData([]);
+      setNSimulationQuantityData([]);
+    } else {
 
-    setSimulationQuantityData(result.graphDataWS[0]);
-    setNSimulationQuantityData(result.graphDataNS[0]);
-    setLoading(false);
+      setSimulationQuantityData(result.graphDataWS[0])
+      setNSimulationQuantityData(result.graphDataNS[0])
+      setMeanQuantitySimulation(result.sim == undefined ? meanQuantitySimulation : result.sim)
+
+    }
   };
 
   const getSimulationVolumeResultDetails = async (executionId: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "volume");
     console.log("volumeresult", result);
-    console.log("volume--------------------------->")
-    setSimulationVolumeData(result.graphDataWS[0])
-    setNSimulationVolumeData(result.graphDataNS[0])
-    setMeanVolumeSimulation(result.sim)
-    setLoading(false)
-
-
-
-
-
+    console.log("volume--------------------------->");
     setLoading(false);
+
+    if (result.status == 400) {
+      setSimulationVolumeData([])
+      setNSimulationVolumeData([])
+    } else {
+      setSimulationVolumeData(result.graphDataWS[0])
+      setNSimulationVolumeData(result.graphDataNS[0])
+      setMeanVolumeSimulation(result.sim == undefined ? meanVolumeSimulation : result.sim)
+      setLoading(false)
+    }
   };
 
   const getOrderBook = async (id: any, siteration: any, sround: any) => {
@@ -762,18 +776,31 @@ export default function Home() {
     if (iterations == "") {
       error = error + 1;
       setIterationsErr("Please Enter Iterations");
+    } else if (/^\d+$/.test(iterations) == false) {
+      setIterationsErr(" Iteration Value accepts only integers");
+      error = error + 1;
+
     } else {
       setIterationsErr("");
     }
     if (rounds == "") {
       error = error + 1;
       setRoundsErr("Please Enter rounds");
-    } else {
+    } else if (/^\d+$/.test(rounds) == false) {
+      setRoundsErr(" Round Value accepts only integers");
+      error = error + 1;
+    }
+    else {
       setRoundsErr("");
     }
     if (ordersRound == "") {
       error = error + 1;
       setordersRoundErr("Please Enter Orders");
+    }
+    else if (/^\d+$/.test(ordersRound) == false) {
+      setordersRoundErr(" Order Value accepts only integers");
+      error = error + 1;
+
     } else {
       setordersRoundErr("");
     }
@@ -809,9 +836,13 @@ export default function Home() {
         setDisableSubmit(false);
       } else {
         console.log(result.exe);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // smooth scrolling behavior
+        });
         toast.success("Execution done successfully");
-
         setExecutionId(result.exe);
+
       }
     }
   };
@@ -987,153 +1018,153 @@ export default function Home() {
 
 
 
-      /*  price*/
+    /*  price*/
 
-      const meanPrice = await API_Auth.getSimulationResult(executionId, "price")
-      console.log("meanPrice", meanPrice.sim)
-      const MeanPriceSimulation = meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim
-  
-      const withStabilizationData =
-      {
-        Template: totalTempName,
-        "Mean": MeanPriceSimulation.mean_price_ws,
-        "Median": MeanPriceSimulation.median_price_ws,
-        "Standard deviation": MeanPriceSimulation.std_price_ws,
-        "10%-90% Interval": MeanPriceSimulation.inter_10_price_ws + "-" + MeanPriceSimulation.inter_90_price_ws
-      }
-      const withoutStabilizationData =
-      {
-        "Template": totalTempName,
-        Mean: MeanPriceSimulation.mean_price_ns,
-        "Median": MeanPriceSimulation.median_price_ns,
-        "Standard deviation": MeanPriceSimulation.std_price_ns,
-        "10%-90% Interval": MeanPriceSimulation.inter_10_price_ns + "-" + MeanPriceSimulation.inter_90_price_ns
-  
-      }
-  
-      const wsData = [['', 'With Stabilization', 'Without Stabilization']];
-      Object.keys(withStabilizationData).forEach((key) => {
-        wsData.push([key, withStabilizationData[key], withoutStabilizationData[key]]);
-      });
-  
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
-  
-      XLSX.utils.book_append_sheet(wb, ws, 'Price');
-      /* volume */
-  
-      const meanVolume = await API_Auth.getSimulationResult(executionId, "volume")
-      console.log("meanVolume", meanVolume.sim)
-      const MeanVolumeSimulation = meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim
-  
-  
-      const withStabilizationDataVOlume =
-      {
-        "Template": totalTempName,
-        Mean: MeanVolumeSimulation.mean_amt_ws,
-        Median: MeanVolumeSimulation.median_amt_ws,
-        "Standard deviation": MeanVolumeSimulation.std_amt_ws,
-        "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ws + "-" + MeanVolumeSimulation.inter_90_amt_ws
-      }
-      const withoutStabilizationDataVolume =
-  
-      {
-        "Template": totalTempName,
-        Mean: MeanVolumeSimulation.mean_amt_ns,
-        Median: MeanVolumeSimulation.median_amt_ns,
-        "Standard deviation": MeanVolumeSimulation.std_amt_ns,
-        "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ns + "-" + MeanVolumeSimulation.inter_90_amt_ns
-      }
-  
-  
-      const wsDataVolume = [['', 'With Stabilization', 'Without Stabilization']];
-      Object.keys(withStabilizationDataVOlume).forEach((key) => {
-        wsDataVolume.push([key, withStabilizationDataVOlume[key], withoutStabilizationDataVolume[key]]);
-      });
-  
-      const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
-      XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
-  
-      /* Quantity */
-  
-  
-      const meanqty = await API_Auth.getSimulationResult(executionId, "quantity")
-      console.log("meanqty", meanqty.sim)
-      const meanqtysimulation = meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim
-  
-  
-      const withStabilizationDataQty =
-      {
-        "Template": totalTempName,
-        Mean: meanqtysimulation.mean_quant_ws,
-        Median: meanqtysimulation.median_quant_ws,
-        "Standard deviation": meanqtysimulation.std_quant_ws,
-        "10%-90% interval": meanqtysimulation.inter_10_quant_ws + "-" + meanqtysimulation.inter_90_quant_ws
-      }
-      const withoutStabilizationDataQty =
-  
-      {
-        "Template": totalTempName,
-        Mean: meanqtysimulation.mean_quant_nsn,
-        Median: meanqtysimulation.median_quant_ns,
-        "Standard deviation": meanqtysimulation.std_quant_ns,
-        "10%-90% interval": meanqtysimulation.inter_10_quant_ns + "-" + meanQuantitySimulation.inter_90_quant_ns
-      }
-  
-  
-  
-      const wsDataQty = [['', 'With Stabilization', 'Without Stabilization']];
-      Object.keys(withStabilizationDataQty).forEach((key) => {
-        wsDataQty.push([key, withStabilizationDataQty[key], withoutStabilizationDataQty[key]]);
-      });
-  
-      const wsQty = XLSX.utils.aoa_to_sheet(wsDataQty);
-      XLSX.utils.book_append_sheet(wb, wsQty, 'Quantity');
-  
-      /* stablizationfund */
-  
-  
-  
-      const stabresult = await API_Auth.getStablizationFundDetails(executionId);
-      console.log("StablizationFund", stabresult);
-      const totalfundata = stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
-  
-  
-  
-      const withCash = {
-        temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-        "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
-      };
-      const withArrayQuantity = {
-        temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-        "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
-      };
-      const withTotalAssetV =
-      {
-        temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-        "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
-      };
-      const withTotalAssetDollar = {
-        temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-        "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
-      };
-  
-      const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset $', 'Total Asset/v',]];
-      Object.keys(withCash).forEach((key) => {
-        wsDataStablization.push([key, withCash[key], withArrayQuantity[key], withTotalAssetV[key], withTotalAssetDollar[key]]);
-      });
-  
-      const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
-      XLSX.utils.book_append_sheet(wb, wssdata, 'Stablization');
-  
-  
-  
-  
-      XLSX.writeFile(wb, totalTempName + 'Report.xlsx');
-  
-  
+    const meanPrice = await API_Auth.getSimulationResult(executionId, "price")
+    console.log("meanPrice", meanPrice.sim)
+    const MeanPriceSimulation = meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim
+
+    const withStabilizationData =
+    {
+      Template: totalTempName,
+      "Mean": MeanPriceSimulation.mean_price_ws,
+      "Median": MeanPriceSimulation.median_price_ws,
+      "Standard deviation": MeanPriceSimulation.std_price_ws,
+      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ws + "-" + MeanPriceSimulation.inter_90_price_ws
+    }
+    const withoutStabilizationData =
+    {
+      "Template": totalTempName,
+      Mean: MeanPriceSimulation.mean_price_ns,
+      "Median": MeanPriceSimulation.median_price_ns,
+      "Standard deviation": MeanPriceSimulation.std_price_ns,
+      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ns + "-" + MeanPriceSimulation.inter_90_price_ns
+
+    }
+
+    const wsData = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationData).forEach((key) => {
+      wsData.push([key, withStabilizationData[key], withoutStabilizationData[key]]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Price');
+    /* volume */
+
+    const meanVolume = await API_Auth.getSimulationResult(executionId, "volume")
+    console.log("meanVolume", meanVolume.sim)
+    const MeanVolumeSimulation = meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim
+
+
+    const withStabilizationDataVOlume =
+    {
+      "Template": totalTempName,
+      Mean: MeanVolumeSimulation.mean_amt_ws,
+      Median: MeanVolumeSimulation.median_amt_ws,
+      "Standard deviation": MeanVolumeSimulation.std_amt_ws,
+      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ws + "-" + MeanVolumeSimulation.inter_90_amt_ws
+    }
+    const withoutStabilizationDataVolume =
+
+    {
+      "Template": totalTempName,
+      Mean: MeanVolumeSimulation.mean_amt_ns,
+      Median: MeanVolumeSimulation.median_amt_ns,
+      "Standard deviation": MeanVolumeSimulation.std_amt_ns,
+      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ns + "-" + MeanVolumeSimulation.inter_90_amt_ns
+    }
+
+
+    const wsDataVolume = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationDataVOlume).forEach((key) => {
+      wsDataVolume.push([key, withStabilizationDataVOlume[key], withoutStabilizationDataVolume[key]]);
+    });
+
+    const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
+    XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
+
+    /* Quantity */
+
+
+    const meanqty = await API_Auth.getSimulationResult(executionId, "quantity")
+    console.log("meanqty", meanqty.sim)
+    const meanqtysimulation = meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim
+
+
+    const withStabilizationDataQty =
+    {
+      "Template": totalTempName,
+      Mean: meanqtysimulation.mean_quant_ws,
+      Median: meanqtysimulation.median_quant_ws,
+      "Standard deviation": meanqtysimulation.std_quant_ws,
+      "10%-90% interval": meanqtysimulation.inter_10_quant_ws + "-" + meanqtysimulation.inter_90_quant_ws
+    }
+    const withoutStabilizationDataQty =
+
+    {
+      "Template": totalTempName,
+      Mean: meanqtysimulation.mean_quant_nsn,
+      Median: meanqtysimulation.median_quant_ns,
+      "Standard deviation": meanqtysimulation.std_quant_ns,
+      "10%-90% interval": meanqtysimulation.inter_10_quant_ns + "-" + meanQuantitySimulation.inter_90_quant_ns
+    }
+
+
+
+    const wsDataQty = [['', 'With Stabilization', 'Without Stabilization']];
+    Object.keys(withStabilizationDataQty).forEach((key) => {
+      wsDataQty.push([key, withStabilizationDataQty[key], withoutStabilizationDataQty[key]]);
+    });
+
+    const wsQty = XLSX.utils.aoa_to_sheet(wsDataQty);
+    XLSX.utils.book_append_sheet(wb, wsQty, 'Quantity');
+
+    /* stablizationfund */
+
+
+
+    const stabresult = await API_Auth.getStablizationFundDetails(executionId);
+    console.log("StablizationFund", stabresult);
+    const totalfundata = stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
+
+
+
+    const withCash = {
+      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    };
+    const withArrayQuantity = {
+      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    };
+    const withTotalAssetV =
+    {
+      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    };
+    const withTotalAssetDollar = {
+      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    };
+
+    const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset $', 'Total Asset/v',]];
+    Object.keys(withCash).forEach((key) => {
+      wsDataStablization.push([key, withCash[key], withArrayQuantity[key], withTotalAssetV[key], withTotalAssetDollar[key]]);
+    });
+
+    const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
+    XLSX.utils.book_append_sheet(wb, wssdata, 'Stablization');
+
+
+
+
+    XLSX.writeFile(wb, totalTempName + 'Report.xlsx');
+
+
 
   }
-  const handleBack=()=>{
+  const handleBack = () => {
     router.back();
   }
 
@@ -1145,7 +1176,7 @@ export default function Home() {
             className="template-header"
             style={{ display: "flex", justifyContent: "space-between" }}
           >
-            <div className="back-option" onClick={()=>handleBack()}>
+            <div className="back-option" onClick={() => handleBack()}>
               <img src="imgs/left-arrow.svg" alt=""
               />
               <p className="mb-0">Back</p>
@@ -1889,7 +1920,7 @@ export default function Home() {
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-                                  
+
 
                                   {orderWsbuy.length == 0 && (
                                     <tbody>
@@ -1930,7 +1961,7 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                 
+
                                   {orderWssell.length == 0 && (
                                     <tbody>
                                       <tr>
@@ -2005,37 +2036,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/next-arrow.svg"
+                                          alt=""
+                                          onClick={() =>
+                                            handleIncrementIteration()
+                                          }
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-paging-gray.svg"
+                                          alt=""
+                                        />
+                                      )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrow.svg"
+                                          alt=""
+                                          onClick={() => handleLastIteration()}
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrowg.svg"
+                                          alt=""
+                                        />
+                                      )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -2413,37 +2444,37 @@ export default function Home() {
                                   <div className="next">
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleIncrementIteration()
-                                        }
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/next-arrow.svg"
+                                          alt=""
+                                          onClick={() =>
+                                            handleIncrementIteration()
+                                          }
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-paging-gray.svg"
+                                          alt=""
+                                        />
+                                      )}
 
                                     {Number(siteration) !=
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastIteration()}
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrow.svg"
+                                          alt=""
+                                          onClick={() => handleLastIteration()}
+                                        />
+                                      )}
                                     {Number(siteration) ==
                                       Number(iterations) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
+                                        <img
+                                          src="imgs/right-doublearrowg.svg"
+                                          alt=""
+                                        />
+                                      )}
                                   </div>
                                 </div>
                                 <div className="round">
@@ -3318,7 +3349,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
@@ -3381,7 +3412,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
@@ -3443,7 +3474,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
@@ -3524,7 +3555,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
@@ -3587,7 +3618,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>
@@ -3649,7 +3680,7 @@ export default function Home() {
                                       <div className="simulation-table">
                                         <div className="table-responsive">
                                           <div className="template-content">
-                                          <table className="table">
+                                            <table className="table">
                                               <thead>
                                                 <tr>
                                                   <th className="emptycell"></th>

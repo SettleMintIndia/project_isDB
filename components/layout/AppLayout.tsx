@@ -25,10 +25,13 @@ const AppLayout = ({ children }: LayoutProps) => {
 
 
   useEffect(() => {
-    let admin_id = 1;
-    getNotifications(admin_id);
+
     const data = localStorage.getItem("useremail");
     console.log("email", data);
+    if (data != undefined) {
+      let admin_id = 1;
+      getNotifications(admin_id);
+    }
     const superadminkey = localStorage.getItem("superadmin");
     console.log("superadmin", superadminkey);
     if (superadminkey == "superadmin") {
@@ -111,8 +114,8 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <li
                     className={
                       router.pathname === "/createtemplate" ||
-                      router.pathname === "/createadmin" ||
-                      router.pathname === "/runSimulation"
+                        router.pathname === "/createadmin" ||
+                        router.pathname === "/runSimulation"
                         ? "active"
                         : ""
                     }

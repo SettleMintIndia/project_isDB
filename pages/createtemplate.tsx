@@ -337,8 +337,20 @@ export default function Home() {
         toast.error("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
         toast.error("lower lmt order price variance should be greater than 1")
+      }else if((Number(alpha0) >1) ){
+        toast.error("alpha0 value should be less than 1");
       }
-      else {
+      else if(Number(alpha0)>Number(alpha1)){
+        toast.error("alpha1 value should be greater than alpha0");
+      }
+      else if((Number(theta0) >1) ){
+        toast.error("theta0 value should be less than 1");
+      }
+      else if(Number(theta0)>Number(theta1)){
+        toast.error("theta1 value should be greater than theta0");
+      
+      }
+       else {
         const template_exist = await API_Auth.getTemplateExists(templatename)
         console.log("template_exist", template_exist)
 
@@ -375,7 +387,7 @@ export default function Home() {
             setDisableSubmit(false);
           }
         }
-      }
+      } 
     }
   };
 

@@ -1,6 +1,7 @@
-let base_url = "http://142.93.210.23:3000/"; // dev
+//let base_url = "http://142.93.210.23:3000/"; // dev
+//let base_url="https://d8c3-182-69-180-138.ngrok-free.app/"
 
-
+let base_url="http://64.227.181.198:3000/"
 const LOGIN_API= base_url+"login";
 const GET_ALL_SCENARIOS=base_url+"getScenarios"
 const GET_ALL_DISTRIBUTIONS=base_url+"getDistributions"
