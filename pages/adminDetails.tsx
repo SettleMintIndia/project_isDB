@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
 import Loader from "@/components/layout/Loader";
 import AppLayout from "@/components/layout/AppLayout";
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Home() {
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
   //const [count, setCount] = useState(10);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(15);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -35,8 +35,7 @@ export default function Home() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const [keyname, setKeyName] = useState('name')
-
+  const [keyname, setKeyName] = useState("name");
 
   const handleDeleteClick = (data: any) => {
     console.log(data);
@@ -62,7 +61,8 @@ export default function Home() {
       datefrom:
         fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage, pgNo: pageNo,
+      resultPerPage: perPage,
+      pgNo: pageNo,
     };
 
     setLoading(true);
@@ -80,10 +80,10 @@ export default function Home() {
     let body = {
       email: useremail,
     };
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getdeleteAdmin(body);
     console.log(result);
-    setLoading(false)
+    setLoading(false);
 
     if (result.status == 200) {
       toast.success("Admin Deleted Successfully");
@@ -181,22 +181,32 @@ export default function Home() {
             <div className="searchArea">
               <div className="searchFilter options">
                 <div className="selectsearch">
-                  <select name="keyname"  id="searchtype"
-                    value={keyname} onChange={handleInput}>
+                  <select
+                    name="keyname"
+                    id="searchtype"
+                    value={keyname}
+                    onChange={handleInput}
+                  >
                     <option value="name">Name</option>
                     <option value="email">Email Address</option>
                   </select>
                 </div>
                 <input
                   type="text"
-                  placeholder={keyname == "name" ? "Search by Name" : "Search by Email"}
+                  placeholder={
+                    keyname == "name" ? "Search by Name" : "Search by Email"
+                  }
                   onChange={handleSearchChange}
                   // value={tempname}
                   name="tempname"
                 />
                 <div className="search-icon">
-                  <Image src="imgs/search-icon.svg" alt=""
-                    width={15.9} height={15.9} />
+                  <Image
+                    src="imgs/search-icon.svg"
+                    alt=""
+                    width={15.9}
+                    height={15.9}
+                  />
                 </div>
               </div>
               {/*   <div className="calendar">
@@ -290,7 +300,6 @@ export default function Home() {
                             title="Delete"
                             width={19.059}
                             height={21.391}
-
                           />
                           {tooltipVisible && key == data.id && (
                             <div className="delete-tooltip">
@@ -360,26 +369,27 @@ export default function Home() {
             </div>
           </div>
         </div> */}
-          {adminData.length != 0 && <div className="pagging-area" style={{ marginTop: "20px" }}>
-            <div className="toolbar">
-              <label htmlFor="">Results per page :</label>
-              <div className="tooldrop">
-                <select value={perPage} name="perPage" onChange={handleInput}>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
+          {adminData.length != 0 && (
+            <div className="pagging-area" style={{ marginTop: "20px" }}>
+              <div className="toolbar">
+                <label htmlFor="">Results per page :</label>
+                <div className="tooldrop">
+                  <select value={perPage} name="perPage" onChange={handleInput}>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    {/* <option value="5">5</option> */}
+                  </select>
+                </div>
+                <span>of {totalCount}</span>
               </div>
-              <span>of {totalCount}</span>
-            </div>
-            <div className="paging-list">
-              {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+              <div className="paging-list">
+                {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
             <span>{totalCount}</span>}
             {totalCount > offset + perPage &&
               <span>{offset + pageNo}</span>} of {totalCount} items</p> */}
-              {/* <ReactPaginate
+                {/* <ReactPaginate
               previousLabel={"<"}
               nextLabel={">"}
               breakLabel={"..."}
@@ -393,55 +403,75 @@ export default function Home() {
               forcePage={currentPage}
             /> */}
 
-              {currentPage == 0 && (
-                <div className="leftaction disable-pointer">
-                  <Image src="imgs/left-doublearrowg.svg" alt="" width={11} height={11} />
-                </div>
-              )}
-              {currentPage != 0 && (
-                <div
-                  className="leftaction disable-pointer"
-                  onClick={() => handleFirstRecord()}
-                >
-                  <Image src="imgs/left-doublearrow.svg" alt="" />
-                </div>
-              )}
-              {/*  <div className="leftaction-single">
+                {currentPage == 0 && (
+                  <div className="leftaction disable-pointer">
+                    <Image
+                      src="imgs/left-doublearrowg.svg"
+                      alt=""
+                      width={11}
+                      height={11}
+                    />
+                  </div>
+                )}
+                {currentPage != 0 && (
+                  <div
+                    className="leftaction disable-pointer"
+                    onClick={() => handleFirstRecord()}
+                  >
+                    <Image src="imgs/left-doublearrow.svg" alt="" />
+                  </div>
+                )}
+                {/*  <div className="leftaction-single">
               <Image src="imgs/left-paging.svg" alt="" />
             </div> */}
-              <ReactPaginate
-                previousLabel={
-                  currentPage == 0 ? (
-                    <Image src="imgs/leftpaginggray.svg" alt=""
-                      width={6.219} height={11.002} />
-                  ) : (
-                    <Image src="imgs/left-paging.svg" alt=""
-                      width={6.219} height={11.002}
-                    />
-                  )
-                }
-                nextLabel={
-                  currentPage == pageCount - 1 ? (
-                    <Image src="imgs/right-paging-gray.svg" alt=""
-                      width={6.219} height={11.002} />
-                  ) : (
-                    <Image src="imgs/right-paging.svg" alt=""
-                      width={6.219} height={11.002} />
-                  )
-                }
-                breakLabel={"..."}
-                breakClassName={"break-me"}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-                forcePage={currentPage}
-                disabledClassName="disabled"
-                disableInitialCallback
-              />
-              {/*  <ul className="paging-count">
+                <ReactPaginate
+                  previousLabel={
+                    currentPage == 0 ? (
+                      <Image
+                        src="imgs/leftpaginggray.svg"
+                        alt=""
+                        width={6.219}
+                        height={11.002}
+                      />
+                    ) : (
+                      <Image
+                        src="imgs/left-paging.svg"
+                        alt=""
+                        width={6.219}
+                        height={11.002}
+                      />
+                    )
+                  }
+                  nextLabel={
+                    currentPage == pageCount - 1 ? (
+                      <Image
+                        src="imgs/right-paging-gray.svg"
+                        alt=""
+                        width={6.219}
+                        height={11.002}
+                      />
+                    ) : (
+                      <Image
+                        src="imgs/right-paging.svg"
+                        alt=""
+                        width={6.219}
+                        height={11.002}
+                      />
+                    )
+                  }
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageClick}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                  forcePage={currentPage}
+                  disabledClassName="disabled"
+                  disableInitialCallback
+                />
+                {/*  <ul className="paging-count">
               <li>1</li>
               <li>2</li>
               <li>3</li>
@@ -450,20 +480,32 @@ export default function Home() {
             <div className="rightaction-single">
               <Image src="imgs/right-paging.svg" alt="" />
             </div>*/}
-              {currentPage != pageCount - 1 && (
-                <div className="rightaction" onClick={() => handlelastRecord()}>
-                  <Image src="imgs/right-doublearrow.svg" alt=""
-                    height={11} width={11} />
-                </div>
-              )}
-              {currentPage == pageCount - 1 && (
-                <div className="rightaction">
-                  <Image src="imgs/right-doublearrowg.svg" alt=""
-                    height={11} width={11} />
-                </div>
-              )}
+                {currentPage != pageCount - 1 && (
+                  <div
+                    className="rightaction"
+                    onClick={() => handlelastRecord()}
+                  >
+                    <Image
+                      src="imgs/right-doublearrow.svg"
+                      alt=""
+                      height={11}
+                      width={11}
+                    />
+                  </div>
+                )}
+                {currentPage == pageCount - 1 && (
+                  <div className="rightaction">
+                    <Image
+                      src="imgs/right-doublearrowg.svg"
+                      alt=""
+                      height={11}
+                      width={11}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>}
+          )}
         </div>
         <ToastContainer />
       </div>

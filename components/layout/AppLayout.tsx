@@ -23,7 +23,6 @@ const AppLayout = ({ children }: LayoutProps) => {
 
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
 
-
   useEffect(() => {
 
     const data = localStorage.getItem("useremail");
@@ -35,17 +34,13 @@ const AppLayout = ({ children }: LayoutProps) => {
     const superadminkey = localStorage.getItem("superadmin");
     console.log("superadmin", superadminkey);
     if (superadminkey == "superadmin") {
-      setKey("superadmin")
+      setKey("superadmin");
     } else {
-      setKey("admin")
+      setKey("admin");
     }
     const name = localStorage.getItem("displayname");
     console.log("username", name);
     setusername(name);
-
-
-
-
 
     /*  const handleScroll = () => {
        console.log(window.scrollY);
@@ -148,7 +143,7 @@ const AppLayout = ({ children }: LayoutProps) => {
               )}
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
-                key == "superadmin" ? (
+              key == "superadmin" ? (
                 <>
                   <div className="nav-links">
                     <ul>
@@ -181,7 +176,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/runSimulation") &&
-                key == "admin" ? (
+              key == "admin" ? (
                 <>
                   <div className="nav-links">
                     <ul>

@@ -21,7 +21,7 @@ import * as XLSX from "xlsx";
 
 export default function Home() {
   const router = useRouter();
-  const [runLoading, setRunLoading] = useState(false)
+  const [runLoading, setRunLoading] = useState(false);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -149,72 +149,106 @@ export default function Home() {
   const [stablization, setStablization] = useState(0);
 
   const [meanPriceSimulation, setMeanPriceSimulation] = useState({
-    inter_10_price_ns: 0, inter_10_price_ws: 0,
-    inter_90_price_ns: 0, inter_90_price_ws: 0,
-    max_price_ns: 0, max_price_ws: 0,
-    mean_price_ns: 0, mean_price_ws: 0,
-    median_price_ns: 0, median_price_ws: 0,
-    min_price_ns: 0, min_price_ws: 0,
-    std_price_ns: 0, std_price_ws: 0
-  })
+    inter_10_price_ns: 0,
+    inter_10_price_ws: 0,
+    inter_90_price_ns: 0,
+    inter_90_price_ws: 0,
+    max_price_ns: 0,
+    max_price_ws: 0,
+    mean_price_ns: 0,
+    mean_price_ws: 0,
+    median_price_ns: 0,
+    median_price_ws: 0,
+    min_price_ns: 0,
+    min_price_ws: 0,
+    std_price_ns: 0,
+    std_price_ws: 0,
+  });
   const [meanVolumeSimulation, setMeanVolumeSimulation] = useState({
-    inter_10_amt_ns: 0, inter_10_amt_ws: 0,
-    inter_90_amt_ns: 0, inter_90_amt_ws: 0,
-    max_amt_ns: 0, max_amt_ws: 0,
-    mean_amt_ns: 0, mean_amt_ws: 0,
-    median_amt_ns: 0, median_amt_ws: 0,
-    min_amt_ns: 0, min_amt_ws: 0,
-    std_amt_ns: 0, std_amt_ws: 0
-  })
+    inter_10_amt_ns: 0,
+    inter_10_amt_ws: 0,
+    inter_90_amt_ns: 0,
+    inter_90_amt_ws: 0,
+    max_amt_ns: 0,
+    max_amt_ws: 0,
+    mean_amt_ns: 0,
+    mean_amt_ws: 0,
+    median_amt_ns: 0,
+    median_amt_ws: 0,
+    min_amt_ns: 0,
+    min_amt_ws: 0,
+    std_amt_ns: 0,
+    std_amt_ws: 0,
+  });
 
   const [meanQuantitySimulation, setMeanQuantitySimulation] = useState({
-    inter_10_quant_ns: 0, inter_10_quant_ws: 0,
-    inter_90_quant_ns: 0, inter_90_quant_ws: 0,
-    max_quant_ns: 0, max_quant_ws: 0,
-    mean_quant_ns: 0, mean_quant_ws: 0,
-    median_quant_ns: 0, median_quant_ws: 0,
-    min_quant_ns: 0, min_quant_ws: 0,
-    std_quant_ns: 0, std_quant_ws: 0
-  })
+    inter_10_quant_ns: 0,
+    inter_10_quant_ws: 0,
+    inter_90_quant_ns: 0,
+    inter_90_quant_ws: 0,
+    max_quant_ns: 0,
+    max_quant_ws: 0,
+    mean_quant_ns: 0,
+    mean_quant_ws: 0,
+    median_quant_ns: 0,
+    median_quant_ws: 0,
+    min_quant_ns: 0,
+    min_quant_ws: 0,
+    std_quant_ns: 0,
+    std_quant_ws: 0,
+  });
 
   const [StablizationFundData, setStablizationFundData] = useState({
-    inter_10_asset_stab: 0, inter_10_cash_stab: 0,
-    inter_10_total_stab: 0, inter_10_total_v_stab: 0,
-    inter_90_asset_stab: 0, inter_90_cash_stab: 0,
-    inter_90_total_stab: 0, inter_90_total_v_stab: 0,
-    max_asset_stab: 0, max_cash_stab: 0,
-    max_total_stab: 0, max_total_v_stab: 0,
-    mean_asset_stab: 0, mean_cash_stab: 0,
-    mean_total_stab: 0, mean_total_v_stab: 0,
-    median_asset_stab: 0, median_cash_stab: 0,
-    median_total_stab: 0, median_total_v_stab: 0,
-    min_asset_stab: 0, min_cash_stab: 0,
-    min_total_stab: 0, min_total_v_stab: 0,
-    std_asset_stab: 0, std_cash_stab: 0,
-    std_total_stab: 0, std_total_v_stab: 0
-
-  })
+    inter_10_asset_stab: 0,
+    inter_10_cash_stab: 0,
+    inter_10_total_stab: 0,
+    inter_10_total_v_stab: 0,
+    inter_90_asset_stab: 0,
+    inter_90_cash_stab: 0,
+    inter_90_total_stab: 0,
+    inter_90_total_v_stab: 0,
+    max_asset_stab: 0,
+    max_cash_stab: 0,
+    max_total_stab: 0,
+    max_total_v_stab: 0,
+    mean_asset_stab: 0,
+    mean_cash_stab: 0,
+    mean_total_stab: 0,
+    mean_total_v_stab: 0,
+    median_asset_stab: 0,
+    median_cash_stab: 0,
+    median_total_stab: 0,
+    median_total_v_stab: 0,
+    min_asset_stab: 0,
+    min_cash_stab: 0,
+    min_total_stab: 0,
+    min_total_v_stab: 0,
+    std_asset_stab: 0,
+    std_cash_stab: 0,
+    std_total_stab: 0,
+    std_total_v_stab: 0,
+  });
 
   const [StablizationTotal, setStablizationTotal] = useState({
-    round_assets: 0, round_cash: 0, round_tk: 0
-  })
+    round_assets: 0,
+    round_cash: 0,
+    round_tk: 0,
+  });
 
-  const [userId, setUserId] = useState('');
-
-
-
-
-
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     console.log(totalTempName);
-    if (totalTempName == undefined || totalTempName == '' || totalTempName == null) {
-      router.push("/runSimulation")
-
+    if (
+      totalTempName == undefined ||
+      totalTempName == "" ||
+      totalTempName == null
+    ) {
+      router.push("/runSimulation");
     } else {
-      let email = localStorage.getItem('useremail')
+      let email = localStorage.getItem("useremail");
       console.log("email");
-      getEmailInfo(email)
+      getEmailInfo(email);
 
       getTemplateDetails(totalTempName);
       getDistributions();
@@ -227,7 +261,6 @@ export default function Home() {
         getSimulationVolumeResultDetails(executionId);
         getSimulationQuantityResultDetails(executionId);
         getStablizationFund(executionId);
-
       }
 
       if (tabIndex == 1) {
@@ -274,60 +307,60 @@ export default function Home() {
   const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    setUserId(result.id)
-  }
+    setUserId(result.id);
+  };
   const getStablizationFund = async (id: any) => {
     setLoading(true);
     const result = await API_Auth.getStablizationFundDetails(id);
-    setLoading(false)
+    setLoading(false);
     if (result.status == 400) {
       setStablizationFundData(StablizationFundData);
-      setStablizationTotal(StablizationTotal)
+      setStablizationTotal(StablizationTotal);
     } else {
-
       console.log("StablizationFund", result);
-      setStablizationFundData(result.stab == undefined ? StablizationFundData : result.stab)
-      setStablizationTotal(result.stab_totals.stab_totals)
+      setStablizationFundData(
+        result.stab == undefined ? StablizationFundData : result.stab
+      );
+      setStablizationTotal(result.stab_totals.stab_totals);
     }
-
   };
   const getSimulationResultDetails = async (id: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(id, "price");
     console.log("simulationresult", result);
-    setLoading(false)
+    setLoading(false);
 
     if (result.status == 400) {
       setgraphDataWsIteration([]);
       setgraphDataWsRound([]);
-      setgraphDataNsIteration([])
-      setgraphDataNsRound([])
+      setgraphDataNsIteration([]);
+      setgraphDataNsRound([]);
     } else {
-
       setgraphDataWsIteration(result.graphDataWS.byiter);
       setgraphDataWsRound(result.graphDataWS.byround);
-      setgraphDataNsIteration(result.graphDataNS.byiter)
-      setgraphDataNsRound(result.graphDataNS.byround)
-      setMeanPriceSimulation(result.sim == undefined ? meanPriceSimulation : result.sim)
+      setgraphDataNsIteration(result.graphDataNS.byiter);
+      setgraphDataNsRound(result.graphDataNS.byround);
+      setMeanPriceSimulation(
+        result.sim == undefined ? meanPriceSimulation : result.sim
+      );
     }
-
   };
   const getSimulationQuantityResultDetails = async (executionId: any) => {
     setLoading(true);
     const result = await API_Auth.getSimulationResult(executionId, "quantity");
     console.log("quantityresult", result);
-    console.log("quantity--------------------------->")
-    setLoading(false)
+    console.log("quantity--------------------------->");
+    setLoading(false);
 
     if (result.status == 400) {
       setSimulationQuantityData([]);
       setNSimulationQuantityData([]);
     } else {
-
-      setSimulationQuantityData(result.graphDataWS[0])
-      setNSimulationQuantityData(result.graphDataNS[0])
-      setMeanQuantitySimulation(result.sim == undefined ? meanQuantitySimulation : result.sim)
-
+      setSimulationQuantityData(result.graphDataWS[0]);
+      setNSimulationQuantityData(result.graphDataNS[0]);
+      setMeanQuantitySimulation(
+        result.sim == undefined ? meanQuantitySimulation : result.sim
+      );
     }
   };
 
@@ -339,13 +372,15 @@ export default function Home() {
     setLoading(false);
 
     if (result.status == 400) {
-      setSimulationVolumeData([])
-      setNSimulationVolumeData([])
+      setSimulationVolumeData([]);
+      setNSimulationVolumeData([]);
     } else {
-      setSimulationVolumeData(result.graphDataWS[0])
-      setNSimulationVolumeData(result.graphDataNS[0])
-      setMeanVolumeSimulation(result.sim == undefined ? meanVolumeSimulation : result.sim)
-      setLoading(false)
+      setSimulationVolumeData(result.graphDataWS[0]);
+      setNSimulationVolumeData(result.graphDataNS[0]);
+      setMeanVolumeSimulation(
+        result.sim == undefined ? meanVolumeSimulation : result.sim
+      );
+      setLoading(false);
     }
   };
 
@@ -779,7 +814,6 @@ export default function Home() {
     } else if (/^\d+$/.test(iterations) == false) {
       setIterationsErr(" Iteration Value accepts only integers");
       error = error + 1;
-
     } else {
       setIterationsErr("");
     }
@@ -789,35 +823,30 @@ export default function Home() {
     } else if (/^\d+$/.test(rounds) == false) {
       setRoundsErr(" Round Value accepts only integers");
       error = error + 1;
-    }
-    else {
+    } else {
       setRoundsErr("");
     }
     if (ordersRound == "") {
       error = error + 1;
       setordersRoundErr("Please Enter Orders");
-    }
-    else if (/^\d+$/.test(ordersRound) == false) {
+    } else if (/^\d+$/.test(ordersRound) == false) {
       setordersRoundErr(" Order Value accepts only integers");
       error = error + 1;
-
     } else {
       setordersRoundErr("");
     }
     if (ordersVar == "") {
       error = error + 1;
       setordersVarErr("Please Enter Order Variance");
-    }
-    else if (Number(ordersVar) > 1) {
+    } else if (Number(ordersVar) > 1) {
       error = error + 1;
-
       setordersVarErr("order variance should be less than 1");
     } else {
       setordersVarErr("");
     }
     if (error == 0) {
       // setDisableSubmit(true)
-      setRunLoading(true)
+      setRunLoading(true);
       let body = {
         temp_name: templatename,
         nb_rounds: Number(rounds),
@@ -827,22 +856,25 @@ export default function Home() {
         iterations: Number(iterations),
         dynamic: 1,
       };
-      const result = await API_Auth.runSimulation(body);
-      console.log(result);
-      setRunLoading(false);
-
-      if (result.status == 400) {
-        toast.error(result.msg);
-        setDisableSubmit(false);
-      } else {
-        console.log(result.exe);
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth' // smooth scrolling behavior
-        });
-        toast.success("Execution done successfully");
-        setExecutionId(result.exe);
-
+      try {
+        const result = await API_Auth.runSimulation(body);
+        console.log(result);
+        setRunLoading(false);
+        if (result.status == 400) {
+          toast.error(result.msg);
+          setDisableSubmit(false);
+        } else {
+          console.log(result.exe);
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // smooth scrolling behavior
+          });
+          toast.success("Execution done successfully");
+          setExecutionId(result.exe);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        toast.error(error);
       }
     }
   };
@@ -871,20 +903,16 @@ export default function Home() {
 
     if (error == 0) {
       if (tabIndex == 1) {
-
         getOrderBook(executionId, siteration, sround);
       }
       if (tabIndex == 2) {
-
         getOrderBook(executionId, siteration, sround);
       }
 
       if (tabIndex == 3) {
-
         getTradeHistoryWS(executionId, siteration, sround);
       }
       if (tabIndex == 4) {
-
         getTradeHistoryNS(executionId, siteration, sround);
       }
       if (tabIndex == 5) {
@@ -956,10 +984,9 @@ export default function Home() {
       pathname: "/reportpdf",
       query: { temp_name: totalTempName, exe_id: executionId },
     });
-  }
+  };
 
   const handleDownloadExcel = async () => {
-
     let body = {
       temp_name: totalTempName,
       creator: "",
@@ -968,7 +995,7 @@ export default function Home() {
       dateto: "",
       resultPerPage: 1,
       pgNo: 1,
-      execution_id: executionId
+      execution_id: executionId,
     };
     const result = await API_Auth.getSimulationHistory(body);
     console.log(
@@ -994,12 +1021,13 @@ export default function Home() {
     console.log("result", finalresult);
     console.log(finalresult.templates[0]);
     var keydata = finalresult.templates[0];
-    keydata['Iteartions'] = result.simulations[0].iterations;
-    keydata['Orders'] = result.simulations[0].nb_orders
-    keydata['rounds'] = result.simulations[0].nb_rounds
-    keydata['oder_variance'] = result.simulations[0].nb_orders_var;
-    keydata['created_timestamp'] = moment(keydata.created_timestamp).format("MM/DD/YYYY h:mm:ss A")
-
+    keydata["Iteartions"] = result.simulations[0].iterations;
+    keydata["Orders"] = result.simulations[0].nb_orders;
+    keydata["rounds"] = result.simulations[0].nb_rounds;
+    keydata["oder_variance"] = result.simulations[0].nb_orders_var;
+    keydata["created_timestamp"] = moment(keydata.created_timestamp).format(
+      "MM/DD/YYYY h:mm:ss A"
+    );
 
     let finalData: any[] = [];
 
@@ -1007,166 +1035,198 @@ export default function Home() {
 
     Object.keys(keydata).forEach(function (key) {
       var value = keydata[key];
-      let obj = { 'key': key, 'Value': value };
+      let obj = { key: key, Value: value };
       finalData.push(obj);
     });
-    console.log("finalData", finalData)
+    console.log("finalData", finalData);
 
     const tempData = XLSX.utils.json_to_sheet(finalData);
-    XLSX.utils.book_append_sheet(wb, tempData, 'Template');
-
-
-
+    XLSX.utils.book_append_sheet(wb, tempData, "Template");
 
     /*  price*/
 
-    const meanPrice = await API_Auth.getSimulationResult(executionId, "price")
-    console.log("meanPrice", meanPrice.sim)
-    const MeanPriceSimulation = meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim
+    const meanPrice = await API_Auth.getSimulationResult(executionId, "price");
+    console.log("meanPrice", meanPrice.sim);
+    const MeanPriceSimulation =
+      meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim;
 
-    const withStabilizationData =
-    {
+    const withStabilizationData = {
       Template: totalTempName,
-      "Mean": MeanPriceSimulation.mean_price_ws,
-      "Median": MeanPriceSimulation.median_price_ws,
+      Mean: MeanPriceSimulation.mean_price_ws,
+      Median: MeanPriceSimulation.median_price_ws,
       "Standard deviation": MeanPriceSimulation.std_price_ws,
-      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ws + "-" + MeanPriceSimulation.inter_90_price_ws
-    }
-    const withoutStabilizationData =
-    {
-      "Template": totalTempName,
+      "10%-90% Interval":
+        MeanPriceSimulation.inter_10_price_ws +
+        "-" +
+        MeanPriceSimulation.inter_90_price_ws,
+    };
+    const withoutStabilizationData = {
+      Template: totalTempName,
       Mean: MeanPriceSimulation.mean_price_ns,
-      "Median": MeanPriceSimulation.median_price_ns,
+      Median: MeanPriceSimulation.median_price_ns,
       "Standard deviation": MeanPriceSimulation.std_price_ns,
-      "10%-90% Interval": MeanPriceSimulation.inter_10_price_ns + "-" + MeanPriceSimulation.inter_90_price_ns
+      "10%-90% Interval":
+        MeanPriceSimulation.inter_10_price_ns +
+        "-" +
+        MeanPriceSimulation.inter_90_price_ns,
+    };
 
-    }
-
-    const wsData = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsData = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationData).forEach((key) => {
-      wsData.push([key, withStabilizationData[key], withoutStabilizationData[key]]);
+      wsData.push([
+        key,
+        withStabilizationData[key],
+        withoutStabilizationData[key],
+      ]);
     });
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-    XLSX.utils.book_append_sheet(wb, ws, 'Price');
+    XLSX.utils.book_append_sheet(wb, ws, "Price");
     /* volume */
 
-    const meanVolume = await API_Auth.getSimulationResult(executionId, "volume")
-    console.log("meanVolume", meanVolume.sim)
-    const MeanVolumeSimulation = meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim
+    const meanVolume = await API_Auth.getSimulationResult(
+      executionId,
+      "volume"
+    );
+    console.log("meanVolume", meanVolume.sim);
+    const MeanVolumeSimulation =
+      meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim;
 
-
-    const withStabilizationDataVOlume =
-    {
-      "Template": totalTempName,
+    const withStabilizationDataVOlume = {
+      Template: totalTempName,
       Mean: MeanVolumeSimulation.mean_amt_ws,
       Median: MeanVolumeSimulation.median_amt_ws,
       "Standard deviation": MeanVolumeSimulation.std_amt_ws,
-      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ws + "-" + MeanVolumeSimulation.inter_90_amt_ws
-    }
-    const withoutStabilizationDataVolume =
-
-    {
-      "Template": totalTempName,
+      "10%-90% interval":
+        MeanVolumeSimulation.inter_10_amt_ws +
+        "-" +
+        MeanVolumeSimulation.inter_90_amt_ws,
+    };
+    const withoutStabilizationDataVolume = {
+      Template: totalTempName,
       Mean: MeanVolumeSimulation.mean_amt_ns,
       Median: MeanVolumeSimulation.median_amt_ns,
       "Standard deviation": MeanVolumeSimulation.std_amt_ns,
-      "10%-90% interval": MeanVolumeSimulation.inter_10_amt_ns + "-" + MeanVolumeSimulation.inter_90_amt_ns
-    }
+      "10%-90% interval":
+        MeanVolumeSimulation.inter_10_amt_ns +
+        "-" +
+        MeanVolumeSimulation.inter_90_amt_ns,
+    };
 
-
-    const wsDataVolume = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsDataVolume = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataVOlume).forEach((key) => {
-      wsDataVolume.push([key, withStabilizationDataVOlume[key], withoutStabilizationDataVolume[key]]);
+      wsDataVolume.push([
+        key,
+        withStabilizationDataVOlume[key],
+        withoutStabilizationDataVolume[key],
+      ]);
     });
 
     const wsVolume = XLSX.utils.aoa_to_sheet(wsDataVolume);
-    XLSX.utils.book_append_sheet(wb, wsVolume, 'Volume');
+    XLSX.utils.book_append_sheet(wb, wsVolume, "Volume");
 
     /* Quantity */
 
+    const meanqty = await API_Auth.getSimulationResult(executionId, "quantity");
+    console.log("meanqty", meanqty.sim);
+    const meanqtysimulation =
+      meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim;
 
-    const meanqty = await API_Auth.getSimulationResult(executionId, "quantity")
-    console.log("meanqty", meanqty.sim)
-    const meanqtysimulation = meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim
-
-
-    const withStabilizationDataQty =
-    {
-      "Template": totalTempName,
+    const withStabilizationDataQty = {
+      Template: totalTempName,
       Mean: meanqtysimulation.mean_quant_ws,
       Median: meanqtysimulation.median_quant_ws,
       "Standard deviation": meanqtysimulation.std_quant_ws,
-      "10%-90% interval": meanqtysimulation.inter_10_quant_ws + "-" + meanqtysimulation.inter_90_quant_ws
-    }
-    const withoutStabilizationDataQty =
-
-    {
-      "Template": totalTempName,
+      "10%-90% interval":
+        meanqtysimulation.inter_10_quant_ws +
+        "-" +
+        meanqtysimulation.inter_90_quant_ws,
+    };
+    const withoutStabilizationDataQty = {
+      Template: totalTempName,
       Mean: meanqtysimulation.mean_quant_nsn,
       Median: meanqtysimulation.median_quant_ns,
       "Standard deviation": meanqtysimulation.std_quant_ns,
-      "10%-90% interval": meanqtysimulation.inter_10_quant_ns + "-" + meanQuantitySimulation.inter_90_quant_ns
-    }
+      "10%-90% interval":
+        meanqtysimulation.inter_10_quant_ns +
+        "-" +
+        meanQuantitySimulation.inter_90_quant_ns,
+    };
 
-
-
-    const wsDataQty = [['', 'With Stabilization', 'Without Stabilization']];
+    const wsDataQty = [["", "With Stabilization", "Without Stabilization"]];
     Object.keys(withStabilizationDataQty).forEach((key) => {
-      wsDataQty.push([key, withStabilizationDataQty[key], withoutStabilizationDataQty[key]]);
+      wsDataQty.push([
+        key,
+        withStabilizationDataQty[key],
+        withoutStabilizationDataQty[key],
+      ]);
     });
 
     const wsQty = XLSX.utils.aoa_to_sheet(wsDataQty);
-    XLSX.utils.book_append_sheet(wb, wsQty, 'Quantity');
+    XLSX.utils.book_append_sheet(wb, wsQty, "Quantity");
 
     /* stablizationfund */
 
-
-
     const stabresult = await API_Auth.getStablizationFundDetails(executionId);
     console.log("StablizationFund", stabresult);
-    const totalfundata = stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
-
-
+    const totalfundata =
+      stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
 
     const withCash = {
-      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+      temp_name: totalTempName,
+      mean: totalfundata.mean_cash_stab,
+      median: totalfundata.median_cash_stab,
+      "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval":
+        totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
     const withArrayQuantity = {
-      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+      temp_name: totalTempName,
+      mean: totalfundata.mean_cash_stab,
+      median: totalfundata.median_cash_stab,
+      "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval":
+        totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withTotalAssetV =
-    {
-      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+    const withTotalAssetV = {
+      temp_name: totalTempName,
+      mean: totalfundata.mean_cash_stab,
+      median: totalfundata.median_cash_stab,
+      "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval":
+        totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
     const withTotalAssetDollar = {
-      temp_name: totalTempName, mean: totalfundata.mean_cash_stab, median: totalfundata.median_cash_stab, "Standard Deviation": totalfundata.std_cash_stab,
-      "10%-90% Interval": totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab
+      temp_name: totalTempName,
+      mean: totalfundata.mean_cash_stab,
+      median: totalfundata.median_cash_stab,
+      "Standard Deviation": totalfundata.std_cash_stab,
+      "10%-90% Interval":
+        totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
 
-    const wsDataStablization = [['', 'Cash', 'Asset(Quantity)', 'Total Asset $', 'Total Asset/v',]];
+    const wsDataStablization = [
+      ["", "Cash", "Asset(Quantity)", "Total Asset $", "Total Asset/v"],
+    ];
     Object.keys(withCash).forEach((key) => {
-      wsDataStablization.push([key, withCash[key], withArrayQuantity[key], withTotalAssetV[key], withTotalAssetDollar[key]]);
+      wsDataStablization.push([
+        key,
+        withCash[key],
+        withArrayQuantity[key],
+        withTotalAssetV[key],
+        withTotalAssetDollar[key],
+      ]);
     });
 
     const wssdata = XLSX.utils.aoa_to_sheet(wsDataStablization);
-    XLSX.utils.book_append_sheet(wb, wssdata, 'Stablization');
+    XLSX.utils.book_append_sheet(wb, wssdata, "Stablization");
 
-
-
-
-    XLSX.writeFile(wb, totalTempName + 'Report.xlsx');
-
-
-
-  }
+    XLSX.writeFile(wb, totalTempName + "Report.xlsx");
+  };
   const handleBack = () => {
     router.back();
-  }
+  };
 
   return (
     <AppLayout>
@@ -1177,28 +1237,29 @@ export default function Home() {
             style={{ display: "flex", justifyContent: "space-between" }}
           >
             <div className="back-option" onClick={() => handleBack()}>
-              <img src="imgs/left-arrow.svg" alt=""
-              />
+              <img src="imgs/left-arrow.svg" alt="" />
               <p className="mb-0">Back</p>
             </div>
             <div className="main-header"></div>
-            {executionId != '' && <div className="right-head info">
-              {/* <div className="format"> */}
-              <p>Download Report :</p>
-              <div className="file-type">
-                <Button>
-                  <a onClick={() => handleDownloadPDF()}>
+            {executionId != "" && (
+              <div className="right-head info">
+                {/* <div className="format"> */}
+                <p>Download Report :</p>
+                <div className="file-type">
+                  <Button>
+                    <a onClick={() => handleDownloadPDF()}>
+                      <img src="imgs/download-white.svg" alt="" />
+                      PDF
+                    </a>
+                  </Button>
+                  <Button onClick={() => handleDownloadExcel()}>
                     <img src="imgs/download-white.svg" alt="" />
-                    PDF
-                  </a>
-                </Button>
-                <Button onClick={() => handleDownloadExcel()}>
-                  <img src="imgs/download-white.svg" alt="" />
-                  EXCEL
-                </Button>
+                    EXCEL
+                  </Button>
+                </div>
+                {/* </div> */}
               </div>
-              {/* </div> */}
-            </div>}
+            )}
           </div>
 
           <div className="simulation-section">
@@ -1624,7 +1685,6 @@ export default function Home() {
                               src="imgs/close-black.svg"
                               alt=""
                               onClick={handleClose}
-
                             />
                           </Modal.Header>
                           <Modal.Body>
@@ -1903,26 +1963,23 @@ export default function Home() {
                           </div>
                           {/* <div className="tabs"></div> */}
                         </div>
-                        <div className="row">
+                        <div className="rows">
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
                             {loading == true && <Loader />}
-
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
-                                  <thead className="sticky-header">
+                                  <thead>
                                     <tr>
                                       <th>Quantity</th>
                                       <th>Buy Price</th>
                                     </tr>
                                   </thead>
-
-
-                                  {orderWsbuy.length == 0 && (
+                                  {orderNsbuy.length == 0 && (
                                     <tbody>
                                       <tr>
                                         <td colSpan={12}>
@@ -1933,8 +1990,8 @@ export default function Home() {
                                       </tr>
                                     </tbody>
                                   )}
-                                  <tbody className="scrollable">
-                                    {orderWsbuy.map((data) => (
+                                  <tbody>
+                                    {orderNsbuy.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -1946,23 +2003,23 @@ export default function Home() {
                             </div>
                           </div>
 
+                          {loading == true && <Loader />}
+
                           <div className="col buy">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
-                            {loading == true && <Loader />}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
-                                  <thead className="sticky-header">
+                                  <thead>
                                     <tr>
                                       <th>Sell Price</th>
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-
-                                  {orderWssell.length == 0 && (
+                                  {orderNssell.length == 0 && (
                                     <tbody>
                                       <tr>
                                         <td colSpan={12}>
@@ -1973,8 +2030,8 @@ export default function Home() {
                                       </tr>
                                     </tbody>
                                   )}
-                                  <tbody className="scrollable">
-                                    {orderWssell.map((data) => (
+                                  <tbody>
+                                    {orderNssell.map((data) => (
                                       <tr>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -1985,176 +2042,166 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="footer">
-                            <div className="orderbook-header">
-                              <div className="search-round">
-                                <div className="controls">
-                                  <h3>Iteration</h3>
-                                  <div className="previous">
-                                    {siteration == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstIteration()}
-                                      />
-                                    )}
+                        </div>
+                        {/* <div className="footer"> */}
+                        <div className="orderbook-header">
+                          <div className="search-round">
+                            <div className="controls">
+                              <h3>Iteration</h3>
+                              <div className="previous">
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleDecrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={siteration}
-                                        name="siteration"
-                                        onChange={handleInput}
-                                      />
-                                      {siterationErr != "" && (
-                                        <p className="alert-message">
-                                          {siterationErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {iterations}</span>
-                                  </div>
-                                  <div className="next">
-                                    {Number(siteration) !=
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/next-arrow.svg"
-                                          alt=""
-                                          onClick={() =>
-                                            handleIncrementIteration()
-                                          }
-                                        />
-                                      )}
-                                    {Number(siteration) ==
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-paging-gray.svg"
-                                          alt=""
-                                        />
-                                      )}
-
-                                    {Number(siteration) !=
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrow.svg"
-                                          alt=""
-                                          onClick={() => handleLastIteration()}
-                                        />
-                                      )}
-                                    {Number(siteration) ==
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrowg.svg"
-                                          alt=""
-                                        />
-                                      )}
-                                  </div>
-                                </div>
-                                <div className="round">
-                                  <h3>Round</h3>
-                                  <div className="previous">
-                                    {sround == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstRound()}
-                                      />
-                                    )}
-
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() => handleDecrementRound()}
-                                      />
-                                    )}
-                                    {sround == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={sround}
-                                        name="sround"
-                                        onChange={handleInput}
-                                      />
-                                      {sroundErr != "" && (
-                                        <p className="alert-message">
-                                          {sroundErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {rounds}</span>
-                                  </div>
-                                  <div className="next">
-                                    {Number(sround) != Number(rounds) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() => handleIncrementRound()}
-                                      />
-                                    )}
-                                    {Number(sround) == Number(rounds) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {Number(sround) != Number(rounds) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastRound()}
-                                      />
-                                    )}
-                                    {Number(sround) == Number(rounds) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="search-controls ms-5">
-                                  <button
-                                    className="search"
-                                    onClick={() => handleSearch()}
-                                  >
-                                    Search
-                                  </button>{" "}
-                                </div>
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
-                              {/* <div className="tabs"></div> */}
+                              <div className="iteration">
+                                <div className="tooldrop">
+                                  <input
+                                    value={siteration}
+                                    name="siteration"
+                                    onChange={handleInput}
+                                  />
+                                  {siterationErr != "" && (
+                                    <p className="alert-message">
+                                      {siterationErr}
+                                    </p>
+                                  )}{" "}
+                                </div>
+                                <span>of {iterations}</span>
+                              </div>
+                              <div className="next">
+                                {Number(siteration) != Number(iterations) && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {Number(siteration) == Number(iterations) && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
+
+                                {Number(siteration) != Number(iterations) && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {Number(siteration) == Number(iterations) && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                              </div>
+                            </div>
+                            <div className="round">
+                              <h3>Round</h3>
+                              <div className="previous">
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
+
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
+                              </div>
+                              <div className="iteration">
+                                <div className="tooldrop">
+                                  <input
+                                    value={sround}
+                                    name="sround"
+                                    onChange={handleInput}
+                                  />
+                                  {sroundErr != "" && (
+                                    <p className="alert-message">{sroundErr}</p>
+                                  )}{" "}
+                                </div>
+                                <span>of {rounds}</span>
+                              </div>
+                              <div className="next">
+                                {Number(sround) != Number(rounds) && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {Number(sround) == Number(rounds) && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
+
+                                {Number(sround) != Number(rounds) && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {Number(sround) == Number(rounds) && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                              </div>
+                            </div>
+                            <div className="search-controls ms-5">
+                              <button
+                                className="search"
+                                onClick={() => handleSearch()}
+                              >
+                                Search
+                              </button>{" "}
                             </div>
                           </div>
+                          {/* <div className="tabs"></div> */}
                         </div>
+                        {/* </div> */}
                       </TabPanel>
                       <TabPanel className="order-book">
                         <div className="orderbook-header">
@@ -2314,7 +2361,7 @@ export default function Home() {
                           </div>
                           {/* <div className="tabs"></div> */}
                         </div>
-                        <div className="row">
+                        <div className="rows">
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
@@ -2393,176 +2440,166 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="footer">
-                            <div className="orderbook-header">
-                              <div className="search-round">
-                                <div className="controls">
-                                  <h3>Iteration</h3>
-                                  <div className="previous">
-                                    {siteration == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstIteration()}
-                                      />
-                                    )}
+                        </div>
+                        {/* <div className="footer"> */}
+                        <div className="orderbook-header">
+                          <div className="search-round">
+                            <div className="controls">
+                              <h3>Iteration</h3>
+                              <div className="previous">
+                                {siteration == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstIteration()}
+                                  />
+                                )}
 
-                                    {siteration != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() =>
-                                          handleDecrementIteration()
-                                        }
-                                      />
-                                    )}
-                                    {siteration == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={siteration}
-                                        name="siteration"
-                                        onChange={handleInput}
-                                      />
-                                      {siterationErr != "" && (
-                                        <p className="alert-message">
-                                          {siterationErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {iterations}</span>
-                                  </div>
-                                  <div className="next">
-                                    {Number(siteration) !=
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/next-arrow.svg"
-                                          alt=""
-                                          onClick={() =>
-                                            handleIncrementIteration()
-                                          }
-                                        />
-                                      )}
-                                    {Number(siteration) ==
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-paging-gray.svg"
-                                          alt=""
-                                        />
-                                      )}
-
-                                    {Number(siteration) !=
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrow.svg"
-                                          alt=""
-                                          onClick={() => handleLastIteration()}
-                                        />
-                                      )}
-                                    {Number(siteration) ==
-                                      Number(iterations) && (
-                                        <img
-                                          src="imgs/right-doublearrowg.svg"
-                                          alt=""
-                                        />
-                                      )}
-                                  </div>
-                                </div>
-                                <div className="round">
-                                  <h3>Round</h3>
-                                  <div className="previous">
-                                    {sround == 1 && (
-                                      <img
-                                        src="imgs/left-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleFirstRound()}
-                                      />
-                                    )}
-
-                                    {sround != 1 && (
-                                      <img
-                                        src="imgs/left-paging.svg"
-                                        alt=""
-                                        onClick={() => handleDecrementRound()}
-                                      />
-                                    )}
-                                    {sround == 1 && (
-                                      <img src="imgs/previous.svg" alt="" />
-                                    )}
-                                  </div>
-                                  <div className="iteration">
-                                    <div className="tooldrop">
-                                      <input
-                                        value={sround}
-                                        name="sround"
-                                        onChange={handleInput}
-                                      />
-                                      {sroundErr != "" && (
-                                        <p className="alert-message">
-                                          {sroundErr}
-                                        </p>
-                                      )}{" "}
-                                    </div>
-                                    <span>of {rounds}</span>
-                                  </div>
-                                  <div className="next">
-                                    {Number(sround) != Number(rounds) && (
-                                      <img
-                                        src="imgs/next-arrow.svg"
-                                        alt=""
-                                        onClick={() => handleIncrementRound()}
-                                      />
-                                    )}
-                                    {Number(sround) == Number(rounds) && (
-                                      <img
-                                        src="imgs/right-paging-gray.svg"
-                                        alt=""
-                                      />
-                                    )}
-
-                                    {Number(sround) != Number(rounds) && (
-                                      <img
-                                        src="imgs/right-doublearrow.svg"
-                                        alt=""
-                                        onClick={() => handleLastRound()}
-                                      />
-                                    )}
-                                    {Number(sround) == Number(rounds) && (
-                                      <img
-                                        src="imgs/right-doublearrowg.svg"
-                                        alt=""
-                                      />
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="search-controls ms-5">
-                                  <button
-                                    className="search"
-                                    onClick={() => handleSearch()}
-                                  >
-                                    Search
-                                  </button>{" "}
-                                </div>
+                                {siteration != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementIteration()}
+                                  />
+                                )}
+                                {siteration == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
                               </div>
-                              {/* <div className="tabs"></div> */}
+                              <div className="iteration">
+                                <div className="tooldrop">
+                                  <input
+                                    value={siteration}
+                                    name="siteration"
+                                    onChange={handleInput}
+                                  />
+                                  {siterationErr != "" && (
+                                    <p className="alert-message">
+                                      {siterationErr}
+                                    </p>
+                                  )}{" "}
+                                </div>
+                                <span>of {iterations}</span>
+                              </div>
+                              <div className="next">
+                                {Number(siteration) != Number(iterations) && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementIteration()}
+                                  />
+                                )}
+                                {Number(siteration) == Number(iterations) && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
+
+                                {Number(siteration) != Number(iterations) && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastIteration()}
+                                  />
+                                )}
+                                {Number(siteration) == Number(iterations) && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                              </div>
+                            </div>
+                            <div className="round">
+                              <h3>Round</h3>
+                              <div className="previous">
+                                {sround == 1 && (
+                                  <img
+                                    src="imgs/left-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleFirstRound()}
+                                  />
+                                )}
+
+                                {sround != 1 && (
+                                  <img
+                                    src="imgs/left-paging.svg"
+                                    alt=""
+                                    onClick={() => handleDecrementRound()}
+                                  />
+                                )}
+                                {sround == 1 && (
+                                  <img src="imgs/previous.svg" alt="" />
+                                )}
+                              </div>
+                              <div className="iteration">
+                                <div className="tooldrop">
+                                  <input
+                                    value={sround}
+                                    name="sround"
+                                    onChange={handleInput}
+                                  />
+                                  {sroundErr != "" && (
+                                    <p className="alert-message">{sroundErr}</p>
+                                  )}{" "}
+                                </div>
+                                <span>of {rounds}</span>
+                              </div>
+                              <div className="next">
+                                {Number(sround) != Number(rounds) && (
+                                  <img
+                                    src="imgs/next-arrow.svg"
+                                    alt=""
+                                    onClick={() => handleIncrementRound()}
+                                  />
+                                )}
+                                {Number(sround) == Number(rounds) && (
+                                  <img
+                                    src="imgs/right-paging-gray.svg"
+                                    alt=""
+                                  />
+                                )}
+
+                                {Number(sround) != Number(rounds) && (
+                                  <img
+                                    src="imgs/right-doublearrow.svg"
+                                    alt=""
+                                    onClick={() => handleLastRound()}
+                                  />
+                                )}
+                                {Number(sround) == Number(rounds) && (
+                                  <img
+                                    src="imgs/right-doublearrowg.svg"
+                                    alt=""
+                                  />
+                                )}
+                              </div>
+                            </div>
+                            <div className="search-controls ms-5">
+                              <button
+                                className="search"
+                                onClick={() => handleSearch()}
+                              >
+                                Search
+                              </button>{" "}
                             </div>
                           </div>
+                          {/* <div className="tabs"></div> */}
                         </div>
+                        {/* </div> */}
                       </TabPanel>
                       <TabPanel className="trade-history-ws">
                         <div className="ws">
@@ -3336,13 +3373,15 @@ export default function Home() {
                                     <TabPanel>
                                       {" "}
                                       {loading == true && <Loader />}
-
-                                      {graphDataWsIteration.length != 0 && graphDataWsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataWsIteration}
-                                        round={graphDataWsRound}
-                                        noofiterations={iterations}
-                                        noofrounds={rounds} />
-                                      }
+                                      {graphDataWsIteration.length != 0 &&
+                                        graphDataWsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataWsIteration}
+                                            round={graphDataWsRound}
+                                            noofiterations={iterations}
+                                            noofrounds={rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -3366,30 +3405,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanPriceSimulation.mean_price_ws}</td>
-                                                  <td>{meanPriceSimulation.mean_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanPriceSimulation.median_price_ws}</td>
-                                                  <td>{meanPriceSimulation.median_price_ns}</td>
-
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanPriceSimulation.std_price_ws}</td>
-                                                  <td>{meanPriceSimulation.std_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanPriceSimulation.inter_10_price_ws}-{meanPriceSimulation.inter_90_price_ws}</td>
-                                                  <td>{meanPriceSimulation.inter_10_price_ns}-{meanPriceSimulation.inter_90_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.inter_10_price_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanPriceSimulation.inter_90_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.inter_10_price_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanPriceSimulation.inter_90_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3429,29 +3507,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanVolumeSimulation.std_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.std_amt_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanVolumeSimulation.inter_10_amt_ws}-{meanVolumeSimulation.inter_90_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.inter_10_amt_ns}-{meanVolumeSimulation.inter_90_amt_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.inter_10_amt_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanVolumeSimulation.inter_90_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.inter_10_amt_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanVolumeSimulation.inter_90_amt_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3491,29 +3609,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanQuantitySimulation.mean_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.mean_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanQuantitySimulation.median_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.median_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanQuantitySimulation.std_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.std_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanQuantitySimulation.inter_10_quant_ws}-{meanQuantitySimulation.inter_90_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.inter_10_quant_ns}-{meanQuantitySimulation.inter_90_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.inter_10_quant_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanQuantitySimulation.inter_90_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.inter_10_quant_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanQuantitySimulation.inter_90_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3542,13 +3700,15 @@ export default function Home() {
                                     <TabPanel>
                                       {" "}
                                       {loading == true && <Loader />}
-
-                                      {graphDataNsIteration.length != 0 && graphDataNsRound.length != 0 && <CandleStickSimulation
-                                        iteration={graphDataNsIteration}
-                                        round={graphDataNsRound}
-                                        noofiterations={iterations}
-                                        noofrounds={rounds} />
-                                      }
+                                      {graphDataNsIteration.length != 0 &&
+                                        graphDataNsRound.length != 0 && (
+                                          <CandleStickSimulation
+                                            iteration={graphDataNsIteration}
+                                            round={graphDataNsRound}
+                                            noofiterations={iterations}
+                                            noofrounds={rounds}
+                                          />
+                                        )}
                                       <div className="simulation-graph">
                                         MARKET PRICE UPDATES
                                       </div>
@@ -3572,30 +3732,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanPriceSimulation.mean_price_ws}</td>
-                                                  <td>{meanPriceSimulation.mean_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanPriceSimulation.median_price_ws}</td>
-                                                  <td>{meanPriceSimulation.median_price_ns}</td>
-
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanPriceSimulation.std_price_ws}</td>
-                                                  <td>{meanPriceSimulation.std_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanPriceSimulation.inter_10_price_ws}-{meanPriceSimulation.inter_90_price_ws}</td>
-                                                  <td>{meanPriceSimulation.inter_10_price_ns}-{meanPriceSimulation.inter_90_price_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.inter_10_price_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanPriceSimulation.inter_90_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.inter_10_price_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanPriceSimulation.inter_90_price_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3635,29 +3834,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.mean_amt_ws}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.median_amt_ws}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanVolumeSimulation.std_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.std_amt_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanVolumeSimulation.inter_10_amt_ws}-{meanVolumeSimulation.inter_90_amt_ws}</td>
-                                                  <td>{meanVolumeSimulation.inter_10_amt_ns}-{meanVolumeSimulation.inter_90_amt_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.inter_10_amt_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanVolumeSimulation.inter_90_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.inter_10_amt_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanVolumeSimulation.inter_90_amt_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3697,29 +3936,69 @@ export default function Home() {
                                                   <th className="emptycell">
                                                     Mean
                                                   </th>
-                                                  <td>{meanQuantitySimulation.mean_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.mean_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Median
                                                   </th>
-                                                  <td>{meanQuantitySimulation.median_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.median_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     Standard deviation
                                                   </th>
-                                                  <td>{meanQuantitySimulation.std_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.std_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                                 <tr>
                                                   <th className="emptycell">
                                                     10% - 90% interval
                                                   </th>
-                                                  <td>{meanQuantitySimulation.inter_10_quant_ws}-{meanQuantitySimulation.inter_90_quant_ws}</td>
-                                                  <td>{meanQuantitySimulation.inter_10_quant_ns}-{meanQuantitySimulation.inter_90_quant_ns}</td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.inter_10_quant_ws
+                                                    }
+                                                    -
+                                                    {
+                                                      meanQuantitySimulation.inter_90_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.inter_10_quant_ns
+                                                    }
+                                                    -
+                                                    {
+                                                      meanQuantitySimulation.inter_90_quant_ns
+                                                    }
+                                                  </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -3769,35 +4048,93 @@ export default function Home() {
                                   <tbody>
                                     <tr>
                                       <th className="emptycell">Mean</th>
-                                      <td>{StablizationFundData.mean_cash_stab}</td>
-                                      <td>{StablizationFundData.mean_asset_stab}</td>
-                                      <td>{StablizationFundData.mean_total_stab}</td>
-                                      <td>{StablizationFundData.mean_total_v_stab}</td>
+                                      <td>
+                                        {StablizationFundData.mean_cash_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.mean_asset_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.mean_total_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.mean_total_v_stab}
+                                      </td>
                                     </tr>
                                     <tr>
                                       <th className="emptycell">Median</th>
-                                      <td>{StablizationFundData.median_cash_stab}</td>
-                                      <td>{StablizationFundData.median_asset_stab}</td>
-                                      <td>{StablizationFundData.median_total_stab}</td>
-                                      <td>{StablizationFundData.median_total_v_stab}</td>
+                                      <td>
+                                        {StablizationFundData.median_cash_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.median_asset_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.median_total_stab}
+                                      </td>
+                                      <td>
+                                        {
+                                          StablizationFundData.median_total_v_stab
+                                        }
+                                      </td>
                                     </tr>
                                     <tr>
                                       <th className="emptycell">
                                         Standard deviation
                                       </th>
-                                      <td>{StablizationFundData.std_cash_stab}</td>
-                                      <td>{StablizationFundData.std_asset_stab}</td>
-                                      <td>{StablizationFundData.std_total_stab}</td>
-                                      <td>{StablizationFundData.std_total_v_stab}</td>
+                                      <td>
+                                        {StablizationFundData.std_cash_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.std_asset_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.std_total_stab}
+                                      </td>
+                                      <td>
+                                        {StablizationFundData.std_total_v_stab}
+                                      </td>
                                     </tr>
                                     <tr>
                                       <th className="emptycell">
                                         10% - 90% interval
                                       </th>
-                                      <td>{StablizationFundData.inter_10_cash_stab}-{StablizationFundData.inter_90_cash_stab}</td>
-                                      <td>{StablizationFundData.inter_10_asset_stab}-{StablizationFundData.inter_90_asset_stab}</td>
-                                      <td>{StablizationFundData.inter_10_total_stab}-{StablizationFundData.inter_90_total_stab}</td>
-                                      <td>{StablizationFundData.inter_10_total_v_stab}-{StablizationFundData.inter_90_total_v_stab}</td>
+                                      <td>
+                                        {
+                                          StablizationFundData.inter_10_cash_stab
+                                        }
+                                        -
+                                        {
+                                          StablizationFundData.inter_90_cash_stab
+                                        }
+                                      </td>
+                                      <td>
+                                        {
+                                          StablizationFundData.inter_10_asset_stab
+                                        }
+                                        -
+                                        {
+                                          StablizationFundData.inter_90_asset_stab
+                                        }
+                                      </td>
+                                      <td>
+                                        {
+                                          StablizationFundData.inter_10_total_stab
+                                        }
+                                        -
+                                        {
+                                          StablizationFundData.inter_90_total_stab
+                                        }
+                                      </td>
+                                      <td>
+                                        {
+                                          StablizationFundData.inter_10_total_v_stab
+                                        }
+                                        -
+                                        {
+                                          StablizationFundData.inter_90_total_v_stab
+                                        }
+                                      </td>
                                     </tr>
                                   </tbody>
                                 </table>

@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import Loader from "@/components/layout/Loader";
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -22,11 +22,10 @@ export default function Home() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [marginTop, setMarginTop] = useState("10px");
- 
-  const [totalErrors, setTotalErrors] = useState([])
-  const [disableSubmit, setDisableSubmit] = useState(false);
-  const[loading,setLoading]=useState(false)
 
+  const [totalErrors, setTotalErrors] = useState([]);
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleNewPasswordInput = (event: any) => {
     setNewPassword(event.target.value);
@@ -124,21 +123,20 @@ export default function Home() {
       let dummyemail = "demo@isdb.com";
 
       let body = {
-        "email": email,
-        "old_password": currentPassword,
-        "new_password": newPassword
-      }
-      setLoading(true)
+        email: email,
+        old_password: currentPassword,
+        new_password: newPassword,
+      };
+      setLoading(true);
       setDisableSubmit(true);
 
       const result = await API_Auth.updatePassword(body);
       console.log(result);
-      setLoading(false)
+      setLoading(false);
 
       if (result.status == 400) {
-        toast.error(result.error)
+        toast.error(result.error);
         setDisableSubmit(false);
-
       } else {
         toast.success(result.msg);
         setTimeout(() => {
@@ -157,8 +155,12 @@ export default function Home() {
         <div className="template edit-password">
           <div className="template-header">
             <div className="back-option" onClick={() => handleBack()}>
-              <Image src="imgs/left-arrow.svg" alt=""
-              width={27.443} height={25.767} />
+              <Image
+                src="imgs/left-arrow.svg"
+                alt=""
+                width={27.443}
+                height={25.767}
+              />
               <p>Back</p>
             </div>
             <div className="main-header">
@@ -166,7 +168,7 @@ export default function Home() {
             </div>
             <div></div>
           </div>
-          {loading==true && <Loader/>}
+          {loading == true && <Loader />}
           <div className="row">
             <div className="col-md-6 mb-3">
               <div className="form-content current-password">
@@ -202,7 +204,7 @@ export default function Home() {
             </div>
             <div className="col-md-6 mb-3"></div>
 
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 ">
               <div className="form-content password1">
                 <label htmlFor="password2">New Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>
@@ -244,7 +246,7 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 ">
               <div className="form-content confirm">
                 <label htmlFor="password3">Confirm New Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>
@@ -277,7 +279,7 @@ export default function Home() {
                 )}
               </div>
             </div>
-            <div className="change-button" style={{ marginTop }}>
+            <div className="change-button">
               <button
                 className="create-template"
                 onClick={handleUpdatePassword}

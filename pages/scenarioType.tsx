@@ -11,9 +11,8 @@ export default function Home() {
   const [scenariotype, setscenariotype] = useState("");
   const [scenariotypeErr, setscenariotypeErr] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
 
-  
   const handleInput = (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
@@ -35,11 +34,11 @@ export default function Home() {
       };
 
       setDisableSubmit(true);
-      setLoading(true)
+      setLoading(true);
 
       const result_exist = await API_Auth.getScenarioExists(scenariotype);
       console.log(result_exist.exists);
-      setLoading(false)
+      setLoading(false);
       if (result_exist.exists == true) {
         setDisableSubmit(false);
 
@@ -67,7 +66,7 @@ export default function Home() {
             <div className="row scenario">
               {loading == true && <Loader />}
 
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="scenario"> Scenario Type</label>
                   <input
@@ -85,7 +84,7 @@ export default function Home() {
               </div>
 
               <button
-                className="create-template"
+                className="create-template mx-3"
                 onClick={() => handleCreateScenario()}
                 disabled={disableSubmit}
               >
