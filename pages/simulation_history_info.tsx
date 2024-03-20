@@ -677,7 +677,7 @@ export default function Home() {
 
     /*  price*/
 
-    const withStabilizationData:any = {
+    const withStabilizationData: any = {
       Template: totalTempName,
       Mean: meanPriceSimulation.mean_price_ws,
       Median: meanPriceSimulation.median_price_ws,
@@ -687,7 +687,7 @@ export default function Home() {
         "-" +
         meanPriceSimulation.inter_90_price_ws,
     };
-    const withoutStabilizationData:any = {
+    const withoutStabilizationData: any = {
       Template: totalTempName,
       Mean: meanPriceSimulation.mean_price_ns,
       Median: meanPriceSimulation.median_price_ns,
@@ -714,7 +714,7 @@ export default function Home() {
 
     console.log("meanVolumeSimulation", meanVolumeSimulation);
 
-    const withStabilizationDataVOlume:any = {
+    const withStabilizationDataVOlume: any = {
       Template: totalTempName,
       Mean: meanVolumeSimulation.mean_amt_ws,
       Median: meanVolumeSimulation.median_amt_ws,
@@ -724,7 +724,7 @@ export default function Home() {
         "-" +
         meanVolumeSimulation.inter_90_amt_ws,
     };
-    const withoutStabilizationDataVolume:any = {
+    const withoutStabilizationDataVolume: any = {
       Template: totalTempName,
       Mean: meanVolumeSimulation.mean_amt_ns,
       Median: meanVolumeSimulation.median_amt_ns,
@@ -750,7 +750,7 @@ export default function Home() {
 
     /* Quantity */
 
-    const withStabilizationDataQty:any = {
+    const withStabilizationDataQty: any = {
       Template: totalTempName,
       Mean: meanQuantitySimulation.mean_quant_ws,
       Median: meanQuantitySimulation.median_quant_ws,
@@ -760,7 +760,7 @@ export default function Home() {
         "-" +
         meanQuantitySimulation.inter_90_quant_ws,
     };
-    const withoutStabilizationDataQty:any = {
+    const withoutStabilizationDataQty: any = {
       Template: totalTempName,
       Mean: meanQuantitySimulation.mean_quant_ns,
       Median: meanQuantitySimulation.median_quant_ns,
@@ -785,7 +785,7 @@ export default function Home() {
     /* stablizationfund */
     console.log("StablizationFundData", StablizationFundData);
 
-    const withCash:any = {
+    const withCash: any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_cash_stab,
       median: StablizationFundData.median_cash_stab,
@@ -796,7 +796,7 @@ export default function Home() {
         StablizationFundData.inter_90_cash_stab,
     };
 
-    const withArrayQuantity:any = {
+    const withArrayQuantity: any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_asset_stab,
       median: StablizationFundData.median_asset_stab,
@@ -807,7 +807,7 @@ export default function Home() {
         StablizationFundData.inter_90_asset_stab,
     };
 
-    const withTotalAssetV:any = {
+    const withTotalAssetV: any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_total_stab,
       median: StablizationFundData.median_total_stab,
@@ -818,7 +818,7 @@ export default function Home() {
         StablizationFundData.inter_90_total_stab,
     };
 
-    const withTotalAssetDollar:any = {
+    const withTotalAssetDollar: any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_total_v_stab,
       median: StablizationFundData.median_total_v_stab,
@@ -1427,7 +1427,7 @@ export default function Home() {
                         {loading == true && <Loader />}
 
                         <div className="rows">
-                          <div className=" sell">
+                          <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{executionData.nb_orders}</span>
@@ -1465,7 +1465,7 @@ export default function Home() {
                             </div>
                           </div>
 
-                          <div className=" buy">
+                          <div className="col buy">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{executionData.nb_orders}</span>
@@ -1827,7 +1827,7 @@ export default function Home() {
                         {loading == true && <Loader />}
 
                         <div className="rows">
-                          <div className=" sell">
+                          <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{executionData.nb_orders}</span>
@@ -1865,7 +1865,7 @@ export default function Home() {
                             </div>
                           </div>
 
-                          <div className=" buy">
+                          <div className="col buy">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{executionData.nb_orders}</span>

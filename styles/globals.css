@@ -95,7 +95,6 @@ label {
   border: 2px solid transparent !important;
 }
 
-
 .login-nav {
   display: flex;
   justify-content: space-between;
@@ -1709,7 +1708,7 @@ label {
 }
 
 .simulation-info .details-section .tab-section .rows th {
-  padding: 30px;
+  padding: 20px;
 }
 
 .simulation-info .details-section .tab-section .rows .sell th {
@@ -1754,6 +1753,7 @@ label {
   overflow-x: scroll;
   padding: 0 10px;
 }
+
 .ws .ws-table,
 .ns-table {
   width: 60%;
@@ -1769,10 +1769,7 @@ label {
 }
 
 .stabilization-table {
-  width: 75%;
   border-radius: 10px;
-  /* border: 1px solid #d3d3d3; */
-  margin-right: 8%;
 }
 
 .stabilization-table td,
@@ -1785,9 +1782,11 @@ label {
 .stabilization-tab .stabilization-table th {
   padding: 20px;
 }
-
-.ws .ws-table td,
 .ns .ns-table td,
+.ws .ws-table td {
+  padding: 10px 20px;
+}
+
 .stabilization-tab .stabilization-table td {
   padding: 15px 30px;
 }
@@ -1895,7 +1894,7 @@ label {
 }
 
 .simulation .tabs {
-  width: 80%;
+  /* width: 80%; */
 }
 
 .template.request-scenario {
@@ -3180,16 +3179,13 @@ footer {
   .simulation-info .tab-section li {
     padding: 6px;
   }
-  .stabilization-table {
-    width: 98%;
-    margin-right: 0;
-  }
+
   .ws .ws-table,
   .ns-table {
     width: 70%;
   }
-  .simulation .tabs {
-    /* width: 85%; */
+  .simulation-info .details-section .tab-section .rows {
+    width: 90%;
   }
 }
 @media screen and (max-width: 1200px) {
@@ -3229,6 +3225,37 @@ footer {
   .simulation-info .details-section .tab-section .row {
     width: 95%;
     margin-left: 2.5%;
+  }
+  .stabilization {
+    font-size: 14px;
+    padding: 10px;
+  }
+  .stabilization ul {
+    gap: 10px;
+    padding-left: 5px;
+  }
+  .stabilization-fund li {
+    padding: 0;
+  }
+  .ws-table .table th,
+  .ns-table .table th,
+  .simulation-table .table th,
+  .stabilization-table .table th {
+    font-size: 14px;
+  }
+  .ws-table .table td,
+  .ns-table .table td,
+  .simulation-table .table td,
+  .stabilization-table .table td {
+    font-size: 13px;
+  }
+  .simulation-info .tab-section .react-tabs__tab-list {
+    font-size: 15px;
+  }
+  .simulation .react-tabs__tab {
+    width: 155px;
+    height: 45px;
+    padding: 0 !important;
   }
 }
 @media screen and (max-width: 1140px) {
@@ -3299,6 +3326,9 @@ footer {
   }
   .simulation-info .template-modal .modal-details .modal-heads {
     display: flex;
+  }
+  .simulation-info .details-section .tab-section .rows {
+    width: 60%;
   }
 }
 @media screen and (max-width: 1080px) {
@@ -3376,7 +3406,7 @@ footer {
     width: 90%;
   }
   .simulation .tabs {
-    width: 95%;
+    /* width: 95%; */
   }
 }
 @media screen and (max-width: 980px) {
@@ -3667,6 +3697,9 @@ footer {
     margin-top: 30px !important;
     justify-content: center;
     justify-items: center;
+  }
+  .rightArea .tab-section {
+    width: fit-content;
   }
 }
 @media screen and (max-width: 580px) {
