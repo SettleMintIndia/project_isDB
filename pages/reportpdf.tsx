@@ -13,12 +13,16 @@ import moment from "moment";
 import AppLayout from "@/components/layout/AppLayout";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { PDFExport } from '@progress/kendo-react-pdf'
+import * as React from 'react';
 
 
 export default function Home() {
   const router = useRouter();
   const [totalTempName, setTotalTempName] = useState(router.query.temp_name);
   const [mounted, setMounted] = useState(false);
+  const pdfExportComponent = React.useRef<PDFExport>(null);
+  const[buttonshow,setButtonshow]=useState(true);
 
   const [viewData, setViewData] = useState({
     limit_order_upper_bound: '',
@@ -218,23 +222,35 @@ export default function Home() {
     }
   };
   const handleDownloadPdf = () => {
-    const input = document.getElementById('page');
+   /*  const input = document.getElementById('page');
 
     html2canvas(input)
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'px', 'a4');
+        const pdf = new jsPDF('p', 'px', 'a2');
         var width = pdf.internal.pageSize.getWidth();
         var height = pdf.internal.pageSize.getHeight() - 50;
 
         pdf.addImage(imgData, 'JPEG', 0, 20, width, height);
         pdf.save(totalTempName + ".pdf");
-      });
+      }); */
+
+      if (pdfExportComponent.current) {
+        pdfExportComponent.current.save();
+      }
+
 
   }
   if (mounted)
     return (
       <AppLayout>
+          <PDFExport
+              paperSize="A2"
+              margin="1cm"
+              landscape
+              fileName={totalTempName + ".pdf"}
+              ref={pdfExportComponent}
+            >
         <div className="container-fluid pdf report mt-2" id="page">
 
 
@@ -251,10 +267,10 @@ export default function Home() {
             <div className="right-head">
               <div className="action-points">
                 <div className="file-type">
-                  <Button onClick={() => handleDownloadPdf()} data-html2canvas-ignore="true">
+                 {buttonshow==true &&<Button onClick={() => handleDownloadPdf()} data-html2canvas-ignore="true">
                     <img src="imgs/download-white.svg" alt="" />
                     PDF
-                  </Button>
+                  </Button>}
                 </div></div>
 
               <div className="pdf-title">Report</div>
@@ -571,6 +587,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </PDFExport>
       </AppLayout>
     );
 }

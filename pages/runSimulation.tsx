@@ -280,13 +280,15 @@ export default function Home() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
+      const x = (value == "all" || value == "") ? "" : value
+      console.log(x)
       setSType(value);
       setCurrentPage(0);
 
       if (tabIndex == 0) {
-        getUserTemplates(tempname, value, fromDate, toDate, perPage, 1);
+        getUserTemplates(tempname, x, fromDate, toDate, perPage, 1);
       } else {
-        getglobalTemplates(tempname, value, fromDate, toDate, perPage, 1);
+        getglobalTemplates(tempname, x, fromDate, toDate, perPage, 1);
       }
     }
     if (name == "tempname") {
@@ -475,7 +477,7 @@ export default function Home() {
                                           Select Scenario Type
                                         </option>
                                         <option
-                                          onSelect={() => handleAllData()}
+                                          value="all"
                                         >
                                           All
                                         </option>
@@ -784,7 +786,7 @@ export default function Home() {
                                           Select Scenario Type
                                         </option>
                                         <option
-                                          onSelect={() => handleAllData()}
+                                          value="all"
                                         >
                                           All
                                         </option>

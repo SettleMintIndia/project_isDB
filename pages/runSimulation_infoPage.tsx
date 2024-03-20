@@ -781,7 +781,21 @@ export default function Home() {
         setFinalErr("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
         setFinalErr("lower lmt order price variance should be greater than 1");
-      } else {
+      }
+      else if ((Number(alpha0) > 1)) {
+        toast.error("alpha0 value should be less than 1");
+      }
+      else if (Number(alpha0) > Number(alpha1)) {
+        toast.error("alpha1 value should be greater than alpha0");
+      }
+      else if ((Number(theta0) > 1)) {
+        toast.error("theta0 value should be less than 1");
+      }
+      else if (Number(theta0) > Number(theta1)) {
+        toast.error("theta1 value should be greater than theta0");
+
+      }
+      else {
         const template_exist = await API_Auth.getTemplateExists(
           newtemplateName
         );
@@ -874,15 +888,17 @@ export default function Home() {
         }
       } catch (error) {
         console.error("An error occurred:", error);
-        toast.error(error);
+        //toast.error(error);
       }
+
+
     }
   };
 
   const handleSearch = () => {
     let error = 0;
 
-    if (siteration == "") {
+    if (siteration.toString() == "") {
       error = error + 1;
       setSIterationErr("Please Enter Iteration");
     } else if (Number(siteration) > Number(iterations)) {
@@ -891,7 +907,7 @@ export default function Home() {
     } else {
       setSIterationErr("");
     }
-    if (sround == "") {
+    if (sround.toString() == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
     } else if (Number(sround) > Number(rounds)) {
@@ -939,7 +955,7 @@ export default function Home() {
     setSIteration(1);
   };
   const handleLastIteration = () => {
-    setSIteration(iterations);
+    setSIteration(Number(iterations));
   };
   const handleIncrementIteration = () => {
     if (Number(siteration) > Number(iterations)) {
@@ -1050,7 +1066,7 @@ export default function Home() {
     const MeanPriceSimulation =
       meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim;
 
-    const withStabilizationData = {
+    const withStabilizationData:any = {
       Template: totalTempName,
       Mean: MeanPriceSimulation.mean_price_ws,
       Median: MeanPriceSimulation.median_price_ws,
@@ -1060,7 +1076,7 @@ export default function Home() {
         "-" +
         MeanPriceSimulation.inter_90_price_ws,
     };
-    const withoutStabilizationData = {
+    const withoutStabilizationData:any = {
       Template: totalTempName,
       Mean: MeanPriceSimulation.mean_price_ns,
       Median: MeanPriceSimulation.median_price_ns,
@@ -1093,7 +1109,7 @@ export default function Home() {
     const MeanVolumeSimulation =
       meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim;
 
-    const withStabilizationDataVOlume = {
+    const withStabilizationDataVOlume:any = {
       Template: totalTempName,
       Mean: MeanVolumeSimulation.mean_amt_ws,
       Median: MeanVolumeSimulation.median_amt_ws,
@@ -1103,7 +1119,7 @@ export default function Home() {
         "-" +
         MeanVolumeSimulation.inter_90_amt_ws,
     };
-    const withoutStabilizationDataVolume = {
+    const withoutStabilizationDataVolume:any = {
       Template: totalTempName,
       Mean: MeanVolumeSimulation.mean_amt_ns,
       Median: MeanVolumeSimulation.median_amt_ns,
@@ -1133,7 +1149,7 @@ export default function Home() {
     const meanqtysimulation =
       meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim;
 
-    const withStabilizationDataQty = {
+    const withStabilizationDataQty:any = {
       Template: totalTempName,
       Mean: meanqtysimulation.mean_quant_ws,
       Median: meanqtysimulation.median_quant_ws,
@@ -1143,7 +1159,7 @@ export default function Home() {
         "-" +
         meanqtysimulation.inter_90_quant_ws,
     };
-    const withoutStabilizationDataQty = {
+    const withoutStabilizationDataQty:any = {
       Template: totalTempName,
       Mean: meanqtysimulation.mean_quant_nsn,
       Median: meanqtysimulation.median_quant_ns,
@@ -1173,7 +1189,7 @@ export default function Home() {
     const totalfundata =
       stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
 
-    const withCash = {
+    const withCash:any = {
       temp_name: totalTempName,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -1181,7 +1197,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withArrayQuantity = {
+    const withArrayQuantity:any = {
       temp_name: totalTempName,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -1189,7 +1205,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withTotalAssetV = {
+    const withTotalAssetV:any = {
       temp_name: totalTempName,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -1197,7 +1213,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withTotalAssetDollar = {
+    const withTotalAssetDollar:any = {
       temp_name: totalTempName,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,

@@ -49,6 +49,7 @@ export default function Home() {
         if (result.error == undefined) {
           console.log("Hello");
           toast.success("Scenario successfully created");
+          localStorage.setItem("scenariotype",scenariotype)
 
           setTimeout(() => {
             router.push("/createtemplate");

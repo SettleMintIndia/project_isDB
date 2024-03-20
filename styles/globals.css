@@ -88,6 +88,14 @@ label {
   border: 2px solid transparent !important;
 }
 
+.dp .active {
+  opacity: 1 !important;
+  background: linear-gradient(#15172a, #15172a) padding-box,
+    linear-gradient(90deg, #81b920 0%, #007354 100%) border-box;
+  border: 2px solid transparent !important;
+}
+
+
 .login-nav {
   display: flex;
   justify-content: space-between;

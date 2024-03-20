@@ -15,13 +15,12 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [totalNotifications, setTotalNotifications] = useState([]);
   const [tooltipVisible1, setTooltipVisible1] = useState(false);
 
-  // const [key, setKey] = useState("superadmin"); //superadmin
-  const [key, setKey] = useState("admin"); //admin
+  const [key, setKey] = useState("superadmin"); //superadmin
+  // const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setusername] = useState("");
 
-  const { loginuseremail, setloginuseremail } = useContext(UserContext);
 
   useEffect(() => {
 
@@ -38,7 +37,7 @@ const AppLayout = ({ children }: LayoutProps) => {
     } else {
       setKey("admin");
     }
-    const name = localStorage.getItem("displayname");
+    const name: any = localStorage.getItem("displayname");
     console.log("username", name);
     setusername(name);
 
@@ -95,32 +94,100 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <img src="/imgs/isdb-logo-layout.png" alt="" />
                 </Link>
               </div>
-              <div
-                className="nav-user  us-1"
-                onMouseEnter={() => setTooltipVisible1(true)}
-                onMouseLeave={() => setTooltipVisible1(false)}
-              >
-                <div className="use">
-                  <img src="/imgs/add.png" alt="" width={30} height={30} />
-                </div>
-              </div>
-              {key == "superadmin" && (
-                <ul className="menu-dropdown dp">
+              {(router.route === "/createtemplate" ||
+                router.route === "/createadmin" || router.route === "/runSimulation") && <div
+                  className="nav-user  us-1"
+                  onMouseEnter={() => setTooltipVisible1(true)}
+                  onMouseLeave={() => setTooltipVisible1(false)}
+                >
+                  <div className="use">
+                    <img src="/imgs/add.png" alt="" width={30} height={30} />
+                  </div>
+                </div>}
+
+              {/*  <ul className="menu-dropdown dp">
+                <li
+                  className={
+                    router.pathname === "/createtemplate" ||
+                      router.pathname === "/createadmin" ||
+                      router.pathname === "/runSimulation"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <a href="createtemplate" className="icn">
+                    <img src="imgs/template.svg" alt="" />
+                    Create Template
+                  </a>
+                </li>
+
+                {router.route === "/runSimulation" ? (
                   <li
                     className={
-                      router.pathname === "/createtemplate" ||
-                        router.pathname === "/createadmin" ||
-                        router.pathname === "/runSimulation"
-                        ? "active"
-                        : ""
+                      router.pathname === "/runSimulation" ? "active" : ""
                     }
                   >
-                    <a href="createtemplate" className="icn">
-                      <img src="imgs/template.svg" alt="" />
-                      Create Template
+                    <a href="runSimulation" className="icn">
+                      <img src="imgs/run.svg" alt="" />
+                      Run Simulation
                     </a>
                   </li>
-                  {router.route === "/runSimulation" ? (
+                ) : (
+                  <li className="active">
+                    <a href="createadmin" className="icn">
+                      <img src="imgs/admin.svg" alt="" />
+                      Create Admin
+                    </a>
+                  </li>
+                )}
+              </ul> */}
+
+              {(router.route === "/createtemplate" ||
+                router.route === "/createadmin") &&
+                key == "superadmin" ? (
+                <>
+                  <ul className="menu-dropdown dp">
+                    <li
+                      className={
+                        router.pathname === "/createtemplate" ? "active" : ""
+                      }
+                    >
+                      <a href="createtemplate">
+                        <img src="imgs/template.svg" alt="" />
+                        Create Template
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        router.pathname === "/createadmin" ? "active" : ""
+                      }
+                    >
+                      <a href="createadmin">
+                        <img src="imgs/admin.svg" alt="" />
+                        Create Admin
+                      </a>
+                    </li>
+                  </ul>
+                </>
+              ) : (
+                <></>
+              )}
+
+              {(router.route === "/createtemplate" ||
+                router.route === "/runSimulation") &&
+                key == "admin" ? (
+                <>
+                  <ul className="menu-dropdown dp">
+                    <li
+                      className={
+                        router.pathname === "/createtemplate" ? "active" : ""
+                      }
+                    >
+                      <a href="createtemplate">
+                        <img src="imgs/template.svg" alt="" />
+                        Create Template
+                      </a>
+                    </li>
                     <li
                       className={
                         router.pathname === "/runSimulation" ? "active" : ""
@@ -131,16 +198,16 @@ const AppLayout = ({ children }: LayoutProps) => {
                         Run Simulation
                       </a>
                     </li>
-                  ) : (
-                    <li className="active">
-                      <a href="createadmin" className="icn">
-                        <img src="imgs/admin.svg" alt="" />
-                        Create Admin
-                      </a>
-                    </li>
-                  )}
-                </ul>
+                  </ul>
+                </>
+              ) : (
+                <></>
               )}
+
+
+
+
+              {/* web */}
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
               key == "superadmin" ? (
@@ -321,11 +388,12 @@ const AppLayout = ({ children }: LayoutProps) => {
           )}
         </>
         // </div>
-      )}
+      )
+      }
 
       {/* render page */}
       <main className="render-page">{children}</main>
-    </div>
+    </div >
   );
 };
 

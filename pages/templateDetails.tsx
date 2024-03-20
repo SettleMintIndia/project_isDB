@@ -154,11 +154,14 @@ export default function templateDetails() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
+
+      const x = (value == "all" || value == "") ? "" : value
+      console.log(x)
       setSType(value);
       setCurrentPage(0);
       handlegetAllTemplateDetails(
         tempname,
-        value,
+        x,
         fromDate,
         toDate,
         perPage,
@@ -373,7 +376,7 @@ export default function templateDetails() {
                                       <option value="">
                                         Select Scenario Type
                                       </option>
-                                      <option onSelect={() => handleAllData()}>
+                                      <option value="all">
                                         All
                                       </option>
                                       {finalScenarios.map((item) => {

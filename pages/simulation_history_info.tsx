@@ -515,7 +515,7 @@ export default function Home() {
   const handleSearch = () => {
     let error = 0;
 
-    if (siteration == "") {
+    if (siteration.toString() == "") {
       error = error + 1;
       setSIterationErr("Please Enter Iteration");
     } else if (Number(siteration) > Number(executionData.iterations)) {
@@ -526,7 +526,7 @@ export default function Home() {
     } else {
       setSIterationErr("");
     }
-    if (sround == "") {
+    if (sround.toString() == "") {
       error = error + 1;
       setSRoundErr("Please Enter Round");
     } else if (Number(sround) > Number(executionData.nb_rounds)) {
@@ -677,7 +677,7 @@ export default function Home() {
 
     /*  price*/
 
-    const withStabilizationData = {
+    const withStabilizationData:any = {
       Template: totalTempName,
       Mean: meanPriceSimulation.mean_price_ws,
       Median: meanPriceSimulation.median_price_ws,
@@ -687,7 +687,7 @@ export default function Home() {
         "-" +
         meanPriceSimulation.inter_90_price_ws,
     };
-    const withoutStabilizationData = {
+    const withoutStabilizationData:any = {
       Template: totalTempName,
       Mean: meanPriceSimulation.mean_price_ns,
       Median: meanPriceSimulation.median_price_ns,
@@ -714,7 +714,7 @@ export default function Home() {
 
     console.log("meanVolumeSimulation", meanVolumeSimulation);
 
-    const withStabilizationDataVOlume = {
+    const withStabilizationDataVOlume:any = {
       Template: totalTempName,
       Mean: meanVolumeSimulation.mean_amt_ws,
       Median: meanVolumeSimulation.median_amt_ws,
@@ -724,7 +724,7 @@ export default function Home() {
         "-" +
         meanVolumeSimulation.inter_90_amt_ws,
     };
-    const withoutStabilizationDataVolume = {
+    const withoutStabilizationDataVolume:any = {
       Template: totalTempName,
       Mean: meanVolumeSimulation.mean_amt_ns,
       Median: meanVolumeSimulation.median_amt_ns,
@@ -750,7 +750,7 @@ export default function Home() {
 
     /* Quantity */
 
-    const withStabilizationDataQty = {
+    const withStabilizationDataQty:any = {
       Template: totalTempName,
       Mean: meanQuantitySimulation.mean_quant_ws,
       Median: meanQuantitySimulation.median_quant_ws,
@@ -760,9 +760,9 @@ export default function Home() {
         "-" +
         meanQuantitySimulation.inter_90_quant_ws,
     };
-    const withoutStabilizationDataQty = {
+    const withoutStabilizationDataQty:any = {
       Template: totalTempName,
-      Mean: meanQuantitySimulation.mean_quant_nsn,
+      Mean: meanQuantitySimulation.mean_quant_ns,
       Median: meanQuantitySimulation.median_quant_ns,
       "Standard deviation": meanQuantitySimulation.std_quant_ns,
       "10%-90% interval":
@@ -785,7 +785,7 @@ export default function Home() {
     /* stablizationfund */
     console.log("StablizationFundData", StablizationFundData);
 
-    const withCash = {
+    const withCash:any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_cash_stab,
       median: StablizationFundData.median_cash_stab,
@@ -796,7 +796,7 @@ export default function Home() {
         StablizationFundData.inter_90_cash_stab,
     };
 
-    const withArrayQuantity = {
+    const withArrayQuantity:any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_asset_stab,
       median: StablizationFundData.median_asset_stab,
@@ -807,7 +807,7 @@ export default function Home() {
         StablizationFundData.inter_90_asset_stab,
     };
 
-    const withTotalAssetV = {
+    const withTotalAssetV:any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_total_stab,
       median: StablizationFundData.median_total_stab,
@@ -818,7 +818,7 @@ export default function Home() {
         StablizationFundData.inter_90_total_stab,
     };
 
-    const withTotalAssetDollar = {
+    const withTotalAssetDollar:any = {
       temp_name: totalTempName,
       mean: StablizationFundData.mean_total_v_stab,
       median: StablizationFundData.median_total_v_stab,
