@@ -37,10 +37,10 @@ export default function CandleStickSimulation(props: any) {
             },
 
             events: {
-                dataPointSelection: (event, chartContext, config) => {
+                dataPointSelection: (event:any, chartContext:any, config:any) => {
                     //  console.log(config.w.config.series[0].data[config.dataPointIndex].rounds);
                     console.log(roundData, config.w.config.series[0].data[config.dataPointIndex]);
-                    const filteredArray = roundData.filter(item => item.iteration === config.w.config.series[0].data[config.dataPointIndex].x);
+                    const filteredArray = roundData.filter((item:any) => item.iteration === config.w.config.series[0].data[config.dataPointIndex].x);
                     console.log("filteredArray", filteredArray)
 
                     let round_result = [];
@@ -93,7 +93,7 @@ export default function CandleStickSimulation(props: any) {
             },
             //tickAmount: 20,
             labels: {
-                formatter: function (value) {
+                formatter: function (value:any) {
                     // Round to 2 decimals
                     return value.toFixed(2);
                 },

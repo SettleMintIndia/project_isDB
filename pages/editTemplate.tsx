@@ -328,12 +328,12 @@ export default function Home() {
     } else {
       settheta1Err("");
     }
-    if (comment === "") {
+   /*  if (comment === "") {
       setcommentErr("Please Enter Comment");
       error = error + 1;
     } else {
       setcommentErr("");
-    }
+    } */
     if (distribution == 'normal') {
 
       if (devpricebuy === "") {

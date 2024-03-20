@@ -2646,6 +2646,33 @@ label {
 }
 
 /* kavya */
+
+/* date */
+
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container {
+  margin: 0 8px;
+}
+
+.custom-datepicker {
+  /* Add your custom styles for the DatePicker component */
+  width: 85px;
+}
+
+.calendar-icon,
+.close-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  /* Add your custom styles for the icons */
+}
+
+/* date */
 .template .searchScenario {
   display: flex;
   align-items: center;

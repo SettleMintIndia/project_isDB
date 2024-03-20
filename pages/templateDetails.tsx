@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,SetStateAction } from "react";
 
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -16,11 +16,12 @@ import ReactPaginate from "react-paginate";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import Loader from "@/components/layout/Loader";
-
 import AppLayout from "@/components/layout/AppLayout";
 import * as React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
 import TemplatePDF from "./templatepdf";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function templateDetails() {
   const router = useRouter();
@@ -43,8 +44,8 @@ export default function templateDetails() {
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
 
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
   const [s_type, setSType] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [totalCount, setTotalCount] = useState(0);
@@ -107,8 +108,8 @@ export default function templateDetails() {
       admin_id: userresult.id,
       scenario: s_type,
       datefrom:
-        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+      (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto:  (toDate == null || toDate == "")  ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
       showPrivate: true,
@@ -201,7 +202,7 @@ export default function templateDetails() {
       setPageNo(1);
       setCurrentPage(0);
 
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, value, 1);
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, Number(value), 1);
     }
   };
 
@@ -311,8 +312,8 @@ export default function templateDetails() {
   const handleAllData = () => {
     setSType("");
     setTempName("");
-    setFromDate("");
-    setToDate("");
+    setFromDate(null);
+    setToDate(null);
     setCurrentPage(0);
     handlegetAllTemplateDetails("", "", "", "", perPage, 1);
   };
@@ -324,6 +325,27 @@ export default function templateDetails() {
     handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
     setCurrentPage(pageCount - 1);
   };
+  const handleDates = (date: any, key: any) => {
+    console.log(date, key)
+    if (key == "startdate") {
+      setFromDate(date)
+      handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(date)
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, 1);
+    }
+  }
+  const handleClear = (key: any) => {
+    if (key == "startdate") {
+      setFromDate(null)
+      handlegetAllTemplateDetails(tempname, s_type, "", toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(null)
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, "", perPage, 1);
+    }
+  }
 
   if (mounted)
     return (
@@ -410,13 +432,47 @@ export default function templateDetails() {
                             <img src="imgs/search-icon.svg" alt="" />
                           </div>
                         </div>
-                        {/*   <div className="calendar">
-                      <img src="imgs/calendar.svg" alt="" />
-                      <select name="" id="calendar">
-                        <option value="">From-to</option>
-                      </select>
-                    </div> */}
                         <div className="dateFilter">
+
+                          <div className="date-picker-container">
+                            <span className="icon-container">
+                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                            </span>
+                            <DatePicker
+                              selected={fromDate}
+                              onChange={(date: any) => handleDates(date, "startdate")}
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText="Start Date"
+                              className="custom-datepicker"
+                            />
+                            {fromDate && (
+                              <span className="icon-container" onClick={() => handleClear("startdate")}>
+                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              </span>
+                            )}
+                          </div>
+
+
+                          <div className="date-picker-container">
+                            <span className="icon-container">
+                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                            </span>
+                            <DatePicker
+                              selected={toDate}
+                              onChange={(date: any) => handleDates(date, "enddate")}
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText="End Date"
+                              className="custom-datepicker"
+                            />
+                            {toDate && (
+                              <span className="icon-container" onClick={() => handleClear("enddate")}>
+                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/*    <div className="dateFilter">
                           <input
                             type="date"
                             name="fromDate"
@@ -432,7 +488,7 @@ export default function templateDetails() {
                             onChange={handleInput}
                             placeholder="End Date"
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 
@@ -764,11 +820,12 @@ export default function templateDetails() {
                       name="perPage"
                       onChange={handleInput}
                     >
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
                       <option value="5">5</option>
+                      <option value="10">10</option>
+
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
                     </select>
                   </div>
                   <span>of {totalCount}</span>

@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -12,6 +11,8 @@ import ReactPaginate from "react-paginate";
 import Loader from "@/components/layout/Loader";
 import AppLayout from "@/components/layout/AppLayout";
 import Image from "next/image";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Home() {
   const router = useRouter();
@@ -21,8 +22,7 @@ export default function Home() {
   ]);
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
-  //const [count, setCount] = useState(10);
-  const [perPage, setPerPage] = useState(15);
+  const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -32,9 +32,8 @@ export default function Home() {
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [loading, setLoading] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
   const [keyname, setKeyName] = useState("name");
 
   const handleDeleteClick = (data: any) => {
@@ -59,8 +58,8 @@ export default function Home() {
       name: keyname == "name" ? searchKey : "",
       email: keyname == "email" ? searchKey : "",
       datefrom:
-        fromDate == "" ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: toDate == "" ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
     };
@@ -69,10 +68,8 @@ export default function Home() {
     const result = await API_Auth.getAdmins(body);
     console.log(result);
     setLoading(false);
-
     setAdminData(result.admins);
     setTotalCount(result.count);
-
     setPageCount(Math.ceil(result.count / perPage));
   };
 
@@ -155,6 +152,28 @@ export default function Home() {
     setCurrentPage(pageCount - 1);
   };
 
+  const handleDates = (date: any, key: any) => {
+    console.log(date, key)
+    if (key == "startdate") {
+      setFromDate(date)
+      handlegetAllAdmins(searchKey, date, toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(date)
+      handlegetAllAdmins(searchKey, fromDate, date, perPage, 1);
+    }
+  }
+  const handleClear = (key: any) => {
+    if (key == "startdate") {
+      setFromDate(null)
+      handlegetAllAdmins(searchKey, "", toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(null)
+      handlegetAllAdmins(searchKey, fromDate, "", perPage, 1);
+    }
+  }
+
   return (
     <AppLayout>
       <div className="container-fluid">
@@ -197,7 +216,6 @@ export default function Home() {
                     keyname == "name" ? "Search by Name" : "Search by Email"
                   }
                   onChange={handleSearchChange}
-                  // value={tempname}
                   name="tempname"
                 />
                 <div className="search-icon">
@@ -209,39 +227,48 @@ export default function Home() {
                   />
                 </div>
               </div>
-              {/*   <div className="calendar">
-              <Image src="imgs/calendar.svg" alt="" />
-              <select name="" id="calendar">
-                <option value="">From-to</option>
-              </select>
-            </div>  */}
-              <div className="dateFilter">
-                <input
-                  type="date"
-                  name="fromDate"
-                  value={fromDate}
-                  onChange={handleInput}
-                  placeholder="Start Date"
-                />
 
-                <input
-                  type="date"
-                  name="toDate"
-                  value={toDate}
-                  onChange={handleInput}
-                  placeholder="End Date"
-                />
+
+              <div className="dateFilter">
+
+                <div className="date-picker-container">
+                  <span className="icon-container">
+                    <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                  </span>
+                  <DatePicker
+                    selected={fromDate}
+                    onChange={(date: any) => handleDates(date, "startdate")}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Start Date"
+                    className="custom-datepicker"
+                  />
+                  {fromDate && (
+                    <span className="icon-container" onClick={() => handleClear("startdate")}>
+                      <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                    </span>
+                  )}
+                </div>
+
+
+                <div className="date-picker-container">
+                  <span className="icon-container">
+                    <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                  </span>
+                  <DatePicker
+                    selected={toDate}
+                    onChange={(date: any) => handleDates(date, "enddate")}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="End Date"
+                    className="custom-datepicker"
+                  />
+                  {toDate && (
+                    <span className="icon-container" onClick={() => handleClear("enddate")}>
+                      <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/*     <DatePicker
-              selectsRange={true}
-              startDate={startDate}
-              endDate={endDate}
-              onChange={(update: any) => {
-                setDateRange(update);
-              }}
-              isClearable={true}
-            /> */}
             </div>
           </div>
           {loading == true && <Loader />}
@@ -336,73 +363,23 @@ export default function Home() {
               </table>
             </div>
           </div>
-          {/*   <div className="pagging-area">
-          <div className="toolbar">
-            <label htmlFor="">Results per page :</label>
-            <div className="tooldrop">
-              <select name="" id="">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-            <span>of 40</span>
-          </div>
-          <div className="paging-list">
-            <div className="leftaction disable-pointer">
-              <Image src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
-              <Image src="imgs/left-paging.svg" alt="" />
-            </div>
-            <ul className="paging-count">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-            </ul>
-            <div className="rightaction-single">
-              <Image src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
-              <Image src="imgs/right-doublearrow.svg" alt="" />
-            </div>
-          </div>
-        </div> */}
           {adminData.length != 0 && (
             <div className="pagging-area" style={{ marginTop: "20px" }}>
               <div className="toolbar">
                 <label htmlFor="">Results per page :</label>
                 <div className="tooldrop">
                   <select value={perPage} name="perPage" onChange={handleInput}>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+
                     <option value="15">15</option>
                     <option value="20">20</option>
-                    <option value="25">25</option>
                     <option value="30">30</option>
-                    {/* <option value="5">5</option> */}
                   </select>
                 </div>
                 <span>of {totalCount}</span>
               </div>
               <div className="paging-list">
-                {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
-            <span>{totalCount}</span>}
-            {totalCount > offset + perPage &&
-              <span>{offset + pageNo}</span>} of {totalCount} items</p> */}
-                {/* <ReactPaginate
-              previousLabel={"<"}
-              nextLabel={">"}
-              breakLabel={"..."}
-              breakClassName={"break-me"}
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              forcePage={currentPage}
-            /> */}
-
                 {currentPage == 0 && (
                   <div className="leftaction disable-pointer">
                     <Image
@@ -421,9 +398,7 @@ export default function Home() {
                     <Image src="imgs/left-doublearrow.svg" alt="" />
                   </div>
                 )}
-                {/*  <div className="leftaction-single">
-              <Image src="imgs/left-paging.svg" alt="" />
-            </div> */}
+
                 <ReactPaginate
                   previousLabel={
                     currentPage == 0 ? (
@@ -471,15 +446,7 @@ export default function Home() {
                   disabledClassName="disabled"
                   disableInitialCallback
                 />
-                {/*  <ul className="paging-count">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-            </ul> 
-            <div className="rightaction-single">
-              <Image src="imgs/right-paging.svg" alt="" />
-            </div>*/}
+
                 {currentPage != pageCount - 1 && (
                   <div
                     className="rightaction"

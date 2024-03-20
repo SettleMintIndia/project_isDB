@@ -18,13 +18,15 @@ import AppLayout from "@/components/layout/AppLayout";
 import * as XLSX from "xlsx";
 import * as React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
-  const [selectedRecords, setSelectedRecords] = useState([]);
-  const [dataRecords, setDataRecords] = useState([]);
+  const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
+  const [dataRecords, setDataRecords] = useState<any[]>([]);
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
 
   const [templateData, setTemplateData] = useState([
@@ -36,8 +38,8 @@ export default function Home() {
       is_public: 0,
     },
   ]);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
   const [s_type, setSType] = useState("");
 
   const [tempname, setTempName] = useState("");
@@ -200,8 +202,10 @@ export default function Home() {
       temp_name: tempname,
       creator: creatorName,
       scenario: s_type,
-      datefrom: fromDate,
-      dateto: toDate,
+      datefrom:
+        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+
       resultPerPage: perPage,
       pgNo: pageNo,
       execution_id: "",
@@ -297,7 +301,7 @@ export default function Home() {
       setPageNo(1);
       setCurrentPage(0);
 
-      getSimulations(tempname, creatorName, s_type, fromDate, toDate, value, 1);
+      getSimulations(tempname, creatorName, s_type, fromDate, toDate, Number(value), 1);
     }
   };
 
@@ -305,8 +309,8 @@ export default function Home() {
     setTempName("");
     setCreatorName("");
     setSType("");
-    setFromDate("");
-    setToDate("");
+    setFromDate(null);
+    setToDate(null);
     setCurrentPage(0);
 
     getSimulations("", "", "", "", "", perPage, 1);
@@ -334,7 +338,7 @@ export default function Home() {
     );
   };
 
-  const handleCheckboxChange = async (id: any) => {
+  const handleCheckboxChange = async (id: never) => {
     console.log(id);
     // Check if the record is already in the array
     const index = selectedRecords.indexOf(id);
@@ -471,7 +475,7 @@ export default function Home() {
     const MeanPriceSimulation =
       meanPrice.sim == undefined ? meanPriceSimulation : meanPrice.sim;
 
-    const withStabilizationData = {
+    const withStabilizationData: any = {
       Template: data.temp_name,
       Mean: MeanPriceSimulation.mean_price_ws,
       Median: MeanPriceSimulation.median_price_ws,
@@ -481,7 +485,7 @@ export default function Home() {
         "-" +
         MeanPriceSimulation.inter_90_price_ws,
     };
-    const withoutStabilizationData = {
+    const withoutStabilizationData: any = {
       Template: data.temp_name,
       Mean: MeanPriceSimulation.mean_price_ns,
       Median: MeanPriceSimulation.median_price_ns,
@@ -514,7 +518,7 @@ export default function Home() {
     const MeanVolumeSimulation =
       meanVolume.sim == undefined ? meanVolumeSimulation : meanVolume.sim;
 
-    const withStabilizationDataVOlume = {
+    const withStabilizationDataVOlume: any = {
       Template: data.temp_name,
       Mean: MeanVolumeSimulation.mean_amt_ws,
       Median: MeanVolumeSimulation.median_amt_ws,
@@ -524,7 +528,7 @@ export default function Home() {
         "-" +
         MeanVolumeSimulation.inter_90_amt_ws,
     };
-    const withoutStabilizationDataVolume = {
+    const withoutStabilizationDataVolume: any = {
       Template: data.temp_name,
       Mean: MeanVolumeSimulation.mean_amt_ns,
       Median: MeanVolumeSimulation.median_amt_ns,
@@ -554,7 +558,7 @@ export default function Home() {
     const meanqtysimulation =
       meanqty.sim == undefined ? meanQuantitySimulation : meanqty.sim;
 
-    const withStabilizationDataQty = {
+    const withStabilizationDataQty: any = {
       Template: data.temp_name,
       Mean: meanqtysimulation.mean_quant_ws,
       Median: meanqtysimulation.median_quant_ws,
@@ -564,7 +568,7 @@ export default function Home() {
         "-" +
         meanqtysimulation.inter_90_quant_ws,
     };
-    const withoutStabilizationDataQty = {
+    const withoutStabilizationDataQty: any = {
       Template: data.temp_name,
       Mean: meanqtysimulation.mean_quant_nsn,
       Median: meanqtysimulation.median_quant_ns,
@@ -594,7 +598,7 @@ export default function Home() {
     const totalfundata =
       stabresult.stab == undefined ? StablizationFundData : stabresult.stab;
 
-    const withCash = {
+    const withCash: any = {
       temp_name: data.temp_name,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -602,7 +606,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withArrayQuantity = {
+    const withArrayQuantity: any = {
       temp_name: data.temp_name,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -610,7 +614,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withTotalAssetV = {
+    const withTotalAssetV: any = {
       temp_name: data.temp_name,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -618,7 +622,7 @@ export default function Home() {
       "10%-90% Interval":
         totalfundata.inter_10_cash_stab + "-" + totalfundata.inter_90_cash_stab,
     };
-    const withTotalAssetDollar = {
+    const withTotalAssetDollar: any = {
       temp_name: data.temp_name,
       mean: totalfundata.mean_cash_stab,
       median: totalfundata.median_cash_stab,
@@ -686,6 +690,28 @@ export default function Home() {
     } */
   };
   //console.log("viewData---------->",viewData)
+
+  const handleDates = (date: any, key: any) => {
+    console.log(date, key)
+    if (key == "startdate") {
+      setFromDate(date)
+      getSimulations(tempname, creatorName, s_type, date, toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(date)
+      getSimulations(tempname, creatorName, s_type, fromDate, date, perPage, 1);
+    }
+  }
+  const handleDelete = (key: any) => {
+    if (key == "startdate") {
+      setFromDate(null)
+      getSimulations(tempname, creatorName, s_type, "", toDate, perPage, 1);
+    } else {
+      console.log("enddate")
+      setToDate(null)
+      getSimulations(tempname, creatorName, s_type, fromDate, "", perPage, 1);
+    }
+  }
   if (mounted)
     return (
       <AppLayout>
@@ -792,7 +818,7 @@ export default function Home() {
                     <option value="">From-to</option>
                   </select>
                 </div> */}
-                    <div className="dateFilter">
+                    {/*  <div className="dateFilter">
                       <input
                         type="date"
                         name="fromDate"
@@ -808,6 +834,45 @@ export default function Home() {
                         onChange={handleInput}
                         placeholder="End Date"
                       />
+                    </div> */}
+                    <div className="dateFilter">
+
+                      <div className="date-picker-container">
+                        <span className="icon-container">
+                          <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                        </span>
+                        <DatePicker
+                          selected={fromDate}
+                          onChange={(date: any) => handleDates(date, "startdate")}
+                          dateFormat="dd/MM/yyyy"
+                          placeholderText="Start Date"
+                          className="custom-datepicker"
+                        />
+                        {fromDate && (
+                          <span className="icon-container" onClick={() => handleDelete("startdate")}>
+                            <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                          </span>
+                        )}
+                      </div>
+
+
+                      <div className="date-picker-container">
+                        <span className="icon-container">
+                          <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                        </span>
+                        <DatePicker
+                          selected={toDate}
+                          onChange={(date: any) => handleDates(date, "enddate")}
+                          dateFormat="dd/MM/yyyy"
+                          placeholderText="End Date"
+                          className="custom-datepicker"
+                        />
+                        {toDate && (
+                          <span className="icon-container" onClick={() => handleDelete("enddate")}>
+                            <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -840,7 +905,7 @@ export default function Home() {
                         </tbody>
                       )}
                       <tbody>
-                        {templateData.map((data) => (
+                        {templateData.map((data: any) => (
                           <tr key={data.exe_id}>
                             <td id="checkbox">
                               {" "}
@@ -914,10 +979,15 @@ export default function Home() {
                 <div className="toolbar">
                   <label htmlFor="">Results per page :</label>
                   <div className="tooldrop">
-                    <select name="" id="">
+                    <select value={perPage}
+                      name="perPage"
+                      onChange={handleInput}>
                       <option value="5">5</option>
                       <option value="10">10</option>
+
+                      <option value="15">15</option>
                       <option value="20">20</option>
+                      <option value="30">30</option>
                     </select>
                   </div>
                   <span>of {totalCount}</span>

@@ -39,7 +39,7 @@ export default function BarGraph(props: any) {
     }
     }, [data,type])
 
-    const chartVolumeOptions = {
+    const chartVolumeOptions:ApexCharts.ApexOptions  = {
         chart: {
             type: 'bar',
             zoom: {
@@ -62,7 +62,7 @@ export default function BarGraph(props: any) {
         },
     ];
 
-    const chartQOptions = {
+    const chartQOptions:ApexCharts.ApexOptions  = {
         chart: {
             type: 'bar',
             zoom: {
