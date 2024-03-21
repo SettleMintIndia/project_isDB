@@ -204,7 +204,7 @@ export default function Home() {
             </div>
             <div className="col-md-6 mb-3"></div>
 
-            <div className="col-md-6 ">
+            <div className="col-md-6">
               <div className="form-content password1">
                 <label htmlFor="password2">New Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>
@@ -246,7 +246,7 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-            <div className="col-md-6 ">
+            <div className="col-md-6">
               <div className="form-content confirm">
                 <label htmlFor="password3">Confirm New Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>

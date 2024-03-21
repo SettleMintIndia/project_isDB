@@ -55,30 +55,28 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
-  const [userId, setUserId] = useState('')
-  const {
-    loginuseremail, setloginuseremail
-  } = useContext(UserContext);
+  const [userId, setUserId] = useState("");
+  const { loginuseremail, setloginuseremail } = useContext(UserContext);
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getScenarios();
     getDistributions();
-    let email = localStorage.getItem('useremail')
+    let email = localStorage.getItem("useremail");
     console.log("email");
 
-    const s_type: any = localStorage.getItem("scenariotype")
+    const s_type: any = localStorage.getItem("scenariotype");
     setScenarioType(s_type);
 
-    getEmailInfo(email)
+    getEmailInfo(email);
   }, []);
 
   const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    setUserId(result.id)
-  }
+    setUserId(result.id);
+  };
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -340,32 +338,27 @@ export default function Home() {
       } else if (Number(upperbound) > 1) {
         toast.error("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1")
-      } else if ((Number(alpha0) > 1)) {
+        toast.error("lower lmt order price variance should be greater than 1");
+      } else if (Number(alpha0) > 1) {
         toast.error("alpha0 value should be less than 1");
-      }
-      else if (Number(alpha0) > Number(alpha1)) {
+      } else if (Number(alpha0) > Number(alpha1)) {
         toast.error("alpha1 value should be greater than alpha0");
-      }
-      else if ((Number(theta0) > 1)) {
+      } else if (Number(theta0) > 1) {
         toast.error("theta0 value should be less than 1");
-      }
-      else if (Number(theta0) > Number(theta1)) {
+      } else if (Number(theta0) > Number(theta1)) {
         toast.error("theta1 value should be greater than theta0");
-
-      }
-      else {
-        const template_exist = await API_Auth.getTemplateExists(templatename)
-        console.log("template_exist", template_exist)
+      } else {
+        const template_exist = await API_Auth.getTemplateExists(templatename);
+        console.log("template_exist", template_exist);
 
         if (template_exist.name_available == false) {
           toast.error("Template Name Already Exists");
         } else {
-          setLoading(true)
+          setLoading(true);
           setDisableSubmit(true);
-          const data = await API_Auth.createTemplate(body)
+          const data = await API_Auth.createTemplate(body);
           console.log(data);
-          setLoading(false)
+          setLoading(false);
 
           if ((data.error! = "" || data.error == undefined)) {
             console.log("hello");
@@ -374,14 +367,11 @@ export default function Home() {
             const superadminkey = localStorage.getItem("superadmin");
             console.log("superadmin", superadminkey);
             if (superadminkey == "superadmin") {
-
               setTimeout(() => {
-
                 router.push("/templateDetails");
               }, 2000);
             } else {
               setTimeout(() => {
-
                 router.push("/runSimulation");
               }, 2000);
             }
@@ -817,7 +807,7 @@ export default function Home() {
                   )}
                 </div>
               </div>
-              <div className="col-md-6 mb-3 comment">
+              <div className="col-md-6 comment">
                 <div className="form-content comment">
                   <label htmlFor="comment">
                     Comment <span>(Optional)</span>

@@ -44,7 +44,6 @@ const AppLayout = ({ children }: LayoutProps) => {
   };
  
   useEffect(() => {
-
     const data = localStorage.getItem("useremail");
     console.log("email", data);
     if (data != undefined) {
@@ -113,7 +112,9 @@ const AppLayout = ({ children }: LayoutProps) => {
                 </Link>
               </div>
               {(router.route === "/createtemplate" ||
-                router.route === "/createadmin" || router.route === "/runSimulation") && <div
+                router.route === "/createadmin" ||
+                router.route === "/runSimulation") && (
+                <div
                   className="nav-user  us-1"
                   onMouseEnter={() => setTooltipVisible1(true)}
                   onMouseLeave={() => setTooltipVisible1(false)}
@@ -121,7 +122,8 @@ const AppLayout = ({ children }: LayoutProps) => {
                   <div className="use">
                     <img src="/imgs/add.png" alt="" width={30} height={30} />
                   </div>
-                </div>}
+                </div>
+              )}
 
               {/*  <ul className="menu-dropdown dp">
                 <li
@@ -162,7 +164,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
-                key == "superadmin" ? (
+              key == "superadmin" ? (
                 <>
                   <ul className="menu-dropdown dp">
                     <li
@@ -193,7 +195,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/runSimulation") &&
-                key == "admin" ? (
+              key == "admin" ? (
                 <>
                   <ul className="menu-dropdown dp">
                     <li
@@ -221,9 +223,6 @@ const AppLayout = ({ children }: LayoutProps) => {
               ) : (
                 <></>
               )}
-
-
-
 
               {/* web */}
               {(router.route === "/createtemplate" ||
@@ -321,6 +320,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   onMouseEnter={() => setTooltipVisible(true)}
                   onMouseLeave={() => setTooltipVisible(false)}
                 >
+                  <div className="countInfo">5</div>
                   <img src="/imgs/notification.svg" alt="" />
                 </div>
 
@@ -406,12 +406,11 @@ const AppLayout = ({ children }: LayoutProps) => {
           )}
         </>
         // </div>
-      )
-      }
+      )}
 
       {/* render page */}
       <main className="render-page">{children}</main>
-    </div >
+    </div>
   );
 };
 

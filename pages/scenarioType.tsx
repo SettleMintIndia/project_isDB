@@ -49,7 +49,7 @@ export default function Home() {
         if (result.error == undefined) {
           console.log("Hello");
           toast.success("Scenario successfully created");
-          localStorage.setItem("scenariotype",scenariotype)
+          localStorage.setItem("scenariotype", scenariotype);
 
           setTimeout(() => {
             router.push("/createtemplate");
@@ -85,7 +85,7 @@ export default function Home() {
               </div>
 
               <button
-                className="create-template mx-3"
+                className="create-template"
                 onClick={() => handleCreateScenario()}
                 disabled={disableSubmit}
               >

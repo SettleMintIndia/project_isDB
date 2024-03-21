@@ -127,7 +127,6 @@ export default function Home() {
                     value={comment}
                     onChange={handleInput}
                   ></textarea>
-
                 </div>
                 {commentErr != "" && (
                   <p className="alert-message">{commentErr}</p>
@@ -147,6 +146,5 @@ export default function Home() {
         <ToastContainer />
       </div>
     </AppLayout>
-
   );
 }
