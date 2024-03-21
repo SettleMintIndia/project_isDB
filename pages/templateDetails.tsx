@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect,SetStateAction } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -23,7 +23,7 @@ import TemplatePDF from "./templatepdf";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function templateDetails() {
+export default function TemplateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
@@ -50,7 +50,9 @@ export default function templateDetails() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [viewData, setViewData] = useState({
+  const [activeButton, setActiveButton] = useState("Static");
+
+  const [viewData, setViewData] = useState<any>({
     limit_order_upper_bound: "",
     limit_order_lower_bound: "",
     temp_name: "",
@@ -76,10 +78,17 @@ export default function templateDetails() {
   });
 
   const [tempname, setTempName] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
   useEffect(() => {
     setMounted(true);
 
-    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, 1);
+    handlegetAllTemplateDetails(tempname,
+      s_type,
+      fromDate,
+      toDate,
+      perPage,
+      1);
     getScenarios();
   }, []);
 
@@ -108,8 +117,8 @@ export default function templateDetails() {
       admin_id: userresult.id,
       scenario: s_type,
       datefrom:
-      (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto:  (toDate == null || toDate == "")  ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
       showPrivate: true,
@@ -236,7 +245,6 @@ export default function templateDetails() {
   const handleEdit = () => {
     router.push("/mytemplates");
   };
-  const [showModal, setShowModal] = useState(false);
   const viewDetails = (data: any) => {
     console.log(data);
     setShowModal(true);
@@ -249,7 +257,7 @@ export default function templateDetails() {
   const handleClose = () => {
     setShowModal(false);
   };
-  const [tabIndex, setTabIndex] = useState(0);
+
   const handleEditTemplate = (data: any) => {
     console.log(data.temp_name);
     router.push({
@@ -287,7 +295,6 @@ export default function templateDetails() {
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
-  const [activeButton, setActiveButton] = useState("Static");
 
   const handleButtonClick = async (data: any, key: any) => {
     console.log(data);

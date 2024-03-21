@@ -52,12 +52,15 @@ interface MyObject {
   limit_order_lower_bound: String
 }
 
-export default function templateDetails() {
+export default function TemplateDetails() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [key, setKey] = useState();
   const pdfExportComponent = React.useRef<PDFExport>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+   const [tabIndex, setTabIndex] = useState(0);
+   const [activeButton, setActiveButton] = useState("Static");
 
   const [templateData, setTemplateData] = useState([
     {
@@ -81,7 +84,7 @@ export default function templateDetails() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [viewData, setViewData] = useState({
+  const [viewData, setViewData] = useState<any>({
     temp_name: "",
     created_timestamp: "",
     scenario_name: "",
@@ -270,7 +273,6 @@ export default function templateDetails() {
   const handleEdit = () => {
     router.push("/mytemplates");
   };
-  const [showModal, setShowModal] = useState(false);
   const viewDetails = (data: any) => {
     console.log(data);
     setShowModal(true);
@@ -283,7 +285,8 @@ export default function templateDetails() {
   const handleClose = () => {
     setShowModal(false);
   };
-  const [tabIndex, setTabIndex] = useState(0);
+  
+
   const handleEditTemplate = (data: any) => {
     console.log(data.temp_name);
     router.push({
@@ -332,10 +335,9 @@ export default function templateDetails() {
   };
   const handleDownloadExel = () => {
     console.log(viewData);
-    const finalViewData: MyObject = viewData
     let finalData: any[] = [];
-    Object.keys(finalViewData).forEach(function (key) {
-      var value = finalViewData[key];
+    Object.keys(viewData).forEach(function (key) {
+      var value = viewData[key];
       console.log("key", key);
       var obj;
       if (key == "created_timestamp") {
@@ -360,7 +362,6 @@ export default function templateDetails() {
 
     FileSaver.saveAs(data, fileName + fileExtension);
   };
-  const [activeButton, setActiveButton] = useState("Static");
 
   const handleSimulation = (data: any) => {
     console.log(data.temp_name);

@@ -67,7 +67,7 @@ export default function Home() {
   const [offset, setOffSet] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [keyname, setKeyName] = useState("template");
-  const [viewData, setViewData] = useState({
+  const [viewData, setViewData] = useState<any>({
     limit_order_upper_bound: "",
     limit_order_lower_bound: "",
     temp_name: "",

@@ -542,7 +542,7 @@ export default function Home() {
     const ws = XLSX.utils.json_to_sheet(totalResult);
 
     // Convert the worksheet to an array of arrays
-    const aoa = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    const aoa:any = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
     // Extract unique keys (column names)
     const keys = Array.from(new Set(aoa[0]));
@@ -552,7 +552,7 @@ export default function Home() {
     // Create a new worksheet with the desired format
     const newWs = keys.map((key, index) => [
       key,
-      ...aoa.slice(1).map((row) => row[index]),
+      ...aoa.slice(1).map((row:any) => row[index]),
     ]);
     console.log("newWs", newWs);
 

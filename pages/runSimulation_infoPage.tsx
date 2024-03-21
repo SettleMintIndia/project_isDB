@@ -1811,7 +1811,7 @@ export default function Home() {
                       <TabPanel className="info">
                         Lorem Ipsum is simply dummy text of the printing and
                         typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s
+                        industry&apos;s standard dummy text ever since the 1500s
                       </TabPanel>
                       <TabPanel className="order-book">
                         <div className="orderbook-header">
@@ -1999,8 +1999,8 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNsbuy.map((data) => (
-                                      <tr>
+                                    {orderNsbuy.map((data,index) => (
+                                      <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
                                       </tr>
@@ -2039,8 +2039,8 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNssell.map((data) => (
-                                      <tr>
+                                    {orderNssell.map((data,index) => (
+                                      <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
                                       </tr>
@@ -2397,8 +2397,8 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNsbuy.map((data) => (
-                                      <tr>
+                                    {orderNsbuy.map((data,index) => (
+                                      <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
                                       </tr>
@@ -2437,8 +2437,8 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNssell.map((data) => (
-                                      <tr>
+                                    {orderNssell.map((data,index) => (
+                                      <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
                                       </tr>
@@ -2811,8 +2811,8 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {tradeHistoryWS.map((item) => (
-                                      <tr>
+                                    {tradeHistoryWS.map((item,index) => (
+                                      <tr key={index}>
                                         <td>
                                           {moment(item.timestamp).format(
                                             "MM/DD/YYYY h:mm:ss A"
@@ -3179,8 +3179,8 @@ export default function Home() {
                                   )}
 
                                   <tbody className="scrollable">
-                                    {tradeHistoryNS.map((item) => (
-                                      <tr>
+                                    {tradeHistoryNS.map((item,index) => (
+                                      <tr key={index}>
                                         <td>
                                           {moment(item.timestamp).format(
                                             "MM/DD/YYYY h:mm:ss A"

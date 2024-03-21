@@ -106,7 +106,7 @@ export default function Home() {
               before updating the market price of an asset based on the gap
               between the sell price and the buy price. Our platform empowers
               the users with intuitive functionalities, facilitating seamless
-              simulation management and execution. Whether it's creating
+              simulation management and execution. Whether it&apos;s creating
               templates, running simulations, or expanding scenario options, our
               platform equips users with the resources they need to succeed.
             </p>
@@ -178,7 +178,7 @@ export default function Home() {
                             <h4>3. Scenario Type Addition</h4>
                             <p>
                               Super Admins have the capability to add new types
-                              of scenarios, expanding the platform's versatility
+                              of scenarios, expanding the platform&apos;s versatility
                               to accommodate emerging needs and trends.
                             </p>
                           </div>
@@ -190,7 +190,7 @@ export default function Home() {
                     <div className="panel-para">
                       <p>
                         Admins are key users responsible for executing
-                        simulations and managing templates. Here's how they
+                        simulations and managing templates. Here&apos;s how they
                         interact with the platform
                       </p>
                     </div>
@@ -205,7 +205,7 @@ export default function Home() {
                             <p>
                               Admins can run simulations using either global
                               templates provided by the Super Admin or templates
-                              they've personally created, enabling flexibility
+                              they&apos;ve personally created, enabling flexibility
                               and customization.
                             </p>
                           </div>
@@ -319,7 +319,7 @@ export default function Home() {
                   <li>
                     <div className="que-ans">
                       <h4>How do I create an account?</h4>
-                      <p>Please contact the super admin at ""</p>
+                      <p>Please contact the super admin at &quot;&ldquo;</p>
                     </div>
                     <div>
                       <img src="" alt="" />
@@ -328,7 +328,7 @@ export default function Home() {
                   <li>
                     <div className="que-ans">
                       <h4>How do I reset my password?</h4>
-                      <p>Please contact the super admin at ""</p>
+                      <p>Please contact the super admin at &quot;&ldquo;</p>
                     </div>
                     <div>
                       <img src="" alt="" />

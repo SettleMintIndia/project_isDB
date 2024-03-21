@@ -5,6 +5,7 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 import API_Auth from "../../pages/api/API_Auth";
 import moment from "moment";
 import { UserContext } from "@/pages/context";
+import Image from 'next/image';
 
 interface LayoutProps {
   children: ReactNode;
@@ -22,11 +23,14 @@ const MainLayout = ({ children }: LayoutProps) => {
   const [loginKey, setLoginKey] = useState(false);
 
   useEffect(() => {
-   /*  let admin_id = 1;
-    getNotifications(admin_id); */
-    const data = localStorage.getItem("useremail");
-    console.log("email", loginuseremail);
 
+    const data = localStorage.getItem("useremail");
+    if (data != undefined) {
+      let email = localStorage.getItem('useremail')
+      console.log("email");
+      getEmailInfo(email)
+
+    }
     const handleScroll = () => {
       console.log(window.scrollY);
       if (window.scrollY >= 10) {
@@ -42,10 +46,14 @@ const MainLayout = ({ children }: LayoutProps) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [email]);
+  const getEmailInfo = async (email: any) => {
+    const result = await API_Auth.getAdminInformation(email);
+    console.log(result);
+    getNotifications(result.id)
+  }
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
     console.log("admin_notifications", admin_notifications);
-
     setTotalNotifications(admin_notifications.notifications);
   };
 
@@ -61,10 +69,6 @@ const MainLayout = ({ children }: LayoutProps) => {
     <>
       {loginKey == false ? (
         <>
-          {/* <div
-            className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}
-            
-          > */}
           <div
             className="nav-container"
             style={{ position: "fixed", width: "96%", margin: "32px" }}
@@ -143,7 +147,7 @@ const MainLayout = ({ children }: LayoutProps) => {
                 </div>
 
                 {totalNotifications.map((item: any) => (
-                  <div className="notification-details">
+                  <div className="notification-details" key={item.id}>
                     <div className="notification-info">
                       <h5>{item.source}</h5>
                       <p>

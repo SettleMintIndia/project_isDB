@@ -14,22 +14,46 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [totalNotifications, setTotalNotifications] = useState([]);
   const [tooltipVisible1, setTooltipVisible1] = useState(false);
+  const [stickyClass, setStickyClass] = useState('');
+
 
   const [key, setKey] = useState("superadmin"); //superadmin
   // const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setusername] = useState("");
+  const [userId, setUserId] = useState('')
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [sticky, setSticky] = useState("");
+
+  useEffect(() => {
+    console.log("hello");
+   /*  window.addEventListener("scroll", isSticky);
+    return () => {
+      window.removeEventListener("scroll", isSticky);
+    }; */
+  }, []);
 
 
+  const isSticky = () => {
+    /* Method that will fix header after a specific scrollable */
+    const scrollTop = window.scrollY;
+    const stickyClass = scrollTop >= 100 ? "fixed-nav" : "";
+    setSticky(stickyClass);
+    console.log(stickyClass,scrollTop);
+  };
+ 
   useEffect(() => {
 
     const data = localStorage.getItem("useremail");
     console.log("email", data);
     if (data != undefined) {
-      let admin_id = 1;
-      getNotifications(admin_id);
+      let email = localStorage.getItem('useremail')
+      console.log("email");
+      getEmailInfo(email)
+
     }
+    
     const superadminkey = localStorage.getItem("superadmin");
     console.log("superadmin", superadminkey);
     if (superadminkey == "superadmin") {
@@ -41,21 +65,14 @@ const AppLayout = ({ children }: LayoutProps) => {
     console.log("username", name);
     setusername(name);
 
-    /*  const handleScroll = () => {
-       console.log(window.scrollY);
-       if (window.scrollY >= 100) {
-         setIsNavFixed(true);
-       } else {
-         setIsNavFixed(false);
-       }
-     };
- 
-     window.addEventListener("scroll", handleScroll);
- 
-     return () => {
-       window.removeEventListener("scroll", handleScroll);
-     }; */
+     
   }, [email]);
+
+  const getEmailInfo = async (email: any) => {
+    const result = await API_Auth.getAdminInformation(email);
+    console.log(result);
+    getNotifications(result.id)
+  }
 
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
@@ -86,8 +103,9 @@ const AppLayout = ({ children }: LayoutProps) => {
       ) : (
         // <div className="nav">
         <>
+        
           {router.route != "/templatepdf" && (
-            <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
+            <div className={`nav-container ${sticky}`}>
               {/* <div className="nav-container"> */}
               <div className="nav-logo">
                 <Link href="/">
@@ -312,7 +330,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   </div>
 
                   {totalNotifications.map((item: any) => (
-                    <div className="notification-details">
+                    <div className="notification-details" key={item.id}>
                       <div className="notification-info">
                         <h5>{item.source}</h5>
                         <p>

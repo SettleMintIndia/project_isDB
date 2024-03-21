@@ -25,7 +25,7 @@ export default function CandleStickSimulation(props: any) {
 
     });
 
-    const [options, setOptions] = useState({
+    const [options, setOptions] = useState<any>({
         chart: {
             type: 'candlestick',
             id: 'candlestick-chart',

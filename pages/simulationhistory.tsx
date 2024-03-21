@@ -29,7 +29,7 @@ export default function Home() {
   const [dataRecords, setDataRecords] = useState<any[]>([]);
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
 
-  const [templateData, setTemplateData] = useState([
+  const [templateData, setTemplateData] = useState<any[]>([
     {
       scenario_name: "",
       temp_name: "",
@@ -338,7 +338,7 @@ export default function Home() {
     );
   };
 
-  const handleCheckboxChange = async (id: never) => {
+  const handleCheckboxChange = async (id: any) => {
     console.log(id);
     // Check if the record is already in the array
     const index = selectedRecords.indexOf(id);
@@ -729,8 +729,8 @@ export default function Home() {
 
             <div className="compare-banner">
               <label htmlFor="">Compare Templates :</label>
-              {dataRecords.map((item: any) => (
-                <button className="templatename">
+              {dataRecords.map((item: any,index:any) => (
+                <button className="templatename" key={index}>
                   {item.temp_name}{" "}
                   <img
                     src="imgs/close-black.svg"
@@ -905,7 +905,7 @@ export default function Home() {
                         </tbody>
                       )}
                       <tbody>
-                        {templateData.map((data: any) => (
+                        {templateData.map((data) => (
                           <tr key={data.exe_id}>
                             <td id="checkbox">
                               {" "}
@@ -914,7 +914,7 @@ export default function Home() {
                                 className="checkbox"
                                 checked={selectedRecords.includes(data.exe_id)}
                                 onChange={() =>
-                                  handleCheckboxChange(data.exe_id)
+                                  handleCheckboxChange(data?.exe_id)
                                 }
                               />
                             </td>
