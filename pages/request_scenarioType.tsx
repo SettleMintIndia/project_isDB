@@ -70,47 +70,47 @@ export default function Home() {
   };
   return (
     <AppLayout>
-    <div className="container-fluid">
-      <div className="template request-scenario">
-        <div className="template-header">
-          <div className="back-option"></div>
-          <div className="main-header">
-            <h1>Create Scenario</h1>
-          </div>
-          <div></div>
-        </div>
-        <div className="table-responsive">
-          <div className="row scenario">
-            <div className="col-md-6 mb-3">
-              <div className="form-content">
-                <label htmlFor="scenario"> Scenario Type</label>
-                <input
-                  type="text"
-                  id="scenario"
-                  name="scenariotype"
-                  required
-                  value={scenariotype}
-                  onChange={handleInput}
-                />
-              </div>
-              {scenariotypeErr != "" && (
-                <p className="alert-message">{scenariotypeErr}</p>
-              )}
+      <div className="container-fluid">
+        <div className="template request-scenario">
+          <div className="template-header">
+            <div className="back-option"></div>
+            <div className="main-header">
+              <h1>Create Scenario</h1>
             </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-content comment">
-                <label htmlFor="comment">
-                  Comment <span>(Optional)</span>
-                </label>
-                <textarea
-                  className="form-control"
-                  id="comment"
-                  rows={5}
-                  name="comment"
-                  value={comment}
-                  onChange={handleInput}
-                ></textarea>
-                {/* <input
+            <div></div>
+          </div>
+          <div className="table-responsive">
+            <div className="row scenario">
+              <div className="col-md-6 mb-3">
+                <div className="form-content">
+                  <label htmlFor="scenario"> Scenario Type</label>
+                  <input
+                    type="text"
+                    id="scenario"
+                    name="scenariotype"
+                    required
+                    value={scenariotype}
+                    onChange={handleInput}
+                  />
+                </div>
+                {scenariotypeErr != "" && (
+                  <p className="alert-message">{scenariotypeErr}</p>
+                )}
+              </div>
+              <div className="col-md-6 mb-3">
+                <div className="form-content comment">
+                  <label htmlFor="comment">
+                    Comment <span>(Optional)</span>
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="comment"
+                    rows={5}
+                    name="comment"
+                    value={comment}
+                    onChange={handleInput}
+                  ></textarea>
+                  {/* <input
                   type="text"
                   id="comment"
                   name="comment"
@@ -118,25 +118,24 @@ export default function Home() {
                   value={comment}
                   onChange={handleInput}
                 /> */}
+                </div>
+                {commentErr != "" && (
+                  <p className="alert-message">{commentErr}</p>
+                )}
               </div>
-              {commentErr != "" && (
-                <p className="alert-message">{commentErr}</p>
-              )}
+              {finalErr != "" && <p className="alert-message">{finalErr}</p>}
+              <button
+                className="create-template"
+                onClick={() => handleCreateScenario()}
+              >
+                {" "}
+                Submit Request
+              </button>
             </div>
-            {finalErr != "" && <p className="alert-message">{finalErr}</p>}
-            <button
-              className="create-template"
-              onClick={() => handleCreateScenario()}
-            >
-              {" "}
-              Submit Request
-            </button>
           </div>
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
     </AppLayout>
-
   );
 }

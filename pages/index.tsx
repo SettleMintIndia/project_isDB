@@ -262,7 +262,7 @@ export default function Home() {
                 </Tabs>
               </div>
             </div>
-            <div className="faqs-contact">
+            {/* <div className="faqs-contact">
               <div className="faqs">
                 <h1>FAQs</h1>
                 <ul className="faqs-list">
@@ -352,7 +352,7 @@ export default function Home() {
                 </div>
                 <button>Send Message</button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

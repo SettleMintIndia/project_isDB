@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useRouter } from "next/router";
 import API_Auth from "./api/API_Auth";
@@ -22,7 +21,7 @@ export default function Home() {
   const [marginTop, setMarginTop] = useState("10px");
   const [totalErrors, setTotalErrors] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [disabledSubmit, setDisableSubmit] = useState(false)
+  const [disabledSubmit, setDisableSubmit] = useState(false);
 
   const handleInput1 = (event: any) => {
     const { name, value } = event.target;
@@ -146,7 +145,6 @@ export default function Home() {
       setLoading(true);
       setDisableSubmit(true);
 
-
       const result = await API_Auth.createAdmin(body);
       console.log("result", result, result.msg);
       setLoading(false);
@@ -160,7 +158,6 @@ export default function Home() {
       } else {
         toast.error(result.msg);
         setDisableSubmit(false);
-
       }
     }
   };
@@ -210,7 +207,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6">
                 <div className="form-content password1">
                   <label htmlFor="password"> Password</label>
                   <div
@@ -254,7 +251,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6">
                 <div className="form-content confirm">
                   <label htmlFor="password1 ">Confirm Password</label>
                   <div
@@ -290,7 +287,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="buttoncenter admin" style={{ marginTop }}>
+              <div className="buttoncenter admin">
                 <button
                   className="create-template"
                   onClick={() => handleCreateAdmin()}

@@ -6,6 +6,7 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
   overflow-y: scroll;
+  height: 100vh;
 }
 
 @font-face {
@@ -82,13 +83,6 @@ label {
 }
 
 .nav-links .active {
-  opacity: 1 !important;
-  background: linear-gradient(#15172a, #15172a) padding-box,
-    linear-gradient(90deg, #81b920 0%, #007354 100%) border-box;
-  border: 2px solid transparent !important;
-}
-
-.dp .active {
   opacity: 1 !important;
   background: linear-gradient(#15172a, #15172a) padding-box,
     linear-gradient(90deg, #81b920 0%, #007354 100%) border-box;
@@ -343,8 +337,13 @@ button {
 .menu,
 .notification {
   cursor: pointer;
+  height: 60px;
+  top: 20px;
+  position: relative;
 }
-
+.notification {
+  position: relative;
+}
 /* .use:hover,
 .menu:hover,
 .notification:hover {
@@ -371,13 +370,13 @@ button {
 }
 
 .menu-dropdown {
-  top: 85px;
+  top: 78px;
   right: 60px;
   /* width: 250px; */
 }
 
 .menu-list {
-  top: 85px;
+  top: 65px;
   width: 170px;
   right: 18%;
   padding-bottom: 0;
@@ -415,7 +414,9 @@ button {
 }
 
 .menu-list li:hover,
-.menu-list li:active {
+.menu-list li:active,
+.menu-dropdown.dp li:hover,
+.menu-dropdown.dp li:active {
   opacity: 1;
   background: #276877;
   border-radius: 5px;
@@ -425,7 +426,10 @@ button {
   align-items: center;
   margin-bottom: 20px;
 }
-
+.menu-dropdown.dp li:hover,
+.menu-dropdown.dp li:active {
+  padding-right: 15px;
+}
 .nav-links ul {
   display: flex;
   gap: 10px;
@@ -508,7 +512,7 @@ button {
 }
 
 .dp li {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .dp li a {
   gap: 10px;
@@ -612,11 +616,23 @@ label {
 }
 
 .template .user-info {
-  margin-top: 30px;
+  margin-top: 15px;
   display: grid;
   gap: 20px;
 }
-
+.countInfo {
+  position: absolute;
+  background: #ff0000;
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  right: -8px;
+  top: -8px;
+  border-radius: 20px;
+  z-index: 999;
+  text-align: center;
+  font-size: 14px;
+}
 .template .user-info .name,
 .email,
 .password {
@@ -665,7 +681,9 @@ label {
 .template.createadmin {
   margin: 0 20%;
 }
-.template.scenariotype .table-responsive {
+
+.template.scenariotype .table-responsive,
+.template.createadmin .table-responsive {
   overflow: hidden !important;
 }
 .template.scenariotype h1 {
@@ -680,8 +698,9 @@ label {
 .template .scenario .create-template {
   width: 141px !important;
   height: 50px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+}
+.template.scenariotype .create-template {
+  margin-left: 12px;
 }
 
 .modal-header {
@@ -802,7 +821,9 @@ label {
   align-items: baseline;
   justify-content: center;
 }
-
+.run .filterArea .bottom-tab li {
+  padding: 0;
+}
 .template .template-type.run .react-tabs__tab-list {
   border-bottom: 1px solid #bfbfbf !important;
   font-size: 20px;
@@ -967,6 +988,7 @@ label {
   padding: 0px 10px 0px 25px;
   position: relative;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 .template-content table tbody tr:hover {
@@ -1096,18 +1118,18 @@ label {
 .template .delete-icon .tooltip {
   width: 234px;
   display: block;
-  height: 128px;
-  padding: 15px;
+  height: 115px;
+  padding: 10px;
   background: #d6d6d6 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 12px #00000029;
   border: 1px solid #222222;
   border-radius: 5px;
   position: absolute;
-  top: 10px;
+  top: -100px;
   z-index: 999;
   opacity: 1;
   text-align: center;
-  right: -20px;
+  right: 12px;
 }
 
 .template .delete-icon .tooltip .tool-buttons {
@@ -1154,8 +1176,8 @@ label {
   /* box-shadow: #999 0 0 10px; */
   background: white;
   width: 100%;
-  overflow: hidden;
   overflow-x: auto;
+  /* min-height: 280px; */
 }
 
 .template-content table tbody tr:hover {
@@ -1325,7 +1347,7 @@ label {
 }
 
 .custom-header img {
-  padding: 20px 20px 0 0;
+  padding: 0;
 }
 
 .template-modal.modal.show .modal-dialog {
@@ -1447,7 +1469,8 @@ label {
 }
 
 .template.run-simulation .template-content table tbody tr td {
-  padding: 20px 10px 20px 25px;
+  padding: 10px 10px 10px 25px;
+  white-space: nowrap;
 }
 
 .simulation-info .modal-details {
@@ -2164,21 +2187,20 @@ label {
 .template .dateFilter {
   display: flex;
   align-items: center;
-  gap: 5px;
   background: white;
   border: 1px solid #6f6d6d;
   border-radius: 21px;
-  width: 285px;
+  width: 265px;
   height: 42px;
-  /* padding-left: 15px; */
   font-size: 14px;
+  padding: 0 10px;
+  gap: 10px;
 }
 
 .template .dateFilter input {
   background: none;
   border: none;
   outline: none;
-  margin-left: 10px;
 }
 
 .template .searchArea {
@@ -2186,7 +2208,9 @@ label {
   align-items: center;
   gap: 10px;
 }
-
+.react-datepicker-wrapper {
+  margin-left: 5px;
+}
 .pagination {
   display: flex;
   float: right;
@@ -2395,7 +2419,7 @@ label {
 .buttoncenter.admin {
   margin: 0;
   margin-top: 0px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .template .template-header {
@@ -2440,7 +2464,7 @@ label {
 .template.edit-password .change-button {
   gap: 20px;
   display: flex;
-  margin-bottom: 20px;
+  margin-top: -10px;
 }
 
 .template.create,
@@ -2449,7 +2473,10 @@ label {
 .template.edit-template {
   margin: 0 20%;
 }
-
+.template.create .table-responsive {
+  margin-bottom: 20px;
+  overflow-x: hidden;
+}
 .template.edit-template .form-control.p-1 {
   border: 0;
 }
@@ -2465,6 +2492,7 @@ label {
 
 .template.edit-template .table-responsive {
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .template.edit-template .buttoncenter {
@@ -2649,18 +2677,12 @@ label {
 
 /* date */
 
-
 .date-picker-container {
   display: flex;
   align-items: center;
 }
 
-.icon-container {
-  margin: 0 8px;
-}
-
 .custom-datepicker {
-  /* Add your custom styles for the DatePicker component */
   width: 85px;
 }
 
@@ -2669,7 +2691,9 @@ label {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  /* Add your custom styles for the icons */
+}
+.close-icon {
+  width: 12px;
 }
 
 /* date */
@@ -3289,6 +3313,9 @@ footer {
   .nav-links li {
     padding: 10px 15px;
   }
+  .menu-list {
+    right: 30%;
+  }
   .simulation-info .simulation-section .frame-area {
     display: grid;
     gap: 40px;
@@ -3297,6 +3324,7 @@ footer {
     width: 100% !important;
     margin-left: 0 !important;
   }
+
   .leftArea.expanded .modal-header {
     display: none;
   }
@@ -3376,28 +3404,16 @@ footer {
     font-size: 15px;
   }
 
-  .nav-user {
-    width: 200px;
-    gap: 20px;
-  }
   .template .searchArea {
     gap: 5px;
   }
-  element {
-  }
+
   .template .searchFilter {
     gap: 5px;
     width: 233px;
     padding-left: 8px;
   }
-  .template .dateFilter {
-    gap: 0px;
-    width: 260px;
-    padding-left: 0;
-  }
-  .template .dateFilter input {
-    margin-left: 5px;
-  }
+
   .template .searchFilter.options {
     gap: 0px;
     width: 225px;
@@ -3408,7 +3424,7 @@ footer {
     margin-left: -5px;
   }
   .template .searchFilter.options input {
-    width: 65px;
+    /* width: 65px; */
   }
   .searchFilter.options .search-icon {
     height: 32px;
@@ -3454,9 +3470,7 @@ footer {
     gap: 10px;
     display: flex;
   }
-  .nav-user {
-    width: 200px;
-  }
+
   .nav-user .user img {
     height: 50px;
   }
@@ -3472,7 +3486,6 @@ footer {
   }
 
   .menu-dropdown,
-  .menu-list,
   .notification-list,
   .menu-list.create {
     top: 80px;
@@ -3499,11 +3512,13 @@ footer {
   .us-1 {
     display: flex;
     justify-content: flex-end;
-    width: 42% !important;
+    width: 38% !important;
     margin-right: 10px;
   }
   .dp {
-    right: 159px;
+    right: 42%;
+    top: 65px;
+    padding-bottom: 0;
   }
 
   .container-fluid.login .row {
@@ -3541,6 +3556,15 @@ footer {
   .ws .ws-table,
   .ns-table {
     width: 95%;
+  }
+  .template .filterArea {
+    display: grid;
+    justify-content: inherit;
+    margin-bottom: 10px;
+    gap: 5px;
+  }
+  .template .filterArea .filterLeft {
+    display: flex;
   }
 }
 @media screen and (max-width: 790px) {
@@ -3586,7 +3610,7 @@ footer {
     height: 30px;
   }
   .us-1 {
-    margin-right: 15px;
+    width: 32% !important;
   }
   .left-tables,
   .right-tables {
@@ -3611,10 +3635,13 @@ footer {
   .simulation-info .details-section .tab-section .rows {
     width: 100%;
   }
+  .us-1 {
+    width: 28% !important;
+  }
 }
 @media screen and (max-width: 720px) {
-  .nav-user {
-    width: 220px;
+  .us-1 {
+    width: 24% !important;
   }
 }
 @media screen and (max-width: 680px) {
@@ -3672,9 +3699,7 @@ footer {
     height: 32px;
     font-size: 14px;
   }
-  .template .user-info {
-    margin-top: 20px;
-  }
+
   .template .imageUpload_area .dropzone p {
     gap: 5px;
     font-size: 12px;
@@ -3710,6 +3735,12 @@ footer {
   .simulation-info .template-modal .modal-details .modal-heads {
     display: grid;
   }
+  .us-1 {
+    width: 18% !important;
+  }
+  .buttoncenter.admin {
+    margin-top: 20px;
+  }
 }
 @media screen and (max-width: 620px) {
   .template.run-simulation .pagging-area .toolbar {
@@ -3728,6 +3759,9 @@ footer {
   .rightArea .tab-section {
     width: fit-content;
   }
+  .us-1 {
+    width: 10% !important;
+  }
 }
 @media screen and (max-width: 580px) {
   .isDB-logo {
@@ -3739,6 +3773,14 @@ footer {
   .template.edit-template .main-header h1 {
     font-size: 26px;
     margin-left: 50px;
+  }
+  .countInfo {
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    right: -10px;
+    top: -4px;
+    font-size: 12px;
   }
   .paging-list li,
   .leftaction,
@@ -3782,9 +3824,7 @@ footer {
     width: 75%;
     margin-left: 13%;
   }
-  .custom-header img {
-    padding: 10px 10px 0 0;
-  }
+
   .modal-details {
     padding: 0 10px 10px;
   }
@@ -3854,6 +3894,88 @@ footer {
   .run .leftArea.compressed .modal-footer img {
     top: 20%;
   }
+  .template .filter,
+  .template .searchFilter,
+  .template .dateFilter {
+    font-size: 12px;
+  }
+  .template .searchScenario {
+    width: 160px;
+    height: 35px;
+    font-size: 12px;
+  }
+  .template .searchFilter.options input {
+    width: 150px;
+  }
+  .template .searchFilter.options {
+    width: 195px;
+  }
+  .template .searchFilter {
+    height: 35px;
+  }
+  .searchFilter.options .search-icon {
+    height: 28px;
+    width: 28px;
+  }
+  .searchFilter.options img {
+    margin: 6px;
+  }
+  .calendar-icon {
+    width: 16px;
+  }
+  .custom-datepicker {
+    width: 75px;
+  }
+  .template .dateFilter {
+    width: 250px;
+    height: 35px;
+  }
+  .nav-user {
+    height: 43px;
+  }
+  .nav-user .user img {
+    height: 35px;
+  }
+  .nav-user .username {
+    display: none;
+  }
+  .nav-logo img {
+    height: 60px;
+    width: 110px;
+  }
+  .menu-dropdown,
+  .menu-list,
+  .notification-list {
+    top: 70px;
+    font-size: 14px;
+    padding: 15px;
+  }
+  .menu-list {
+    right: 26%;
+  }
+  .dp {
+    right: 70px;
+  }
+  .dp,
+  .menu-list,
+  .notification-list {
+    padding-bottom: 5px;
+  }
+  .menu img,
+  .notification img {
+    height: 20px;
+  }
+  .use img {
+    height: 26px;
+    width: 26px;
+    margin-bottom: -2px;
+  }
+  .nav-container .nav-right {
+    gap: 15px;
+  }
+  .us-1 {
+    width: 44% !important;
+  }
 }
 @media screen and (max-width: 520px) {
   .template.create,
@@ -3887,38 +4009,7 @@ footer {
   .template .head button a {
     font-size: 14px;
   }
-  .nav-user {
-    width: 90px;
-    gap: 10px;
-    height: 43px;
-    padding: 4px;
-  }
-  .nav-user .user img {
-    height: 35px;
-  }
-  .nav-user .username {
-    display: none;
-  }
-  .nav-logo img {
-    height: 60px;
-    width: 110px;
-  }
-  .menu-dropdown,
-  .menu-list,
-  .notification-list {
-    top: 70px;
-    font-size: 14px;
-    padding: 15px;
-  }
 
-  .dp {
-    right: 70px;
-  }
-  .dp,
-  .menu-list,
-  .notification-list {
-    padding-bottom: 5px;
-  }
   .nav-container {
     padding: 10px;
   }
@@ -3928,6 +4019,10 @@ footer {
   }
   .simulation-info {
     margin: 10px;
+  }
+  .template .searchArea {
+    display: grid;
+    justify-items: end;
   }
 }
 @media screen and (max-width: 480px) {
@@ -4024,6 +4119,13 @@ footer {
   }
   .template .scenario {
     padding: 10px;
+  }
+  .us-1 {
+    width: 35% !important;
+  }
+  .buttoncenter,
+  .buttoncenter.admin {
+    display: grid;
   }
 }
 
@@ -4146,7 +4248,7 @@ footer {
   }
   .nav-logo img {
     height: 55px;
-    width: 130px;
+    width: 100px;
   }
   .notification-list {
     width: 300px;
@@ -4212,6 +4314,9 @@ footer {
     /* gap: 5%; */
     display: grid;
   }
+  .login-form {
+    padding: 50px 10px;
+  }
 }
 
 @media screen and (max-width: 360px) {
@@ -4254,10 +4359,6 @@ footer {
     margin-left: 0;
   }
 
-  .nav-logo img {
-    height: 50px;
-    width: 160px;
-  }
   .notification-list {
     width: 270px;
   }
@@ -4281,6 +4382,10 @@ footer {
   .simulation-info .table-responsive .form-control {
     display: grid;
   }
-}
-@media screen and (max-width: 340px) {
+  .nav-container .nav-right {
+    gap: 10px;
+  }
+  .us-1 {
+    width: 16% !important;
+  }
 }

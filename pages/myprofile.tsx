@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import Loader from "@/components/layout/Loader";
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function Home() {
     display_name: "",
     display_pic: "",
   });
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const handleEdit = () => {
     router.push("/changePassword");
   };
@@ -28,12 +28,11 @@ export default function Home() {
     getAdminInfo(email);
   }, []);
   const getAdminInfo = async (email: any) => {
-    setLoading(true)
+    setLoading(true);
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
     setUserData(result);
-    setLoading(false)
-
+    setLoading(false);
   };
 
   const handleFileUpload = async (e: any) => {
@@ -49,11 +48,11 @@ export default function Home() {
       new_image_link: selectedFile.name,
     };
     console.log(body);
-    setLoading(true)
+    setLoading(true);
 
     const result = await API_Auth.uploadUserImage(body);
     console.log(result);
-    setLoading(false)
+    setLoading(false);
 
     if (result.status == 200) {
       toast.success("Image Upload Successfully");
@@ -76,22 +75,26 @@ export default function Home() {
             <div className="profile">
               <div className="user-icon">
                 {userData.display_pic == null && (
-                  <Image src="imgs/user.svg" alt=""
-                    width={61.733} height={61.733} />
+                  <Image
+                    src="imgs/user.svg"
+                    alt=""
+                    width={61.733}
+                    height={61.733}
+                  />
                 )}
                 {userData.display_pic != null && (
                   <img
                     src="https://www.shutterstock.com/image-illustration/generic-image-default-avatar-profile-260nw-1902153229.jpg"
                     alt=""
                     className="userImage"
-                    />
+                  />
                 )}
               </div>
               <div className="file">
                 <div className="imageUpload_area">
                   <label className="dropzone" htmlFor="dropzone-file">
                     <div>
-                      <p>
+                      <p className="mb-0">
                         <span> Choose File</span> No file chosen
                       </p>
                     </div>
@@ -129,8 +132,12 @@ export default function Home() {
                   <button onClick={() => handleEdit()}>
                     {" "}
                     <Link href="changePassword">
-                      <Image src="imgs/pencil.svg" alt=""
-                        width={22.119} height={22.375} />
+                      <Image
+                        src="imgs/pencil.svg"
+                        alt=""
+                        width={22.119}
+                        height={22.375}
+                      />
                     </Link>{" "}
                   </button>
                 </div>
