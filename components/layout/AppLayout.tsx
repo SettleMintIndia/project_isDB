@@ -38,8 +38,8 @@ const AppLayout = ({ children }: LayoutProps) => {
   const isSticky = () => {
     /* Method that will fix header after a specific scrollable */
     const scrollTop = window.scrollY;
-    const stickyClass = scrollTop >= 100 ? "fixed-nav" : "";
-    setSticky(stickyClass);
+    const stickyClass = scrollTop >= 100 ? true : false;
+    setIsNavFixed(stickyClass);
     console.log(stickyClass,scrollTop);
   };
  
@@ -104,8 +104,8 @@ const AppLayout = ({ children }: LayoutProps) => {
         <>
         
           {router.route != "/templatepdf" && (
-            <div className={`nav-container ${sticky}`}>
-              {/* <div className="nav-container"> */}
+          <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
+          {/* <div className="nav-container"> */}
               <div className="nav-logo">
                 <Link href="/">
                   <img src="/imgs/isdb-logo-layout.png" alt="" />
