@@ -17,9 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default function Home() {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [adminData, setAdminData] = useState([
-    { id: "", email: "", display_name: "", created_timestamp: "" },
-  ]);
+  const [adminData, setAdminData] = useState<any>([]);
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
   const [perPage, setPerPage] = useState(5);
@@ -84,9 +82,9 @@ export default function Home() {
 
     if (result.status == 200) {
       toast.success("Admin Deleted Successfully");
-      setCurrentPage(0);
+      // setCurrentPage(0);
       setTimeout(() => {
-        handlegetAllAdmins("", "", "", perPage, 1);
+        handlegetAllAdmins("", "", "", perPage, pageNo);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -99,9 +97,9 @@ export default function Home() {
   const handleSearchChange = (event: any) => {
     setSearchKey(event.target.value);
 
-    setCurrentPage(0);
+    // setCurrentPage(0);
 
-    handlegetAllAdmins(event.target.value, fromDate, toDate, perPage, 1);
+    handlegetAllAdmins(event.target.value, fromDate, toDate, perPage, pageNo);
   };
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
@@ -124,22 +122,22 @@ export default function Home() {
 
     if (name == "perPage") {
       setPerPage(Number(value));
-      setPageNo(1);
-      setCurrentPage(0);
+      // setPageNo(1);
+      //setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, fromDate, toDate, Number(value), 1);
+      handlegetAllAdmins(searchKey, fromDate, toDate, Number(value), pageNo);
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0);
+      //  setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, value, toDate, perPage, 1);
+      handlegetAllAdmins(searchKey, value, toDate, perPage, pageNo);
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, fromDate, value, perPage, 1);
+      handlegetAllAdmins(searchKey, fromDate, value, perPage, pageNo);
     }
   };
 
@@ -156,11 +154,11 @@ export default function Home() {
     console.log(date, key)
     if (key == "startdate") {
       setFromDate(date)
-      handlegetAllAdmins(searchKey, date, toDate, perPage, 1);
+      handlegetAllAdmins(searchKey, date, toDate, perPage, pageNo);
     } else {
       console.log("enddate")
       setToDate(date)
-      handlegetAllAdmins(searchKey, fromDate, date, perPage, 1);
+      handlegetAllAdmins(searchKey, fromDate, date, perPage, pageNo);
     }
   }
   const handleClear = (key: any) => {
@@ -304,7 +302,7 @@ export default function Home() {
                   </tbody>
                 )}
                 <tbody>
-                  {adminData.map((data) => (
+                  {adminData.map((data: any) => (
                     <tr key={data.id}>
                       <td>{data.display_name}</td>
                       <td>{data.email}</td>
@@ -366,7 +364,7 @@ export default function Home() {
           {adminData.length != 0 && (
             <div className="pagging-area" style={{ marginTop: "20px" }}>
               <div className="toolbar">
-                <label htmlFor="">Results per page :</label>
+                {/*  <label htmlFor="">Results per page :</label>
                 <div className="tooldrop">
                   <select value={perPage} name="perPage" onChange={handleInput}>
                     <option value="5">5</option>
@@ -377,9 +375,13 @@ export default function Home() {
                     <option value="30">30</option>
                   </select>
                 </div>
-                <span>of {totalCount}</span>
+                <span>of {totalCount}</span> */}
               </div>
               <div className="paging-list">
+                <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                  <span>{totalCount}</span>}
+                  {totalCount > offset + perPage &&
+                    <span>{offset + perPage}</span>} of {totalCount} items</p>
                 {currentPage == 0 && (
                   <div className="leftaction disable-pointer">
                     <Image

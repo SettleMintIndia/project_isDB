@@ -425,12 +425,12 @@ export default function Home() {
     } else {
       setnewtemplateNameErr("");
     }
-    if (finalComments == "") {
+   /*  if (finalComments == "") {
       setfinalCommentsErr("Please Enter Comments");
       error = error + 1;
     } else {
       setfinalCommentsErr("");
-    }
+    } */
     if (error == 0) {
       let finalbody = {
         "temp_name": newtemplateName,
@@ -528,6 +528,7 @@ export default function Home() {
                     id="type"
                     value={scenarioType}
                     onChange={handleInput}
+                    disabled
                   >
                     <option value="">Select Scenario Type</option>
 
@@ -555,6 +556,7 @@ export default function Home() {
                     required
                     value={templatename}
                     onChange={handleInput}
+                    disabled
                   />
                 </div>
                 {templatenameErr != "" && (

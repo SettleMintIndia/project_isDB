@@ -3514,15 +3514,15 @@ export default function Home() {
                             <ul className="stabilization-fund">
                               <li className="token-issued">
                                 <label htmlFor="token">Token Issued</label>
-                                <span>100</span>
+                                <span>{StablizationTotal.round_tk}</span>
                               </li>
                               <li className="assets">
                                 <label htmlFor="asset">Assets (QTY)</label>
-                                <span>200</span>
+                                <span>{StablizationTotal.round_assets}</span>
                               </li>
                               <li className="cash">
                                 <label htmlFor="cash">Cash</label>
-                                <span>200</span>
+                                <span>{StablizationTotal.round_cash}</span>
                               </li>
                             </ul>
                           </div>

@@ -320,7 +320,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   onMouseEnter={() => setTooltipVisible(true)}
                   onMouseLeave={() => setTooltipVisible(false)}
                 >
-                  <div className="countInfo">5</div>
+                  <div className="countInfo">{totalNotifications.length}</div>
                   <img src="/imgs/notification.svg" alt="" />
                 </div>
 

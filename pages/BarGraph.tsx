@@ -52,6 +52,7 @@ export default function BarGraph(props: any) {
         tooltip: {
             enabled: true,
         },
+        colors:['#27A2ED']
 
     };
 
@@ -73,7 +74,7 @@ export default function BarGraph(props: any) {
         xaxis: {
             categories: barQunatityData.map((dataPoint) => dataPoint.x),
         },
-        colors: ["#00FF00"]
+        colors: ["#42C572"]
 
     };
 
