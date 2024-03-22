@@ -176,7 +176,7 @@ export default function Home() {
           {loading == true && <Loader />}
           <div className="table-responsive">
             <div className="row">
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="user-name"> Name</label>
                   <input
@@ -192,7 +192,7 @@ export default function Home() {
                   )}
                 </div>
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="name">Email Address</label>
                   <input
@@ -220,7 +220,10 @@ export default function Home() {
                       value={password}
                       onChange={handleInput1}
                       required
-                      style={{ paddingRight: "30px", width: "100%" }}
+                      style={{
+                        paddingRight: "30px",
+                        width: "100%",
+                      }}
                     />
                     <button
                       type="button"
@@ -231,6 +234,7 @@ export default function Home() {
                         border: "none",
                         textDecoration: "underline",
                         whiteSpace: "nowrap",
+                        fontSize: "14px",
                       }}
                     >
                       {showPassword ? "Hide" : "Show"}
@@ -275,6 +279,7 @@ export default function Home() {
                         border: "none",
                         textDecoration: "underline",
                         whiteSpace: "nowrap",
+                        fontSize: "14px",
                       }}
                     >
                       {showConfirmPassword ? "Hide" : "Show"}

@@ -14,45 +14,42 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [totalNotifications, setTotalNotifications] = useState([]);
   const [tooltipVisible1, setTooltipVisible1] = useState(false);
-  const [stickyClass, setStickyClass] = useState('');
-
+  const [stickyClass, setStickyClass] = useState("");
 
   const [key, setKey] = useState("superadmin"); //superadmin
   // const [key, setKey] = useState("admin"); //admin
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setusername] = useState("");
-  const [userId, setUserId] = useState('')
+  const [userId, setUserId] = useState("");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [sticky, setSticky] = useState("");
 
   useEffect(() => {
     console.log("hello");
-   /*  window.addEventListener("scroll", isSticky);
+    /*  window.addEventListener("scroll", isSticky);
     return () => {
       window.removeEventListener("scroll", isSticky);
     }; */
   }, []);
-
 
   const isSticky = () => {
     /* Method that will fix header after a specific scrollable */
     const scrollTop = window.scrollY;
     const stickyClass = scrollTop >= 100 ? true : false;
     setIsNavFixed(stickyClass);
-    console.log(stickyClass,scrollTop);
+    console.log(stickyClass, scrollTop);
   };
- 
+
   useEffect(() => {
     const data = localStorage.getItem("useremail");
     console.log("email", data);
     if (data != undefined) {
-      let email = localStorage.getItem('useremail')
+      let email = localStorage.getItem("useremail");
       console.log("email");
-      getEmailInfo(email)
-
+      getEmailInfo(email);
     }
-    
+
     const superadminkey = localStorage.getItem("superadmin");
     console.log("superadmin", superadminkey);
     if (superadminkey == "superadmin") {
@@ -63,15 +60,13 @@ const AppLayout = ({ children }: LayoutProps) => {
     const name: any = localStorage.getItem("displayname");
     console.log("username", name);
     setusername(name);
-
-     
   }, [email]);
 
   const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    getNotifications(result.id)
-  }
+    getNotifications(result.id);
+  };
 
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
@@ -91,24 +86,19 @@ const AppLayout = ({ children }: LayoutProps) => {
       {router.route === "/login" ? (
         <div className="login-nav">
           <Link href="/">
-            <img
-              src="/imgs/isdb-logo-signin.svg"
-              className="isDB-logo"
-              alt=""
-            />
+            <img src="/imgs/IsDBI_Logo.svg" className="isDB-logo" alt="" />
           </Link>
-          <img className="close" src="/imgs/close.svg" alt="" />
+          {/* <img className="close" src="/imgs/close.svg" alt="" /> */}
         </div>
       ) : (
         // <div className="nav">
         <>
-        
           {router.route != "/templatepdf" && (
-          <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
-          {/* <div className="nav-container"> */}
+            <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
+              {/* <div className="nav-container"> */}
               <div className="nav-logo">
                 <Link href="/">
-                  <img src="/imgs/isdb-logo-layout.png" alt="" />
+                  <img src="/imgs/IsDBI_Logo.svg" alt="" />
                 </Link>
               </div>
               {(router.route === "/createtemplate" ||
@@ -320,7 +310,7 @@ const AppLayout = ({ children }: LayoutProps) => {
                   onMouseEnter={() => setTooltipVisible(true)}
                   onMouseLeave={() => setTooltipVisible(false)}
                 >
-                  <div className="countInfo">5</div>
+                  <div className="countInfo">{totalNotifications.length}</div>
                   <img src="/imgs/notification.svg" alt="" />
                 </div>
 

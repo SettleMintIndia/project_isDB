@@ -11,8 +11,8 @@ import ReactPaginate from "react-paginate";
 import Loader from "@/components/layout/Loader";
 import AppLayout from "@/components/layout/AppLayout";
 import Image from "next/image";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Home() {
   const router = useRouter();
@@ -58,8 +58,13 @@ export default function Home() {
       name: keyname == "name" ? searchKey : "",
       email: keyname == "email" ? searchKey : "",
       datefrom:
-        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        fromDate == null || fromDate == ""
+          ? ""
+          : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto:
+        toDate == null || toDate == ""
+          ? ""
+          : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
     };
@@ -153,26 +158,26 @@ export default function Home() {
   };
 
   const handleDates = (date: any, key: any) => {
-    console.log(date, key)
+    console.log(date, key);
     if (key == "startdate") {
-      setFromDate(date)
+      setFromDate(date);
       handlegetAllAdmins(searchKey, date, toDate, perPage, 1);
     } else {
-      console.log("enddate")
-      setToDate(date)
+      console.log("enddate");
+      setToDate(date);
       handlegetAllAdmins(searchKey, fromDate, date, perPage, 1);
     }
-  }
+  };
   const handleClear = (key: any) => {
     if (key == "startdate") {
-      setFromDate(null)
+      setFromDate(null);
       handlegetAllAdmins(searchKey, "", toDate, perPage, 1);
     } else {
-      console.log("enddate")
-      setToDate(null)
+      console.log("enddate");
+      setToDate(null);
       handlegetAllAdmins(searchKey, fromDate, "", perPage, 1);
     }
-  }
+  };
 
   return (
     <AppLayout>
@@ -207,7 +212,7 @@ export default function Home() {
                     onChange={handleInput}
                   >
                     <option value="name">Name</option>
-                    <option value="email">Email Address</option>
+                    <option value="email">Email</option>
                   </select>
                 </div>
                 <input
@@ -228,12 +233,14 @@ export default function Home() {
                 </div>
               </div>
 
-
               <div className="dateFilter">
-
                 <div className="date-picker-container">
                   <span className="icon-container">
-                    <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                    <img
+                      src="imgs/calendar.svg"
+                      alt="Calendar Icon"
+                      className="calendar-icon"
+                    />
                   </span>
                   <DatePicker
                     selected={fromDate}
@@ -243,16 +250,26 @@ export default function Home() {
                     className="custom-datepicker"
                   />
                   {fromDate && (
-                    <span className="icon-container" onClick={() => handleClear("startdate")}>
-                      <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                    <span
+                      className="icon-container"
+                      onClick={() => handleClear("startdate")}
+                    >
+                      <img
+                        src="imgs/close.svg"
+                        alt="Close Icon"
+                        className="close-icon"
+                      />
                     </span>
                   )}
                 </div>
 
-
                 <div className="date-picker-container">
                   <span className="icon-container">
-                    <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                    <img
+                      src="imgs/calendar.svg"
+                      alt="Calendar Icon"
+                      className="calendar-icon"
+                    />
                   </span>
                   <DatePicker
                     selected={toDate}
@@ -262,13 +279,19 @@ export default function Home() {
                     className="custom-datepicker"
                   />
                   {toDate && (
-                    <span className="icon-container" onClick={() => handleClear("enddate")}>
-                      <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                    <span
+                      className="icon-container"
+                      onClick={() => handleClear("enddate")}
+                    >
+                      <img
+                        src="imgs/close.svg"
+                        alt="Close Icon"
+                        className="close-icon"
+                      />
                     </span>
                   )}
                 </div>
               </div>
-
             </div>
           </div>
           {loading == true && <Loader />}
@@ -385,8 +408,8 @@ export default function Home() {
                     <Image
                       src="imgs/left-doublearrowg.svg"
                       alt=""
-                      width={11}
-                      height={11}
+                      width={35}
+                      height={40}
                     />
                   </div>
                 )}
@@ -455,8 +478,8 @@ export default function Home() {
                     <Image
                       src="imgs/right-doublearrow.svg"
                       alt=""
-                      height={11}
-                      width={11}
+                      height={35}
+                      width={35}
                     />
                   </div>
                 )}
@@ -465,8 +488,8 @@ export default function Home() {
                     <Image
                       src="imgs/right-doublearrowg.svg"
                       alt=""
-                      height={11}
-                      width={11}
+                      height={35}
+                      width={40}
                     />
                   </div>
                 )}

@@ -5,7 +5,7 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 import API_Auth from "../../pages/api/API_Auth";
 import moment from "moment";
 import { UserContext } from "@/pages/context";
-import Image from 'next/image';
+import Image from "next/image";
 
 interface LayoutProps {
   children: ReactNode;
@@ -23,13 +23,11 @@ const MainLayout = ({ children }: LayoutProps) => {
   const [loginKey, setLoginKey] = useState(false);
 
   useEffect(() => {
-
     const data = localStorage.getItem("useremail");
     if (data != undefined) {
-      let email = localStorage.getItem('useremail')
+      let email = localStorage.getItem("useremail");
       console.log("email");
-      getEmailInfo(email)
-
+      getEmailInfo(email);
     }
     const handleScroll = () => {
       console.log(window.scrollY);
@@ -49,8 +47,8 @@ const MainLayout = ({ children }: LayoutProps) => {
   const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    getNotifications(result.id)
-  }
+    getNotifications(result.id);
+  };
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
     console.log("admin_notifications", admin_notifications);
@@ -75,7 +73,7 @@ const MainLayout = ({ children }: LayoutProps) => {
           >
             <div className="nav-logo">
               <Link href="/">
-                <img src="/imgs/isdb-logo-layout.png" alt="" />
+                <img src="/imgs/IsDBI_Logo.svg" alt="" />
               </Link>
             </div>
             <div className="navhead-links">
@@ -105,7 +103,7 @@ const MainLayout = ({ children }: LayoutProps) => {
           <div className={`nav-container ${isNavFixed ? "fixed-nav" : ""}`}>
             <div className="nav-logo">
               <Link href="/">
-                <img src="/imgs/isdb-logo-layout.png" alt="" />
+                <img src="/imgs/IsDBI_Logo.svg" alt="" />
               </Link>
             </div>
             <div className="nav-right">

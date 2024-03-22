@@ -18,8 +18,8 @@ import AppLayout from "@/components/layout/AppLayout";
 import * as XLSX from "xlsx";
 import * as React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Home() {
   const router = useRouter();
@@ -203,8 +203,13 @@ export default function Home() {
       creator: creatorName,
       scenario: s_type,
       datefrom:
-        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        fromDate == null || fromDate == ""
+          ? ""
+          : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto:
+        toDate == null || toDate == ""
+          ? ""
+          : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
 
       resultPerPage: perPage,
       pgNo: pageNo,
@@ -301,7 +306,15 @@ export default function Home() {
       setPageNo(1);
       setCurrentPage(0);
 
-      getSimulations(tempname, creatorName, s_type, fromDate, toDate, Number(value), 1);
+      getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        fromDate,
+        toDate,
+        Number(value),
+        1
+      );
     }
   };
 
@@ -343,30 +356,25 @@ export default function Home() {
     // Check if the record is already in the array
     const index = selectedRecords.indexOf(id);
     console.log(selectedRecords);
-
     const filteredArray = templateData.filter((item) => item.exe_id === id);
     console.log("filteredArray", filteredArray, dataRecords);
-
-    if (dataRecords.length < 3) {
-      // If the record is checked, add it to the array
-      if (index === -1) {
+    // If the record is checked, add it to the array
+    if (index === -1) {
+      if (dataRecords.length < 3) {
         setSelectedRecords([...selectedRecords, id]);
         setDataRecords([...dataRecords, filteredArray[0]]);
       } else {
-        // If the record is unchecked, remove it from the array
-        const updatedRecords = [...selectedRecords];
-        const updateDataRecords = [...dataRecords];
-        updatedRecords.splice(index, 1);
-        //updateDataRecords.splice(index, 1);
-        const updatedData = updateDataRecords.filter(
-          (item) => item.exe_id === id
-        );
-
-        setDataRecords([...updatedData]);
-        setSelectedRecords(updatedRecords);
+        toast.error("Template Records should not more than 3");
       }
     } else {
-      toast.error("Template Records should not more than 3");
+      // If the record is unchecked, remove it from the array
+      const updatedRecords = [...selectedRecords];
+      const updateDataRecords = [...dataRecords];
+      updatedRecords.splice(index, 1);
+      //updateDataRecords.splice(index, 1);
+      const updatedData = updateDataRecords.filter((item) => item.exe_id != id);
+      setDataRecords([...updatedData]);
+      setSelectedRecords(updatedRecords);
     }
   };
   const handleClear = () => {
@@ -377,7 +385,7 @@ export default function Home() {
   const handleCompareClick = () => {
     console.log(dataRecords);
     if (dataRecords.length != 3) {
-      toast.error("Template Records length should be 3");
+      toast.error("Template Records length should not greater than 3");
     } else {
       //router.push("/templatedetails_excel")
 
@@ -692,26 +700,26 @@ export default function Home() {
   //console.log("viewData---------->",viewData)
 
   const handleDates = (date: any, key: any) => {
-    console.log(date, key)
+    console.log(date, key);
     if (key == "startdate") {
-      setFromDate(date)
+      setFromDate(date);
       getSimulations(tempname, creatorName, s_type, date, toDate, perPage, 1);
     } else {
-      console.log("enddate")
-      setToDate(date)
+      console.log("enddate");
+      setToDate(date);
       getSimulations(tempname, creatorName, s_type, fromDate, date, perPage, 1);
     }
-  }
+  };
   const handleDelete = (key: any) => {
     if (key == "startdate") {
-      setFromDate(null)
+      setFromDate(null);
       getSimulations(tempname, creatorName, s_type, "", toDate, perPage, 1);
     } else {
-      console.log("enddate")
-      setToDate(null)
+      console.log("enddate");
+      setToDate(null);
       getSimulations(tempname, creatorName, s_type, fromDate, "", perPage, 1);
     }
-  }
+  };
   if (mounted)
     return (
       <AppLayout>
@@ -729,7 +737,7 @@ export default function Home() {
 
             <div className="compare-banner">
               <label htmlFor="">Compare Templates :</label>
-              {dataRecords.map((item: any,index:any) => (
+              {dataRecords.map((item: any, index: any) => (
                 <button className="templatename" key={index}>
                   {item.temp_name}{" "}
                   <img
@@ -836,29 +844,44 @@ export default function Home() {
                       />
                     </div> */}
                     <div className="dateFilter">
-
                       <div className="date-picker-container">
                         <span className="icon-container">
-                          <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                          <img
+                            src="imgs/calendar.svg"
+                            alt="Calendar Icon"
+                            className="calendar-icon"
+                          />
                         </span>
                         <DatePicker
                           selected={fromDate}
-                          onChange={(date: any) => handleDates(date, "startdate")}
+                          onChange={(date: any) =>
+                            handleDates(date, "startdate")
+                          }
                           dateFormat="dd/MM/yyyy"
                           placeholderText="Start Date"
                           className="custom-datepicker"
                         />
                         {fromDate && (
-                          <span className="icon-container" onClick={() => handleDelete("startdate")}>
-                            <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                          <span
+                            className="icon-container"
+                            onClick={() => handleDelete("startdate")}
+                          >
+                            <img
+                              src="imgs/close.svg"
+                              alt="Close Icon"
+                              className="close-icon"
+                            />
                           </span>
                         )}
                       </div>
 
-
                       <div className="date-picker-container">
                         <span className="icon-container">
-                          <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                          <img
+                            src="imgs/calendar.svg"
+                            alt="Calendar Icon"
+                            className="calendar-icon"
+                          />
                         </span>
                         <DatePicker
                           selected={toDate}
@@ -868,8 +891,15 @@ export default function Home() {
                           className="custom-datepicker"
                         />
                         {toDate && (
-                          <span className="icon-container" onClick={() => handleDelete("enddate")}>
-                            <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                          <span
+                            className="icon-container"
+                            onClick={() => handleDelete("enddate")}
+                          >
+                            <img
+                              src="imgs/close.svg"
+                              alt="Close Icon"
+                              className="close-icon"
+                            />
                           </span>
                         )}
                       </div>
@@ -979,9 +1009,11 @@ export default function Home() {
                 <div className="toolbar">
                   <label htmlFor="">Results per page :</label>
                   <div className="tooldrop">
-                    <select value={perPage}
+                    <select
+                      value={perPage}
                       name="perPage"
-                      onChange={handleInput}>
+                      onChange={handleInput}
+                    >
                       <option value="5">5</option>
                       <option value="10">10</option>
 

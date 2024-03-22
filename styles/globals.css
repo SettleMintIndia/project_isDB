@@ -134,7 +134,7 @@ label {
   border-radius: 10px;
   opacity: 1;
   padding: 50px 30px;
-  width: 80%;
+  width: 85%;
 }
 
 .login-form form {
@@ -237,7 +237,7 @@ button {
 
 .alert-message {
   color: red;
-  margin: 3px 1px;
+  margin: 0;
   font-size: 13px;
 }
 
@@ -326,6 +326,18 @@ button {
   box-shadow: 0px 8px 24px #00000073;
   z-index: 1;
   position: relative;
+  padding-left: 0 !important;
+}
+.nav-container .nav-logo {
+  background: white;
+  border-radius: 10px 0px 35px 10px;
+  width: 176px;
+  height: 90px;
+  padding: 10px 20px;
+}
+.nav-container .nav-logo img {
+  width: 130px;
+  height: 65px;
 }
 .nav-container .nav-right {
   display: flex;
@@ -526,6 +538,7 @@ button {
   max-width: 100%;
   opacity: 1;
   margin-left: 0px;
+  cursor: pointer;
 }
 
 .menu-dropdown .logout:hover,
@@ -898,7 +911,12 @@ label {
   justify-content: space-between;
   padding-right: 2px;
 }
-
+.template.admin .searchFilter {
+  width: 240px;
+}
+.template.admin .searchFilter.options input {
+  width: 115px;
+}
 .template .searchFilter input {
   background: none;
   border: none;
@@ -967,7 +985,7 @@ label {
 .template-content table thead th {
   position: sticky;
   background: #0d3c47;
-  padding: 25px 10px 25px 15px;
+  padding: 25px 10px 25px 25px;
   color: white;
   font-weight: bold;
   font-family: "Segoe UI Regular";
@@ -1203,7 +1221,9 @@ label {
   align-items: last baseline;
   gap: 10px;
 }
-
+.right-head.info p {
+  padding: 0;
+}
 .right-head {
   display: inline;
   font-size: 14px;
@@ -1293,6 +1313,14 @@ label {
 .right-tables {
   display: grid;
   gap: 20px;
+}
+.right-tables .table-responsive,
+.left-tables .table-responsive {
+  overflow-x: hidden;
+}
+.right-tables .table-responsive td,
+.left-tables .table-responsive td {
+  white-space: wrap;
 }
 .template-modal .modal-details .modal-comment {
   padding: 0 10px;
@@ -1413,7 +1441,9 @@ label {
 .iteratioview {
   margin: 20px;
 }
-
+.info p {
+  padding: 0 20px;
+}
 .simulation-info {
   margin: 20px;
 }
@@ -1922,7 +1952,12 @@ label {
 .template.request-scenario {
   margin: 3% 20%;
 }
-
+.template.request-scenario .create-template {
+  margin-left: 11px;
+}
+.template.request-scenario .table-responsive {
+  overflow-x: hidden;
+}
 .template.request-scenario .create-template {
   width: max-content !important;
   padding: 0 30px;
@@ -1974,7 +2009,7 @@ label {
   /* display: flex;
   gap: 20px; */
   text-decoration: underline;
-  padding: 25px 60px;
+  padding: 20px 60px 20px 40px;
   text-align: center;
   color: #0d3c47;
 }
@@ -2251,8 +2286,8 @@ label {
   border-color: #00001f24;
   outline: none;
   color: #ffff;
-  height: initial;
-  width: inherit;
+  /* height: initial;
+  width: inherit; */
 }
 
 .pagination > li > a,
@@ -2342,12 +2377,15 @@ label {
   display: flex;
   gap: 20px;
 }
-
+.radio .form-control {
+  padding: 0;
+  border: none;
+}
 .template .radio-button {
   display: flex;
   align-items: center;
   gap: 50px;
-  margin-top: 15px;
+  margin-top: 6px;
 }
 
 .template .radio-button .form-check {
@@ -2365,82 +2403,17 @@ label {
   font-family: "Segoe UI Regular";
   font-size: 16px;
 }
-
-/*  */
-/* .pagination {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
+.template.admin .pagination {
+  margin-top: 6px;
 }
 
-.page-item {
-  display: inline-block;
-  margin-right: 5px;
-}
-
-.page-link {
-  padding: 8px 12px;
-  
-  color: #333;
-  cursor: pointer;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.page-link:hover {
-  background-color: #f2f2f2;
-}
-
-.active .page-link {
-  background-color: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
-
-.break-me {
-  cursor: default;
-} */
-/* .pagination {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-}
-
-.pagination li {
-  margin: 0 5px;
-  cursor: pointer;
-}
-
-.pagination li a {
-  color: #000;
-  padding: 5px 10px;
-  text-decoration: none;
-}
-
-.pagination li.active a {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.pagination li.disabled a {
-  pointer-events: none;
-  color: #ccc;
-}
-
-.pagination li.disabled a:hover {
-  background-color: transparent;
-}
-
-.pagination li a:hover {
-  background-color: #f0f0f0;
-}
- */
- .pagination{
+.pagination {
   margin-top: 8px;
- }
- .pagination > li {
+}
+.pagination .next {
+  width: 28px;
+}
+.pagination > li {
   display: inline-block;
   padding-left: 0;
 }
@@ -2456,7 +2429,7 @@ label {
   color: black;
 }
 
-.pagination>li.active>a {
+.pagination > li.active > a {
   color: #fff;
   background-color: #000044;
   border-color: #000044;
@@ -2467,16 +2440,14 @@ label {
 
 /* Style the active class (and buttons on mouse-over) */
 .pagination > li > a:hover {
-  background-color:  #000044;
+  background-color: #000044;
   color: white;
   height: 28px;
   width: 28px;
   border-radius: 14px;
- 
 }
 
-
- /*  */
+/*  */
 .template .table-responsive .row select,
 .template .row input {
   font-size: 16px;
@@ -2797,7 +2768,6 @@ label {
   padding-top: 0px;
   padding-bottom: 0px;
 }
-
 
 /* date */
 
@@ -3496,6 +3466,7 @@ footer {
     display: flex;
     gap: 20px;
   }
+
   .right-tables .modal-comment,
   .right-tables .table-responsive {
     width: 50%;
@@ -3536,6 +3507,23 @@ footer {
     gap: 5px;
     width: 233px;
     padding-left: 8px;
+  }
+  .template.admin .searchFilter.options {
+    gap: 0px;
+    width: 230px;
+  }
+  .template.admin #searchtype,
+  .template.run-simulation #searchtype {
+    width: 72px;
+  }
+  .template.run-simulation #searchtype {
+    width: 90px;
+  }
+  .template.run-simulation .searchFilter.options {
+    width: 298px;
+  }
+  .template.run-simulation .searchFilter.options input {
+    width: 170px;
   }
 
   .template .searchFilter.options {
@@ -3612,7 +3600,7 @@ footer {
   .menu-dropdown,
   .notification-list,
   .menu-list.create {
-    top: 80px;
+    top: 75px;
   }
 
   .row.scenario .col-md-6 {
@@ -3625,6 +3613,11 @@ footer {
   .ns-table {
     width: 85%;
   }
+  .template.run-simulation .filterArea {
+    display: grid;
+    margin-bottom: 10px;
+    gap: 5px;
+  }
 }
 @media screen and (max-width: 880px) {
   .nav-links {
@@ -3636,11 +3629,14 @@ footer {
   .us-1 {
     display: flex;
     justify-content: flex-end;
-    width: 38% !important;
-    margin-right: 10px;
+    width: 42% !important;
+    /* margin-right: 10px; */
+    height: 80px;
+    position: relative;
+    top: 4px;
   }
   .dp {
-    right: 42%;
+    right: 38%;
     top: 65px;
     padding-bottom: 0;
   }
@@ -3865,6 +3861,13 @@ footer {
   .buttoncenter.admin {
     margin-top: 20px;
   }
+  .template.edit-password .change-button {
+    margin-top: 10px;
+  }
+  .template.run-simulation .searchArea {
+    display: grid;
+    justify-items: end;
+  }
 }
 @media screen and (max-width: 620px) {
   .template.run-simulation .pagging-area .toolbar {
@@ -3911,7 +3914,7 @@ footer {
   .rightaction,
   .leftaction-single,
   .rightaction-single {
-    width: 30px;
+    /* width: 30px; */
   }
   .template .pagging-area .toolbar {
     font-size: 14px;
@@ -4081,8 +4084,7 @@ footer {
     right: 70px;
   }
   .dp,
-  .menu-list,
-  .notification-list {
+  .menu-list {
     padding-bottom: 5px;
   }
   .menu img,
@@ -4098,7 +4100,50 @@ footer {
     gap: 15px;
   }
   .us-1 {
-    width: 44% !important;
+    width: 40% !important;
+    top: 2px;
+    height: 80px;
+  }
+  .paging-list .pagination {
+    margin-top: 10px;
+  }
+  .pagination .next {
+    width: 24px;
+  }
+  .template.admin #searchtype {
+    height: 28px;
+  }
+  .template.admin .searchFilter.options {
+    width: 208px;
+  }
+  .template.admin .searchFilter.options input {
+    width: 100px;
+  }
+  .template.run-simulation #searchtype {
+    height: 28px;
+  }
+  .template.run-simulation .searchFilter.options {
+    width: 274px;
+  }
+  .template.run-simulation .searchFilter.options input {
+    width: 150px;
+  }
+  .template.run-simulation #searchtype {
+    width: 82px;
+  }
+  .template.details .compare-banner {
+    gap: 5px;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .template.details .compare-banner .compare-button {
+    width: 150px;
+  }
+}
+@media screen and (max-width: 540px) {
+  .template .searchArea {
+    display: grid;
+    justify-items: end;
   }
 }
 @media screen and (max-width: 520px) {
@@ -4137,6 +4182,12 @@ footer {
   .nav-container {
     padding: 10px;
   }
+  .nav-container .nav-logo {
+    width: 130px;
+  }
+  .nav-container .nav-logo img {
+    width: 100px;
+  }
   .notification-list {
     width: 320px;
     right: 6%;
@@ -4144,9 +4195,8 @@ footer {
   .simulation-info {
     margin: 10px;
   }
-  .template .searchArea {
-    display: grid;
-    justify-items: end;
+  .us-1 {
+    width: 36% !important;
   }
 }
 @media screen and (max-width: 480px) {
@@ -4245,7 +4295,7 @@ footer {
     padding: 10px;
   }
   .us-1 {
-    width: 35% !important;
+    width: 24% !important;
   }
   .buttoncenter,
   .buttoncenter.admin {
@@ -4281,6 +4331,9 @@ footer {
   }
   .template .row label {
     font-size: 14px;
+  }
+  .alert-message {
+    font-size: 12px;
   }
   .template .table-responsive .row select,
   .template .row input {
@@ -4440,6 +4493,19 @@ footer {
   }
   .login-form {
     padding: 50px 10px;
+  }
+  .pagination li,
+  .pagination li {
+    margin-top: 5px;
+  }
+  .paging-list .pagination {
+    margin-top: 7px;
+  }
+  .template.admin .pagination {
+    margin-top: 4px;
+  }
+  .paging-list li.active {
+    margin-top: initial;
   }
 }
 

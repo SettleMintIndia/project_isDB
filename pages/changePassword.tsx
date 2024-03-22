@@ -170,7 +170,7 @@ export default function Home() {
           </div>
           {loading == true && <Loader />}
           <div className="row">
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6">
               <div className="form-content current-password">
                 <label htmlFor="password1">Current Password</label>
                 <div style={{ position: "relative", display: "inline-block" }}>
@@ -192,6 +192,7 @@ export default function Home() {
                       border: "none",
                       textDecoration: "underline",
                       whiteSpace: "nowrap",
+                      fontSize: "14px",
                     }}
                   >
                     {showCurrentPassword ? "Hide" : "Show"}
@@ -202,7 +203,7 @@ export default function Home() {
                 <p className="alert-message">{currentPasswordErr}</p>
               )}
             </div>
-            <div className="col-md-6 mb-3"></div>
+            <div className="col-md-6"></div>
 
             <div className="col-md-6">
               <div className="form-content password1">
@@ -226,6 +227,7 @@ export default function Home() {
                       border: "none",
                       textDecoration: "underline",
                       whiteSpace: "nowrap",
+                      fontSize: "14px",
                     }}
                   >
                     {showNewPassword ? "Hide" : "Show"}
@@ -268,6 +270,7 @@ export default function Home() {
                       border: "none",
                       textDecoration: "underline",
                       whiteSpace: "nowrap",
+                      fontSize: "14px",
                     }}
                   >
                     {showConfirmPassword ? "Hide" : "Show"}
@@ -279,7 +282,7 @@ export default function Home() {
                 )}
               </div>
             </div>
-            <div className="change-button">
+            <div className="change-button mb-2">
               <button
                 className="create-template"
                 onClick={handleUpdatePassword}

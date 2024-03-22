@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import Loader from "@/components/layout/Loader";
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -66,15 +66,15 @@ export default function Home() {
   const [finalComments, setfinalComments] = useState("");
   const [finalCommentsErr, setfinalCommentsErr] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const [userId, setUserId] = useState('')
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     getTemplateDetails(totalTempName);
-    let email = localStorage.getItem('useremail')
+    let email = localStorage.getItem("useremail");
     console.log("email");
-    getEmailInfo(email)
+    getEmailInfo(email);
     getScenarios();
     getDistributions();
   }, [totalTempName]);
@@ -82,8 +82,8 @@ export default function Home() {
   const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    setUserId(result.id)
-  }
+    setUserId(result.id);
+  };
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -133,10 +133,10 @@ export default function Home() {
       setDevqty(data.std_dev_quant);
       setMeanqty(data.mean_quant);
       setDistribution(data.distribution);
-      setcomment(data.comments)
+      setcomment(data.comments);
       setlowerbound(data.limit_order_lower_bound);
-      setupperbound(data.limit_order_upper_bound)
-      setPublicKey(data.is_public)
+      setupperbound(data.limit_order_upper_bound);
+      setPublicKey(data.is_public);
     }
   };
 
@@ -148,17 +148,14 @@ export default function Home() {
     setShowModal(false);
   };
 
-
   const handleYesCancel = () => {
     setModalIsOpen(false);
     const superadminkey = localStorage.getItem("superadmin");
     console.log("superadmin", superadminkey);
     if (superadminkey == "superadmin") {
       router.push("/templateDetails");
-
     } else {
       router.push("/runSimulation");
-
     }
   };
   const handleNoCancel = () => {
@@ -328,14 +325,13 @@ export default function Home() {
     } else {
       settheta1Err("");
     }
-   /*  if (comment === "") {
+    /*  if (comment === "") {
       setcommentErr("Please Enter Comment");
       error = error + 1;
     } else {
       setcommentErr("");
     } */
-    if (distribution == 'normal') {
-
+    if (distribution == "normal") {
       if (devpricebuy === "") {
         setDevPricebuyErr("Please Enter Standard Deviation Price Buy");
         error = error + 1;
@@ -355,8 +351,7 @@ export default function Home() {
         setDevqtyErr("");
       }
     }
-    if (distribution == 'poisson' || distribution == 'normal') {
-
+    if (distribution == "poisson" || distribution == "normal") {
       if (meanpricebuy === "") {
         setMeanPricebuyErr("Please Enter Mean Price Buy");
         error = error + 1;
@@ -370,7 +365,6 @@ export default function Home() {
       } else {
         setMeanPricesellErr("");
       }
-
 
       if (meanqty === "") {
         setMeanqtyErr("Please Enter Mean Qunatity");
@@ -389,32 +383,24 @@ export default function Home() {
 
     console.log(error);
     if (error == 0) {
-
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        toast.error("price or quant variance should be less than 1")
+        toast.error("price or quant variance should be less than 1");
       } else if (Number(upperbound) > 1) {
-        toast.error("upper lmt order price variance should be less than 1")
-      }
-      else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1")
-      } 
-      else if((Number(alpha0) >1) ){
+        toast.error("upper lmt order price variance should be less than 1");
+      } else if (Number(lowerbound) < 1) {
+        toast.error("lower lmt order price variance should be greater than 1");
+      } else if (Number(alpha0) > 1) {
         toast.error("alpha0 value should be less than 1");
-      }
-      else if(Number(alpha0)>Number(alpha1)){
+      } else if (Number(alpha0) > Number(alpha1)) {
         toast.error("alpha1 value should be greater than alpha0");
-      }
-      else if((Number(theta0) >1) ){
+      } else if (Number(theta0) > 1) {
         toast.error("theta0 value should be less than 1");
-      }
-      else if(Number(theta0)>Number(theta1)){
+      } else if (Number(theta0) > Number(theta1)) {
         toast.error("theta1 value should be greater than theta0");
-      
+      } else {
+        setShowModal(true);
       }
-      else {
-      setShowModal(true);
     }
-  }
   };
 
   const handleSaveTemplate = async () => {
@@ -433,84 +419,89 @@ export default function Home() {
     }
     if (error == 0) {
       let finalbody = {
-        "temp_name": newtemplateName,
-        "scenario_name": scenarioType,
-        "initial_mkt_price": Number(inititalmarketprice),
-        "price_var": Number(pricelimit),
-        "base_quant": Number(basequantity),
-        "quant_var": Number(quantitylimit),
-        "alpha0": Number(alpha0),
-        "alpha1": Number(alpha1),
-        "theta0": Number(theta0),
-        "theta1": Number(theta1),
-        "distribution": distribution,
-        "comments": finalComments,
-        "is_public": publickey,
-        "std_dev_price_buy": distribution == 'normal' ? Number(devpricebuy) : 0,
-        "std_dev_price_sell": distribution == 'normal' ? Number(devpricesell) : 0,
-        "std_dev_quant": distribution == 'normal' ? Number(devqty) : 0,
-        "mean_price_buy": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricebuy) : 0,
-        "mean_price_sell": (distribution == 'poisson' || distribution == 'normal') ? Number(meanpricesell) : 0,
-        "mean_quant": (distribution == 'poisson' || distribution == 'normal') ? Number(meanqty) : 0,
-        "admin_id": userId,
-        "limit_order_upper_bound": Number(upperbound),
-        "limit_order_lower_bound": Number(lowerbound)
-
-      }
+        temp_name: newtemplateName,
+        scenario_name: scenarioType,
+        initial_mkt_price: Number(inititalmarketprice),
+        price_var: Number(pricelimit),
+        base_quant: Number(basequantity),
+        quant_var: Number(quantitylimit),
+        alpha0: Number(alpha0),
+        alpha1: Number(alpha1),
+        theta0: Number(theta0),
+        theta1: Number(theta1),
+        distribution: distribution,
+        comments: finalComments,
+        is_public: publickey,
+        std_dev_price_buy: distribution == "normal" ? Number(devpricebuy) : 0,
+        std_dev_price_sell: distribution == "normal" ? Number(devpricesell) : 0,
+        std_dev_quant: distribution == "normal" ? Number(devqty) : 0,
+        mean_price_buy:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanpricebuy)
+            : 0,
+        mean_price_sell:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanpricesell)
+            : 0,
+        mean_quant:
+          distribution == "poisson" || distribution == "normal"
+            ? Number(meanqty)
+            : 0,
+        admin_id: userId,
+        limit_order_upper_bound: Number(upperbound),
+        limit_order_lower_bound: Number(lowerbound),
+      };
       console.log("finalbody", finalbody);
-    
-        console.log("finalbody", finalbody);
 
-        const template_exist = await API_Auth.getTemplateExists(newtemplateName)
-        console.log("template_exist", template_exist)
-        if (template_exist.name_available == false) {
-          setFinalErr("Template Name Already Exists")
-        }
-        else {
-          setFinalErr("")
-          setDisableSubmit(true);
-          setLoading(true);
+      console.log("finalbody", finalbody);
 
-          const data = await API_Auth.createTemplate(finalbody)
-          console.log("result", data);
-          setLoading(false)
-          if (data.error! = '' || data.error == undefined) {
-            toast.success("Template Created Successfully")
-            const superadminkey = localStorage.getItem("superadmin");
-            console.log("superadmin", superadminkey);
-            if (superadminkey == "superadmin") {
+      const template_exist = await API_Auth.getTemplateExists(newtemplateName);
+      console.log("template_exist", template_exist);
+      if (template_exist.name_available == false) {
+        setFinalErr("Template Name Already Exists");
+      } else {
+        setFinalErr("");
+        setDisableSubmit(true);
+        setLoading(true);
 
-              setTimeout(() => {
-
-                router.push("/templateDetails");
-              }, 2000);
-            } else {
-              setTimeout(() => {
-
-                router.push("/runSimulation");
-              }, 2000);
-            }
-
+        const data = await API_Auth.createTemplate(finalbody);
+        console.log("result", data);
+        setLoading(false);
+        if ((data.error! = "" || data.error == undefined)) {
+          toast.success("Template Created Successfully");
+          const superadminkey = localStorage.getItem("superadmin");
+          console.log("superadmin", superadminkey);
+          if (superadminkey == "superadmin") {
+            setTimeout(() => {
+              router.push("/templateDetails");
+            }, 2000);
           } else {
-            setDisableSubmit(false);
-            setFinalErr("Duplicate Entries Exists");
-
+            setTimeout(() => {
+              router.push("/runSimulation");
+            }, 2000);
           }
+        } else {
+          setDisableSubmit(false);
+          setFinalErr("Duplicate Entries Exists");
         }
       }
-    
+    }
   };
   const handleBack = () => {
     router.back();
-  }
+  };
   return (
     <AppLayout>
       <div className="container-fluid">
         <div className="template edit-template">
           <div className="template-header">
             <div className="back-option" onClick={() => handleBack()}>
-              <Image src="imgs/left-arrow.svg" alt=""
-                width={27.443} height={25.767} />
+              <Image
+                src="imgs/left-arrow.svg"
+                alt=""
+                width={27.443}
+                height={25.767}
+              />
               <p className="mb-0">Back</p>
             </div>
             <div className="main-header">
@@ -611,7 +602,9 @@ export default function Home() {
               </div>
               <div className="col-md-6 p-1">
                 <div className="form-content">
-                  <label htmlFor="quantitylimit">Quantity Variance Limit*</label>
+                  <label htmlFor="quantitylimit">
+                    Quantity Variance Limit*
+                  </label>
                   <input
                     type="number"
                     id="quantitylimit"
@@ -669,7 +662,9 @@ export default function Home() {
                     onChange={handleInput}
                   />
                 </div>
-                {alpha0Err != "" && <p className="alert-message">{alpha0Err}</p>}
+                {alpha0Err != "" && (
+                  <p className="alert-message">{alpha0Err}</p>
+                )}
               </div>
               <div className="col-md-6 p-1">
                 <div className="form-content">
@@ -683,7 +678,9 @@ export default function Home() {
                     onChange={handleInput}
                   />
                 </div>
-                {alpha1Err != "" && <p className="alert-message">{alpha1Err}</p>}
+                {alpha1Err != "" && (
+                  <p className="alert-message">{alpha1Err}</p>
+                )}
               </div>
               <div className="col-md-6 p-1">
                 <div className="form-content">
@@ -697,7 +694,9 @@ export default function Home() {
                     onChange={handleInput}
                   />
                 </div>
-                {theta0Err != "" && <p className="alert-message">{theta0Err}</p>}
+                {theta0Err != "" && (
+                  <p className="alert-message">{theta0Err}</p>
+                )}
               </div>
               <div className="col-md-6 p-1">
                 <div className="form-content">
@@ -711,7 +710,9 @@ export default function Home() {
                     onChange={handleInput}
                   />
                 </div>
-                {theta1Err != "" && <p className="alert-message">{theta1Err}</p>}
+                {theta1Err != "" && (
+                  <p className="alert-message">{theta1Err}</p>
+                )}
               </div>
 
               <div className="col-md-6 p-1">
@@ -736,108 +737,119 @@ export default function Home() {
                   <p className="alert-message">{distributionErr}</p>
                 )}
               </div>
-              {distribution == 'normal' && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Standard Deviation Price Buy</label>
-                  <input
-                    type="number"
-                    id="devpricebuy"
-                    name="devpricebuy"
-                    required
-                    value={devpricebuy}
-                    onChange={handleInput}
-                  />
+              {distribution == "normal" && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">Standard Deviation Price Buy</label>
+                    <input
+                      type="number"
+                      id="devpricebuy"
+                      name="devpricebuy"
+                      required
+                      value={devpricebuy}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {devpricebuyErr != "" && (
+                    <p className="alert-message">{devpricebuyErr}</p>
+                  )}
                 </div>
-                {devpricebuyErr != "" && <p className="alert-message">{devpricebuyErr}</p>}
-              </div>
-              }
+              )}
 
-              {distribution == 'normal' && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Standard Deviation Price Sell</label>
-                  <input
-                    type="number"
-                    id="devpricesell"
-                    name="devpricesell"
-                    required
-                    value={devpricesell}
-                    onChange={handleInput}
-                  />
+              {distribution == "normal" && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">
+                      Standard Deviation Price Sell
+                    </label>
+                    <input
+                      type="number"
+                      id="devpricesell"
+                      name="devpricesell"
+                      required
+                      value={devpricesell}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {devpricesellErr != "" && (
+                    <p className="alert-message">{devpricesellErr}</p>
+                  )}
                 </div>
-                {devpricesellErr != "" && <p className="alert-message">{devpricesellErr}</p>}
-              </div>
-              }
+              )}
 
-
-              {distribution == 'normal' && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Standard Deviation Quantity</label>
-                  <input
-                    type="number"
-                    id="devqty"
-                    name="devqty"
-                    required
-                    value={devqty}
-                    onChange={handleInput}
-                  />
+              {distribution == "normal" && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">Standard Deviation Quantity</label>
+                    <input
+                      type="number"
+                      id="devqty"
+                      name="devqty"
+                      required
+                      value={devqty}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {devqtyErr != "" && (
+                    <p className="alert-message">{devqtyErr}</p>
+                  )}
                 </div>
-                {devqtyErr != "" && <p className="alert-message">{devqtyErr}</p>}
-              </div>
-              }
-              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Mean Price Buy</label>
-                  <input
-                    type="number"
-                    id="meanpricebuy"
-                    name="meanpricebuy"
-                    required
-                    value={meanpricebuy}
-                    onChange={handleInput}
-                  />
+              )}
+              {(distribution == "poisson" || distribution == "normal") && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">Mean Price Buy</label>
+                    <input
+                      type="number"
+                      id="meanpricebuy"
+                      name="meanpricebuy"
+                      required
+                      value={meanpricebuy}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {meanpricebuyErr != "" && (
+                    <p className="alert-message">{meanpricebuyErr}</p>
+                  )}
                 </div>
-                {meanpricebuyErr != "" && <p className="alert-message">{meanpricebuyErr}</p>}
-              </div>
-              }
-              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Mean Price Sell</label>
-                  <input
-                    type="number"
-                    id="meanpricesell"
-                    name="meanpricesell"
-                    required
-                    value={meanpricesell}
-                    onChange={handleInput}
-                  />
+              )}
+              {(distribution == "poisson" || distribution == "normal") && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">Mean Price Sell</label>
+                    <input
+                      type="number"
+                      id="meanpricesell"
+                      name="meanpricesell"
+                      required
+                      value={meanpricesell}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {meanpricesellErr != "" && (
+                    <p className="alert-message">{meanpricesellErr}</p>
+                  )}
                 </div>
-                {meanpricesellErr != "" && <p className="alert-message">{meanpricesellErr}</p>}
-              </div>
-              }
+              )}
 
-
-              {(distribution == 'poisson' || distribution == 'normal') && <div className="col-md-6 p-1">
-
-                <div className="form-content">
-                  <label htmlFor="theta1">Mean Price Quantity</label>
-                  <input
-                    type="number"
-                    id="meanqty"
-                    name="meanqty"
-                    required
-                    value={meanqty}
-                    onChange={handleInput}
-                  />
+              {(distribution == "poisson" || distribution == "normal") && (
+                <div className="col-md-6 p-1">
+                  <div className="form-content">
+                    <label htmlFor="theta1">Mean Price Quantity</label>
+                    <input
+                      type="number"
+                      id="meanqty"
+                      name="meanqty"
+                      required
+                      value={meanqty}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  {meanqtyErr != "" && (
+                    <p className="alert-message">{meanqtyErr}</p>
+                  )}
                 </div>
-                {meanqtyErr != "" && <p className="alert-message">{meanqtyErr}</p>}
-              </div>
-              }
-
+              )}
 
               <div className="col-md-6 p-1">
                 <div className="form-control p-1">
@@ -852,9 +864,11 @@ export default function Home() {
                         value={1}
                         checked={publickey === 1}
                         onChange={handleInput}
-
                       />
-                      <label className="form-check-label" htmlFor="inlineRadio1">
+                      <label
+                        className="form-check-label"
+                        htmlFor="inlineRadio1"
+                      >
                         Public
                       </label>
                     </div>
@@ -867,9 +881,11 @@ export default function Home() {
                         value={0}
                         checked={publickey === 0}
                         onChange={handleInput}
-
                       />
-                      <label className="form-check-label" htmlFor="inlineRadio2">
+                      <label
+                        className="form-check-label"
+                        htmlFor="inlineRadio2"
+                      >
                         Private
                       </label>
                     </div>
@@ -910,9 +926,13 @@ export default function Home() {
                 className="energy-efficiency"
               >
                 <Modal.Header className="custom-header">
-                  <Image src="imgs/close-black.svg" alt=""
-                    width={19.199} height={19.199}
-                    onClick={handleClose} />
+                  <Image
+                    src="imgs/close-black.svg"
+                    alt=""
+                    width={19.199}
+                    height={19.199}
+                    onClick={handleClose}
+                  />
                 </Modal.Header>
                 <Modal.Body>
                   {" "}
@@ -967,9 +987,13 @@ export default function Home() {
               </button>
               <Modal show={modalIsOpen} onHide={closeModal}>
                 <Modal.Header className="custom-header">
-                  <Image src="imgs/close-black.svg" alt=""
-                    width={19.199} height={19.199}
-                    onClick={closeModal} />
+                  <Image
+                    src="imgs/close-black.svg"
+                    alt=""
+                    width={19.199}
+                    height={19.199}
+                    onClick={closeModal}
+                  />
                 </Modal.Header>
                 <Modal.Body className="modal-ask p-0">
                   <div>

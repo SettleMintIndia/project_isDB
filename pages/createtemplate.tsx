@@ -423,7 +423,7 @@ export default function Home() {
 
           <div className="table-responsive">
             <div className="row">
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="type">Scenario Type*</label>
                   <select
@@ -448,7 +448,7 @@ export default function Home() {
                   )}
                 </div>
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="name">Template Name*</label>
                   <input
@@ -464,7 +464,7 @@ export default function Home() {
                   <p className="alert-message">{templatenameErr}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="price">Initial Market Price*</label>
                   <input
@@ -480,7 +480,7 @@ export default function Home() {
                   )}
                 </div>
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="pricelimit">Price Variance Limit*</label>
                   <input
@@ -496,7 +496,7 @@ export default function Home() {
                   <p className="alert-message">{pricelimitErr}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="quantity">Base Quantity*</label>
                   <input
@@ -512,7 +512,7 @@ export default function Home() {
                   )}
                 </div>
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="quantitylimit">
                     Quantity Variance Limit*
@@ -530,7 +530,7 @@ export default function Home() {
                   <p className="alert-message">{quantitylimitErr}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="upperbonds">Limit Order Upper Bound*</label>
                   <input
@@ -546,7 +546,7 @@ export default function Home() {
                   <p className="alert-message">{upperboundErr}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="lowerbonds">Limit Order Lower Bound*</label>
                   <input
@@ -562,7 +562,7 @@ export default function Home() {
                   <p className="alert-message">{lowerboundErr}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="alpha0">Alpha 0*</label>
                   <input
@@ -578,7 +578,7 @@ export default function Home() {
                   <p className="alert-message">{alpha0Err}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="alpha1">Alpha 1*</label>
                   <input
@@ -594,7 +594,7 @@ export default function Home() {
                   <p className="alert-message">{alpha1Err}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="theta0">Theta 0*</label>
                   <input
@@ -610,7 +610,7 @@ export default function Home() {
                   <p className="alert-message">{theta0Err}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="theta1">Theta 1*</label>
                   <input
@@ -626,7 +626,7 @@ export default function Home() {
                   <p className="alert-message">{theta1Err}</p>
                 )}
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2">
                 <div className="form-content">
                   <label htmlFor="distribution">Distribution*</label>
                   <select
@@ -650,7 +650,7 @@ export default function Home() {
               </div>
 
               {distribution == "normal" && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">Standard Deviation Price Buy</label>
                     <input
@@ -669,7 +669,7 @@ export default function Home() {
               )}
 
               {distribution == "normal" && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">
                       Standard Deviation Price Sell
@@ -690,7 +690,7 @@ export default function Home() {
               )}
 
               {distribution == "normal" && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">Standard Deviation Quantity</label>
                     <input
@@ -708,7 +708,7 @@ export default function Home() {
                 </div>
               )}
               {(distribution == "poisson" || distribution == "normal") && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">Mean Price Buy</label>
                     <input
@@ -726,7 +726,7 @@ export default function Home() {
                 </div>
               )}
               {(distribution == "poisson" || distribution == "normal") && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">Mean Price Sell</label>
                     <input
@@ -745,7 +745,7 @@ export default function Home() {
               )}
 
               {(distribution == "poisson" || distribution == "normal") && (
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-2">
                   <div className="form-content">
                     <label htmlFor="theta1">Mean Price Quantity</label>
                     <input
@@ -763,7 +763,7 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="col-md-6 mb-3">
+              <div className="col-md-6 mb-2 radio">
                 <div className="form-control">
                   <label htmlFor="accessible">Visibility*</label>
                   <div className="radio-button">

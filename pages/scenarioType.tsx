@@ -85,7 +85,7 @@ export default function Home() {
               </div>
 
               <button
-                className="create-template"
+                className="create-template mb-2"
                 onClick={() => handleCreateScenario()}
                 disabled={disableSubmit}
               >

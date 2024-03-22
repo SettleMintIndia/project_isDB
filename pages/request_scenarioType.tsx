@@ -16,8 +16,8 @@ export default function Home() {
   const [comment, setcomment] = useState("");
   const [commentErr, setcommentErr] = useState("");
   const [finalErr, setFinalErr] = useState("");
-  const [userId, setUserId] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const email = localStorage.getItem("useremail");
@@ -28,8 +28,7 @@ export default function Home() {
   const getAdminInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
-    setUserId(result.id)
-
+    setUserId(result.id);
   };
 
   const handleInput = (e: any) => {
@@ -71,10 +70,10 @@ export default function Home() {
       if (result_exist.exists == true) {
         toast.error("Scenario already Exists");
       } else {
-        setLoading(true)
+        setLoading(true);
         const result = await API_Auth.getRequestScenario(body);
         console.log("result", result);
-        setLoading(false)
+        setLoading(false);
 
         if (result.status == 400) {
           setFinalErr(result.msg);
@@ -122,7 +121,7 @@ export default function Home() {
                   <textarea
                     className="form-control"
                     id="comment"
-                    rows={5}
+                    rows={3}
                     name="comment"
                     value={comment}
                     onChange={handleInput}
@@ -134,7 +133,7 @@ export default function Home() {
               </div>
               {finalErr != "" && <p className="alert-message">{finalErr}</p>}
               <button
-                className="create-template"
+                className="create-template mb-2"
                 onClick={() => handleCreateScenario()}
               >
                 {" "}

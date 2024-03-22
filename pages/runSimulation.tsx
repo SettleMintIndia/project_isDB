@@ -19,8 +19,8 @@ import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import * as React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // @ts-ignore
 
@@ -133,8 +133,13 @@ export default function Home() {
       admin_id: userresult.id,
       scenario: s_type,
       datefrom:
-        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        fromDate == null || fromDate == ""
+          ? ""
+          : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto:
+        toDate == null || toDate == ""
+          ? ""
+          : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
       showPrivate: true,
@@ -164,8 +169,13 @@ export default function Home() {
       admin_id: "",
       scenario: s_type,
       datefrom:
-        (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-      dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+        fromDate == null || fromDate == ""
+          ? ""
+          : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+      dateto:
+        toDate == null || toDate == ""
+          ? ""
+          : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
       resultPerPage: perPage,
       pgNo: pageNo,
       showPrivate: false,
@@ -283,8 +293,8 @@ export default function Home() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
-      const x = (value == "all" || value == "") ? "" : value
-      console.log(x)
+      const x = value == "all" || value == "" ? "" : value;
+      console.log(x);
       setSType(value);
       setCurrentPage(0);
 
@@ -334,7 +344,14 @@ export default function Home() {
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, toDate, Number(value), 1);
       } else {
-        getglobalTemplates(tempname, s_type, fromDate, toDate, Number(value), 1);
+        getglobalTemplates(
+          tempname,
+          s_type,
+          fromDate,
+          toDate,
+          Number(value),
+          1
+        );
       }
     }
     if (name == "keyname") {
@@ -431,17 +448,17 @@ export default function Home() {
     }
   };
   const handleDates = (date: any, key: any) => {
-    console.log(date, key)
+    console.log(date, key);
     if (key == "startdate") {
-      setFromDate(date)
+      setFromDate(date);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, date, toDate, perPage, 1);
       } else {
         getglobalTemplates(tempname, s_type, date, toDate, perPage, 1);
       }
     } else {
-      console.log("enddate")
-      setToDate(date)
+      console.log("enddate");
+      setToDate(date);
 
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, date, perPage, 1);
@@ -449,25 +466,25 @@ export default function Home() {
         getglobalTemplates(tempname, s_type, fromDate, date, perPage, 1);
       }
     }
-  }
+  };
   const handleClear = (key: any) => {
     if (key == "startdate") {
-      setFromDate(null)
+      setFromDate(null);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, "", toDate, perPage, 1);
       } else {
         getglobalTemplates(tempname, s_type, "", toDate, perPage, 1);
       }
     } else {
-      console.log("enddate")
-      setToDate(null)
+      console.log("enddate");
+      setToDate(null);
       if (tabIndex == 0) {
         getUserTemplates(tempname, s_type, fromDate, "", perPage, 1);
       } else {
         getglobalTemplates(tempname, s_type, fromDate, "", perPage, 1);
       }
     }
-  }
+  };
   if (mounted)
     return (
       <AppLayout>
@@ -517,11 +534,7 @@ export default function Home() {
                                         <option value="">
                                           Select Scenario Type
                                         </option>
-                                        <option
-                                          value="all"
-                                        >
-                                          All
-                                        </option>
+                                        <option value="all">All</option>
                                         {finalScenarios.map((item) => {
                                           return (
                                             <option
@@ -581,40 +594,64 @@ export default function Home() {
                           />
                         </div> */}
                         <div className="dateFilter">
-
                           <div className="date-picker-container">
                             <span className="icon-container">
-                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                              <img
+                                src="imgs/calendar.svg"
+                                alt="Calendar Icon"
+                                className="calendar-icon"
+                              />
                             </span>
                             <DatePicker
                               selected={fromDate}
-                              onChange={(date: any) => handleDates(date, "startdate")}
+                              onChange={(date: any) =>
+                                handleDates(date, "startdate")
+                              }
                               dateFormat="dd/MM/yyyy"
                               placeholderText="Start Date"
                               className="custom-datepicker"
                             />
                             {fromDate && (
-                              <span className="icon-container" onClick={() => handleClear("startdate")}>
-                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              <span
+                                className="icon-container"
+                                onClick={() => handleClear("startdate")}
+                              >
+                                <img
+                                  src="imgs/close.svg"
+                                  alt="Close Icon"
+                                  className="close-icon"
+                                />
                               </span>
                             )}
                           </div>
 
-
                           <div className="date-picker-container">
                             <span className="icon-container">
-                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                              <img
+                                src="imgs/calendar.svg"
+                                alt="Calendar Icon"
+                                className="calendar-icon"
+                              />
                             </span>
                             <DatePicker
                               selected={toDate}
-                              onChange={(date: any) => handleDates(date, "enddate")}
+                              onChange={(date: any) =>
+                                handleDates(date, "enddate")
+                              }
                               dateFormat="dd/MM/yyyy"
                               placeholderText="End Date"
                               className="custom-datepicker"
                             />
                             {toDate && (
-                              <span className="icon-container" onClick={() => handleClear("enddate")}>
-                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              <span
+                                className="icon-container"
+                                onClick={() => handleClear("enddate")}
+                              >
+                                <img
+                                  src="imgs/close.svg"
+                                  alt="Close Icon"
+                                  className="close-icon"
+                                />
                               </span>
                             )}
                           </div>
@@ -758,7 +795,11 @@ export default function Home() {
                         <div className="toolbar">
                           <label htmlFor="">Results per page :</label>
                           <div className="tooldrop">
-                            <select value={perPage} name="perPage" onChange={handleInput}>
+                            <select
+                              value={perPage}
+                              name="perPage"
+                              onChange={handleInput}
+                            >
                               <option value="5">5</option>
                               <option value="10">10</option>
 
@@ -868,11 +909,7 @@ export default function Home() {
                                         <option value="">
                                           Select Scenario Type
                                         </option>
-                                        <option
-                                          value="all"
-                                        >
-                                          All
-                                        </option>
+                                        <option value="all">All</option>
                                         {finalScenarios.map((item) => {
                                           return (
                                             <option
@@ -917,7 +954,9 @@ export default function Home() {
                             value={tempname}
                             onChange={handleInput}
                           />
-                          <img src="imgs/search-icon.svg" alt="" />
+                          <div className="search-icon">
+                            <img src="imgs/search-icon.svg" alt="" />
+                          </div>
                         </div>
                         {/*   <div className="calendar">
                       <img src="imgs/calendar.svg" alt="" />
@@ -943,40 +982,64 @@ export default function Home() {
                           />
                         </div> */}
                         <div className="dateFilter">
-
                           <div className="date-picker-container">
                             <span className="icon-container">
-                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                              <img
+                                src="imgs/calendar.svg"
+                                alt="Calendar Icon"
+                                className="calendar-icon"
+                              />
                             </span>
                             <DatePicker
                               selected={fromDate}
-                              onChange={(date: any) => handleDates(date, "startdate")}
+                              onChange={(date: any) =>
+                                handleDates(date, "startdate")
+                              }
                               dateFormat="dd/MM/yyyy"
                               placeholderText="Start Date"
                               className="custom-datepicker"
                             />
                             {fromDate && (
-                              <span className="icon-container" onClick={() => handleClear("startdate")}>
-                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              <span
+                                className="icon-container"
+                                onClick={() => handleClear("startdate")}
+                              >
+                                <img
+                                  src="imgs/close.svg"
+                                  alt="Close Icon"
+                                  className="close-icon"
+                                />
                               </span>
                             )}
                           </div>
 
-
                           <div className="date-picker-container">
                             <span className="icon-container">
-                              <img src="imgs/calendar.svg" alt="Calendar Icon" className="calendar-icon" />
+                              <img
+                                src="imgs/calendar.svg"
+                                alt="Calendar Icon"
+                                className="calendar-icon"
+                              />
                             </span>
                             <DatePicker
                               selected={toDate}
-                              onChange={(date: any) => handleDates(date, "enddate")}
+                              onChange={(date: any) =>
+                                handleDates(date, "enddate")
+                              }
                               dateFormat="dd/MM/yyyy"
                               placeholderText="End Date"
                               className="custom-datepicker"
                             />
                             {toDate && (
-                              <span className="icon-container" onClick={() => handleClear("enddate")}>
-                                <img src="imgs/close.svg" alt="Close Icon" className="close-icon" />
+                              <span
+                                className="icon-container"
+                                onClick={() => handleClear("enddate")}
+                              >
+                                <img
+                                  src="imgs/close.svg"
+                                  alt="Close Icon"
+                                  className="close-icon"
+                                />
                               </span>
                             )}
                           </div>
@@ -1061,7 +1124,11 @@ export default function Home() {
                         <div className="toolbar">
                           <label htmlFor="">Results per page :</label>
                           <div className="tooldrop">
-                            <select value={perPage} name="perPage" onChange={handleInput}>
+                            <select
+                              value={perPage}
+                              name="perPage"
+                              onChange={handleInput}
+                            >
                               <option value="5">5</option>
                               <option value="10">10</option>
 

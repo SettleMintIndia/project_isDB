@@ -1262,9 +1262,12 @@ export default function Home() {
                         <Tab>Stabilization Fund</Tab>
                       </TabList>
                       <TabPanel className="info">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry&apos;s standard dummy text ever since the 1500s
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industry&apos;s standard dummy text ever since the
+                          1500s
+                        </p>
                       </TabPanel>
                       <TabPanel className="order-book">
                         <div className="orderbook-header">
@@ -1453,7 +1456,7 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderWsbuy.map((data,index) => (
+                                    {orderWsbuy.map((data, index) => (
                                       <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -1475,8 +1478,8 @@ export default function Home() {
                                 <table className="table">
                                   <thead>
                                     <tr>
-                                      <th>Sell Price</th>
                                       <th>Quantity</th>
+                                      <th>Sell Price</th>
                                     </tr>
                                   </thead>
                                   {orderWssell.length == 0 && (
@@ -1491,7 +1494,7 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderWssell.map((data,index) => (
+                                    {orderWssell.map((data, index) => (
                                       <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -1853,7 +1856,7 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNsbuy.map((data,index) => (
+                                    {orderNsbuy.map((data, index) => (
                                       <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -1875,8 +1878,8 @@ export default function Home() {
                                 <table className="table">
                                   <thead>
                                     <tr>
-                                      <th>Sell Price</th>
                                       <th>Quantity</th>
+                                      <th>Sell Price</th>
                                     </tr>
                                   </thead>
                                   {orderNssell.length == 0 && (
@@ -1891,7 +1894,7 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {orderNssell.map((data,index) => (
+                                    {orderNssell.map((data, index) => (
                                       <tr key={index}>
                                         <td>{data.quantity}</td>
                                         <td>{data.price}</td>
@@ -2269,7 +2272,7 @@ export default function Home() {
                                     </tbody>
                                   )}
                                   <tbody>
-                                    {tradeHistoryWS.map((item,index) => (
+                                    {tradeHistoryWS.map((item, index) => (
                                       <tr key={index}>
                                         <td>
                                           {moment(item.timestamp).format(
@@ -2637,7 +2640,7 @@ export default function Home() {
                                         </tr>
                                       </tbody>
                                     )}
-                                    {tradeHistoryNS.map((item,index) => (
+                                    {tradeHistoryNS.map((item, index) => (
                                       <tr key={index}>
                                         <td>
                                           {moment(item.timestamp).format(
