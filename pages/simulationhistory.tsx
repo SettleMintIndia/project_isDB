@@ -30,13 +30,7 @@ export default function Home() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
 
   const [templateData, setTemplateData] = useState<any[]>([
-    {
-      scenario_name: "",
-      temp_name: "",
-      created_timestamp: "",
-      exe_id: "",
-      is_public: 0,
-    },
+  
   ]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
@@ -45,7 +39,7 @@ export default function Home() {
   const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
   const [creatorName, setCreatorName] = useState("");
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(20);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -201,7 +195,7 @@ export default function Home() {
     let body = {
       temp_name: tempname,
       creator: creatorName,
-      scenario: s_type,
+      scenario: s_type == "all" ? "" : s_type,
       datefrom:
         fromDate == null || fromDate == ""
           ? ""
@@ -261,34 +255,36 @@ export default function Home() {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
+      const x = (value == "all" || value == "") ? "" : value
+      console.log(x)
       setSType(value);
-      setCurrentPage(0);
+     // setCurrentPage(0);
       getSimulations(
         tempname,
         creatorName,
-        value,
+        x,
         fromDate,
         toDate,
         perPage,
-        1
+        pageNo
       );
     }
     if (name == "tempname") {
       setTempName(value);
-      setCurrentPage(0);
+    //  setCurrentPage(0);
 
-      getSimulations(value, creatorName, s_type, fromDate, toDate, perPage, 1);
+      getSimulations(value, creatorName, s_type, fromDate, toDate, perPage, pageNo);
       //handlegetAllTemplateDetails();
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
-      getSimulations(tempname, creatorName, s_type, value, toDate, perPage, 1);
+      getSimulations(tempname, creatorName, s_type, value, toDate, perPage, pageNo);
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0);
+     // setCurrentPage(0);
 
       getSimulations(
         tempname,
@@ -297,25 +293,11 @@ export default function Home() {
         fromDate,
         value,
         perPage,
-        1
+        pageNo
       );
     }
 
-    if (name == "perPage") {
-      setPerPage(Number(value));
-      setPageNo(1);
-      setCurrentPage(0);
-
-      getSimulations(
-        tempname,
-        creatorName,
-        s_type,
-        fromDate,
-        toDate,
-        Number(value),
-        1
-      );
-    }
+   
   };
 
   const handleAllData = () => {
@@ -372,11 +354,14 @@ export default function Home() {
       const updateDataRecords = [...dataRecords];
       updatedRecords.splice(index, 1);
       //updateDataRecords.splice(index, 1);
-      const updatedData = updateDataRecords.filter((item) => item.exe_id != id);
+      const updatedData = updateDataRecords.filter(
+        (item) => item.exe_id != id
+      );
       setDataRecords([...updatedData]);
       setSelectedRecords(updatedRecords);
     }
   };
+
   const handleClear = () => {
     setDataRecords([]);
     setSelectedRecords([]);
@@ -782,7 +767,7 @@ export default function Home() {
                                   onChange={handleInput}
                                 >
                                   <option value="">Select Scenario Type</option>
-                                  <option onSelect={() => handleAllData()}>
+                                  <option value="all">
                                     All
                                   </option>
                                   {finalScenarios.map((item) => {
@@ -1007,7 +992,7 @@ export default function Home() {
             {templateData.length != 0 && (
               <div className="pagging-area mt-2">
                 <div className="toolbar">
-                  <label htmlFor="">Results per page :</label>
+                  {/* <label htmlFor="">Results per page :</label>
                   <div className="tooldrop">
                     <select
                       value={perPage}
@@ -1022,9 +1007,13 @@ export default function Home() {
                       <option value="30">30</option>
                     </select>
                   </div>
-                  <span>of {totalCount}</span>
+                  <span>of {totalCount}</span> */}
                 </div>
                 <div className="paging-list">
+                <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                            <span>{totalCount}</span>}
+                            {totalCount > offset + perPage &&
+                              <span>{offset + perPage}</span>} of {totalCount} items</p>
                   {currentPage == 0 && (
                     <div className="leftaction disable-pointer">
                       <img src="imgs/left-doublearrowg.svg" alt="" />

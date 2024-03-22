@@ -1974,13 +1974,14 @@ export default function Home() {
                           </div>
                           {/* <div className="tabs"></div> */}
                         </div>
+                        {loading == true && <Loader />}
+
                         <div className="rows">
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
-                            {loading == true && <Loader />}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -2014,7 +2015,6 @@ export default function Home() {
                             </div>
                           </div>
 
-                          {loading == true && <Loader />}
 
                           <div className="col buy">
                             <div className="orderNo">
@@ -2372,13 +2372,14 @@ export default function Home() {
                           </div>
                           {/* <div className="tabs"></div> */}
                         </div>
+                        {loading == true && <Loader />}
+
                         <div className="rows">
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
                               <span>{ordersRound}</span>
                             </div>
-                            {loading == true && <Loader />}
                             <div className="table-responsive">
                               <div className="table-content">
                                 <table className="table">
@@ -2412,7 +2413,6 @@ export default function Home() {
                             </div>
                           </div>
 
-                          {loading == true && <Loader />}
 
                           <div className="col buy">
                             <div className="orderNo">
@@ -2790,6 +2790,8 @@ export default function Home() {
                               </button>
                             </div>
                           </div>
+                          {loading == true && <Loader />}
+
                           <div className="ws-table">
                             <div className="table-responsive">
                               <div className="template-content">
@@ -2801,7 +2803,6 @@ export default function Home() {
                                       <th>Quantity</th>
                                     </tr>
                                   </thead>
-                                  {loading == true && <Loader />}
                                   {tradeHistoryWS.length == 0 && (
                                     <tbody>
                                       <tr>

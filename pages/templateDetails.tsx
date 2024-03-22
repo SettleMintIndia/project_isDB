@@ -29,15 +29,7 @@ export default function TemplateDetails() {
   const [key, setKey] = useState();
   const pdfExportComponent = React.useRef<PDFExport>(null);
   const [mounted, setMounted] = useState(false);
-  const [templateData, setTemplateData] = useState([
-    {
-      scenario_name: "",
-      temp_name: "",
-      created_timestamp: "",
-      comments: "",
-      is_public: 0,
-    },
-  ]);
+  const [templateData, setTemplateData] = useState<any>([]);
   const [perPage, setPerPage] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -115,7 +107,7 @@ export default function TemplateDetails() {
     let body = {
       temp_name: tempname,
       admin_id: userresult.id,
-      scenario: s_type,
+      scenario: s_type=="all"? "":s_type,
       datefrom:
         (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
@@ -168,33 +160,33 @@ export default function TemplateDetails() {
       const x = (value == "all" || value == "") ? "" : value
       console.log(x)
       setSType(value);
-      setCurrentPage(0);
+      // setCurrentPage(0);
       handlegetAllTemplateDetails(
         tempname,
         x,
         fromDate,
         toDate,
         perPage,
-        1
+        pageNo
       );
     }
     if (name == "tempname") {
       setTempName(value);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
-      handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, 1);
+      handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, pageNo);
 
       //handlegetAllTemplateDetails();
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
-      handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, 1);
+      handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, pageNo);
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
       handlegetAllTemplateDetails(
         tempname,
@@ -202,16 +194,16 @@ export default function TemplateDetails() {
         fromDate,
         value,
         perPage,
-        1
+        pageNo
       );
     }
 
     if (name == "perPage") {
       setPerPage(Number(value));
-      setPageNo(1);
-      setCurrentPage(0);
+      //  setPageNo(1);
+      //setCurrentPage(0);
 
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, Number(value), 1);
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, Number(value), pageNo);
     }
   };
 
@@ -230,10 +222,10 @@ export default function TemplateDetails() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
-      setCurrentPage(0);
+      // setCurrentPage(0);
 
       setTimeout(() => {
-        handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+        handlegetAllTemplateDetails("", "", "", "", perPage, pageNo);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -301,7 +293,7 @@ export default function TemplateDetails() {
     console.log("key", key);
     let body = {
       template_name: data.temp_name,
-      make_public: key == "public" ? true : false,
+      makePublic: data.is_public == 1 ? false : true,
     };
     console.log(body);
     setLoading(true);
@@ -312,18 +304,11 @@ export default function TemplateDetails() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
-      handlegetAllTemplateDetails("", "", "", "", perPage, 1);
-      setCurrentPage(0);
+      handlegetAllTemplateDetails("", "", "", "", perPage, pageNo);
+      //setCurrentPage(0);
     }
   };
-  const handleAllData = () => {
-    setSType("");
-    setTempName("");
-    setFromDate(null);
-    setToDate(null);
-    setCurrentPage(0);
-    handlegetAllTemplateDetails("", "", "", "", perPage, 1);
-  };
+
   const handleFirstRecord = () => {
     handlegetAllTemplateDetails("", "", "", "", perPage, 1);
     setCurrentPage(0);
@@ -336,11 +321,11 @@ export default function TemplateDetails() {
     console.log(date, key)
     if (key == "startdate") {
       setFromDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, 1);
+      handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, pageNo);
     } else {
       console.log("enddate")
       setToDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, 1);
+      handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, pageNo);
     }
   }
   const handleClear = (key: any) => {
@@ -523,7 +508,7 @@ export default function TemplateDetails() {
                             </tbody>
                           )}
                           <tbody>
-                            {templateData.map((data) => (
+                            {templateData.map((data: any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -820,7 +805,7 @@ export default function TemplateDetails() {
             {templateData.length != 0 && (
               <div className="pagging-area mt-2">
                 <div className="toolbar">
-                  <label htmlFor="">Results per page :</label>
+                  {/*  <label htmlFor="">Results per page :</label>
                   <div className="tooldrop">
                     <select
                       value={perPage}
@@ -835,9 +820,14 @@ export default function TemplateDetails() {
                       <option value="30">30</option>
                     </select>
                   </div>
-                  <span>of {totalCount}</span>
+                  <span>of {totalCount}</span> */}
                 </div>
                 <div className="paging-list">
+                  <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                    <span>{totalCount}</span>}
+                    {totalCount > offset + perPage &&
+                      <span>{offset + perPage}</span>} of {totalCount} items</p>
+
                   {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
             <span>{totalCount}</span>}
             {totalCount > offset + perPage &&

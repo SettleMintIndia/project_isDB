@@ -37,22 +37,10 @@ export default function Home() {
   const [tabIndex, setTabIndex] = useState(0);
 
   const [templateData, setTemplateData] = useState([
-    {
-      is_public: 1,
-      scenario_name: "",
-      temp_name: "",
-      created_timestamp: "",
-      comments: "",
-    },
+   
   ]);
   const [globalTemplates, setGlobalTemplates] = useState([
-    {
-      display_name: "",
-      scenario_name: "",
-      temp_name: "",
-      created_timestamp: "",
-      comments: "",
-    },
+   
   ]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
@@ -131,7 +119,7 @@ export default function Home() {
     let body = {
       temp_name: tempname,
       admin_id: userresult.id,
-      scenario: s_type,
+      scenario: s_type == "all" ? "" : s_type,
       datefrom:
         fromDate == null || fromDate == ""
           ? ""
@@ -167,7 +155,7 @@ export default function Home() {
       temp_name: keyname == "template" ? tempname : "",
       creator: keyname == "creator" ? tempname : "",
       admin_id: "",
-      scenario: s_type,
+      scenario: s_type == "all" ? "" : s_type,
       datefrom:
         fromDate == null || fromDate == ""
           ? ""
@@ -207,10 +195,10 @@ export default function Home() {
     console.log(result);
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
       setTimeout(() => {
-        getUserTemplates("", "", "", "", perPage, 1);
+        getUserTemplates("", "", "", "", perPage, pageNo);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -255,7 +243,7 @@ export default function Home() {
     console.log(data);
     let body = {
       template_name: data.temp_name,
-      make_public: data.is_public == 1 ? false : true,
+      makePublic: data.is_public == 1 ? false : true,
     };
     const result = await API_Auth.getChangeVisiblityTemplate(body);
     console.log("visibilityresult", result);
@@ -276,18 +264,7 @@ export default function Home() {
     }
   };
 
-  const handleAllData = () => {
-    setSType("");
-    setTempName("");
-    setFromDate(null);
-    setToDate(null);
-    setCurrentPage(0);
-    if (tabIndex == 0) {
-      getUserTemplates("", "", "", "", perPage, 1);
-    } else {
-      getglobalTemplates("", "", "", "", perPage, 1);
-    }
-  };
+  
 
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
@@ -296,66 +273,49 @@ export default function Home() {
       const x = value == "all" || value == "" ? "" : value;
       console.log(x);
       setSType(value);
-      setCurrentPage(0);
+     // setCurrentPage(0);
 
       if (tabIndex == 0) {
-        getUserTemplates(tempname, x, fromDate, toDate, perPage, 1);
+        getUserTemplates(tempname, x, fromDate, toDate, perPage, pageNo);
       } else {
-        getglobalTemplates(tempname, x, fromDate, toDate, perPage, 1);
+        getglobalTemplates(tempname, x, fromDate, toDate, perPage, pageNo);
       }
     }
     if (name == "tempname") {
       console.log(tabIndex);
-      setCurrentPage(0);
+      //setCurrentPage(0);
 
       if (tabIndex == 0) {
-        getUserTemplates(value, s_type, fromDate, toDate, perPage, 1);
+        getUserTemplates(value, s_type, fromDate, toDate, perPage, pageNo);
       } else {
-        getglobalTemplates(value, s_type, fromDate, toDate, perPage, 1);
+        getglobalTemplates(value, s_type, fromDate, toDate, perPage, pageNo);
       }
       setTempName(value);
     }
     if (name == "fromDate") {
       setFromDate(value);
-      setCurrentPage(0);
+     // setCurrentPage(0);
 
       if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, value, toDate, perPage, 1);
+        getUserTemplates(tempname, s_type, value, toDate, perPage, pageNo);
       } else {
-        getglobalTemplates(tempname, s_type, value, toDate, perPage, 1);
+        getglobalTemplates(tempname, s_type, value, toDate, perPage, pageNo);
       }
     }
     if (name == "toDate") {
       setToDate(value);
-      setCurrentPage(0);
+     // setCurrentPage(0);
 
       if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, value, perPage, 1);
+        getUserTemplates(tempname, s_type, fromDate, value, perPage, pageNo);
       } else {
-        getglobalTemplates(tempname, s_type, fromDate, value, perPage, 1);
+        getglobalTemplates(tempname, s_type, fromDate, value, perPage, pageNo);
       }
     }
 
-    if (name == "perPage") {
-      setPerPage(Number(value));
-      setCurrentPage(0);
-
-      setPageNo(1);
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, toDate, Number(value), 1);
-      } else {
-        getglobalTemplates(
-          tempname,
-          s_type,
-          fromDate,
-          toDate,
-          Number(value),
-          1
-        );
-      }
-    }
+   
     if (name == "keyname") {
-      setKeyName(value);
+     /*  setKeyName(value);
       setCurrentPage(0);
 
       setPageNo(1);
@@ -363,7 +323,7 @@ export default function Home() {
         getUserTemplates(tempname, s_type, fromDate, toDate, value, 1);
       } else {
         getglobalTemplates(value, s_type, fromDate, toDate, value, 1);
-      }
+      } */
     }
   };
 
@@ -684,7 +644,7 @@ export default function Home() {
                           )}
 
                           <tbody>
-                            {templateData.map((data) => (
+                            {templateData.map((data:any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -793,7 +753,7 @@ export default function Home() {
                     {templateData.length !== 0 && (
                       <div className="pagging-area mt-2">
                         <div className="toolbar">
-                          <label htmlFor="">Results per page :</label>
+                          {/*  <label htmlFor="">Results per page :</label>
                           <div className="tooldrop">
                             <select
                               value={perPage}
@@ -808,9 +768,14 @@ export default function Home() {
                               <option value="30">30</option>
                             </select>
                           </div>
-                          <span>of {totalCount}</span>
+                          <span>of {totalCount}</span> */}
                         </div>
                         <div className="paging-list">
+
+                          <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                            <span>{totalCount}</span>}
+                            {totalCount > offset + perPage &&
+                              <span>{offset + perPage}</span>} of {totalCount} items</p>
                           {currentPage == 0 && (
                             <div className="leftaction disable-pointer">
                               <img src="imgs/left-doublearrowg.svg" alt="" />
@@ -1073,7 +1038,7 @@ export default function Home() {
                             </tbody>
                           )}
                           <tbody>
-                            {globalTemplates.map((data) => (
+                            {globalTemplates.map((data:any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -1122,7 +1087,7 @@ export default function Home() {
                     {globalTemplates.length != 0 && (
                       <div className="pagging-area mt-2">
                         <div className="toolbar">
-                          <label htmlFor="">Results per page :</label>
+                          {/* <label htmlFor="">Results per page :</label>
                           <div className="tooldrop">
                             <select
                               value={perPage}
@@ -1137,9 +1102,13 @@ export default function Home() {
                               <option value="30">30</option>
                             </select>
                           </div>
-                          <span>of {totalCount}</span>
+                          <span>of {totalCount}</span> */}
                         </div>
                         <div className="paging-list">
+                          <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                            <span>{totalCount}</span>}
+                            {totalCount > offset + perPage &&
+                              <span>{offset + perPage}</span>} of {totalCount} items</p>
                           {currentPage == 0 && (
                             <div className="leftaction disable-pointer">
                               <img src="imgs/left-doublearrowg.svg" alt="" />
