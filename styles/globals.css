@@ -3112,12 +3112,12 @@ label {
 }
 .content-heroBanner {
   position: absolute;
-  top: 36%;
-  left: 4%;
+  top: 40%;
+  left: 3%;
   color: #fff;
 }
 .content-heroBanner h1 {
-  font-size: 90px;
+  font-size: 94px;
   margin: 0;
   padding: 0;
   background: transparent linear-gradient(180deg, #81b920 0%, #007354 100%) 0%
@@ -3128,7 +3128,7 @@ label {
   line-height: 1.1;
 }
 .content-heroBanner p {
-  font-size: 36px;
+  font-size: 38px;
   margin: 0;
   margin-top: 0px;
   padding: 0;
@@ -3145,7 +3145,7 @@ label {
   width: 270px;
   height: 70px;
   border: none;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .container-fluid.landing .main-section {
   margin: 0 80px;
@@ -3162,17 +3162,10 @@ footer {
   padding: 40px;
   text-align: center;
   font-size: 13px;
-  border: 1px solid #d6d6d6;
+  /* border: 1px solid #d6d6d6; */
   font-family: "Segoe UI Regular";
 }
-.landing-details {
-  margin: 50px 0;
-}
-.landing-details .works {
-  border: 1px solid #d6d6d6;
-  border-radius: 20px;
-  background: #fff;
-}
+
 .landing-details .works .works-header {
   text-align: center;
   padding: 4% 22%;
@@ -3189,7 +3182,7 @@ footer {
   background: #f7f7f7 0% 0% no-repeat padding-box;
   box-shadow: 0px -15px 21px #00000012;
   border: 1px solid #d6d6d6;
-  border-radius: 131px 131px 20px 20px;
+  border-radius: 35px;
 }
 .landing-details .works .works-tab .tab-option .react-tabs__tab-list {
   width: 450px;
@@ -3234,6 +3227,8 @@ footer {
 }
 .landing-details .works .works-tab .panel {
   text-align: center;
+  font-family: "Segoe UI Regular";
+  font-size: 18px;
 }
 .landing-details .works .works-tab .panel .row {
   display: flex;
@@ -3246,6 +3241,13 @@ footer {
 }
 .panel .row .col-md-3 .optionsContent h4 {
   margin: 12px;
+  font-family: "Segoe UI Bold";
+  font-weight: inherit;
+  font-size: 20px;
+}
+.panel .row .col-md-3 .optionsContent p {
+  font-size: 16px;
+  line-height: 1.8;
 }
 .run .leftArea.compressed .template-modal {
   width: 100%;
@@ -3255,6 +3257,88 @@ footer {
   justify-items: center;
   padding: 0 10px;
   overflow-x: scroll;
+}
+.landing .objective {
+  background: #ededed;
+  border-radius: 35px;
+  padding: 40px;
+}
+.landing .objective .objective-title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+.landing .objective .row {
+  display: flex;
+  gap: 40px;
+}
+.landing .objective .row .col {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 30px;
+  width: 33%;
+  line-height: 2;
+  font-size: 16px;
+  font-weight: lighter;
+}
+.landing .faqs {
+  margin: 50px 28%;
+  font-family: "Segoe UI Regular";
+}
+.landing .que-ans .que {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 18px;
+}
+.landing .que-ans .que h4 {
+  margin-bottom: 10px;
+}
+.landing .que-ans img {
+  cursor: pointer;
+}
+.landing .faqs h1 {
+  text-align: center;
+  font-size: 42px;
+}
+.ans.expand {
+  line-height: 1.8;
+  font-size: 15px;
+  width: 92%;
+}
+.ans.compress {
+  display: none;
+}
+.faqs-list li {
+  border-bottom: 1px solid #bfbfbf;
+  padding-bottom: 15px;
+}
+.landing .contact-details {
+  border-top: 1px solid #bfbfbf;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 50px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.landing .contact-details h1 {
+  font-size: 58px;
+  font-weight: inherit;
+}
+.landing .contact-details .contact,
+.url {
+  display: grid;
+  font-size: 24px;
+  font-weight: bold;
+  gap: 5px;
+}
+.landing .contact-details .contact label,
+.url label {
+  font-weight: 300;
+}
+.landing .contact-details .contact a,
+.url a {
+  font-size: 30px;
 }
 /* responsiveness */
 

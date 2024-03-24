@@ -16,6 +16,51 @@ export default function Home() {
   const [activeButton, setActiveButton] = useState("Static");
   const [err, setErr] = useState("");
 
+  const faqs = [
+    {
+      question:
+        "What is the objective of the Smart Stabilization System (SSS)?",
+      answer:
+        "The SSS aims to add substantial value to the market by strategically managing the gap between supply and demand. The overarching goal is to reduce price volatility while preserving the essential role that this market gap plays in equilibrating the broader financial landscape. Leveraging the capabilities of blockchain technology, the SSS will be designed to proactively manage pressure on prices before changes occur.",
+    },
+    {
+      question: "How does the SSS work?",
+      answer:
+        "The gap between supply and demand is managed by applying a deduction to excess supply or demand. This deduction is transferred to a blockchain-based Stabilization Network in exchange for Stabilization tokens or S-tokens. The Network acts as a fund to back and support the stabilization system.",
+    },
+    {
+      question:
+        "Can I customize templates for simulations according to specific scenarios?",
+      answer:
+        "Yes, both Super Admins and Admins have the ability to create and customize templates for simulations, allowing for flexibility in addressing various scenarios such as crashes, bubbles, and more. It can be done by editing the current template and storing it with a new name.",
+    },
+    {
+      question: "How can I request a new scenario type for simulation?",
+      answer:
+        "Admins can request the Super Admin to create new scenario types by raising it on the portal.",
+    },
+    {
+      question: "What is the purpose of this site?",
+      answer:
+        "In the initial phase (Phase 1) of the project, the key objective is to develop an exchange platform where an admin can run simulations enabled with a smart stabilization system algorithm and without it along with visualization of its output. This workable demo will be presented to the member countries, and they will be introduced to the groundbreaking SSS. The aim is not only to showcase the technological prowess of the system but also to ignite interest and enthusiasm among member countries to actively participate as the pioneering users in subsequent project phases.",
+    },
+    {
+      question: "How do I create an account?",
+      answer: ` Please contact the super admin at <strong><a href='mailto:KSolutions@isdb.org' style={{fontWeight:"bold"}}>"KSolutions@isdb.org"</a></strong>`,
+    },
+    {
+      question: "How do I reset my password?",
+      answer: ` Please contact the super admin at <strong><a href='mailto:KSolutions@isdb.org'>"KSolutions@isdb.org"</a></strong>`,
+    },
+  ];
+  const [expandedItems, setExpandedItems] = useState({});
+  const toggleColumn = (index: number) => {
+    setExpandedItems((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
+
   const handleLogin = async () => {
     let error = 0;
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,6 +128,7 @@ export default function Home() {
   const handleButtonClick = (buttonName: SetStateAction<string>) => {
     setActiveButton(buttonName);
   };
+
   return (
     <MainLayout>
       <div className="container-fluid landing">
@@ -100,16 +146,51 @@ export default function Home() {
           </div>
         </div>
         <div className="main-section">
-          <div className="main-para">
-            <p>
-              The exchange introduces the use of a stabilization algorithm
-              before updating the market price of an asset based on the gap
-              between the sell price and the buy price. Our platform empowers
-              the users with intuitive functionalities, facilitating seamless
-              simulation management and execution. Whether it&apos;s creating
-              templates, running simulations, or expanding scenario options, our
-              platform equips users with the resources they need to succeed.
-            </p>
+          <div className="objective">
+            <div className="objective-title">
+              <h1>Objective</h1>
+            </div>
+            <div className="row">
+              <div className="col">
+                <p>
+                  The Smart Stabilization System (SSS) addresses the inherent
+                  challenges posed by price volatility in capital markets within
+                  organized exchanges, the SSS endeavors to revolutionize the
+                  dynamics of market equilibrium. The primary objective for
+                  IsDBI is to intricately manage the delicate balance between
+                  supply and demand, thereby mitigating the fluctuations in
+                  prices while simultaneously preserving the essential role that
+                  market gaps play in equilibrating the broader economic
+                  landscape. This report serves as a comprehensive overview,
+                  laying the foundation for the forthcoming phases of
+                  development and implementation, charting a course toward
+                  greater stability and resilience in the financial domain.
+                </p>
+              </div>
+              <div className="col">
+                <p>
+                  The primary objective of the SSS project is to revolutionize
+                  the landscape of capital markets within organized exchanges by
+                  addressing the prevalent issue of "excess volatility." This
+                  excess volatility, identified through comprehensive studies,
+                  has been identified as a phenomenon not inherently tied to
+                  economic fundamentals, posing a detriment to economic
+                  progress.
+                </p>
+              </div>
+              <div className="col">
+                <p>
+                  Consequently, the SSS aims to add substantial value to the
+                  market by strategically managing the gap between supply and
+                  demand. The overarching goal is to reduce price volatility
+                  while preserving the essential role that this market gap plays
+                  in equilibrating the broader financial landscape. Leveraging
+                  the capabilities of blockchain technology, the SSS will be
+                  designed to proactively manage pressure on prices before
+                  changes occur.
+                </p>
+              </div>
+            </div>
           </div>
           <div className="landing-details">
             <div className="works">
@@ -178,8 +259,9 @@ export default function Home() {
                             <h4>3. Scenario Type Addition</h4>
                             <p>
                               Super Admins have the capability to add new types
-                              of scenarios, expanding the platform&apos;s versatility
-                              to accommodate emerging needs and trends.
+                              of scenarios, expanding the platform&apos;s
+                              versatility to accommodate emerging needs and
+                              trends.
                             </p>
                           </div>
                         </div>
@@ -205,8 +287,8 @@ export default function Home() {
                             <p>
                               Admins can run simulations using either global
                               templates provided by the Super Admin or templates
-                              they&apos;ve personally created, enabling flexibility
-                              and customization.
+                              they&apos;ve personally created, enabling
+                              flexibility and customization.
                             </p>
                           </div>
                         </div>
@@ -262,101 +344,57 @@ export default function Home() {
                 </Tabs>
               </div>
             </div>
-            {/* <div className="faqs-contact">
+            <div className="faqs-contact">
               <div className="faqs">
-                <h1>FAQs</h1>
+                <h1>Frequently Asked Questions</h1>
+
                 <ul className="faqs-list">
-                  <li>
-                    <div className="que-ans">
-                      <h4>
-                        What is the objective of the Smart Stabilization System
-                        (SSS) project?
-                      </h4>
-                      <p>
-                        The primary objective of the project is to develop an
-                        exchange platform where an admin can run simulations
-                        utilizing a smart stabilization system algorithm and
-                        without it, while also providing visualization of its
-                        output.
-                      </p>
-                    </div>
-                    <div>
-                      <img src="" alt="" />
-                    </div>
-                  </li>
-                  <li>
-                    <div className="que-ans">
-                      <h4>
-                        Can I customize templates for simulations according to
-                        specific scenarios?
-                      </h4>
-                      <p>
-                        Yes, both Super Admins and Admins have the ability to
-                        create and customize templates for simulations, allowing
-                        for flexibility in addressing various scenarios such as
-                        crashes, bubbles, and more. It can be done by editing
-                        the current template and storing it with a new name.
-                      </p>
-                    </div>
-                    <div>
-                      <img src="" alt="" />
-                    </div>
-                  </li>
-                  <li>
-                    <div className="que-ans">
-                      <h4>
-                        How can I request a new scenario type for simulation?
-                      </h4>
-                      <p>
-                        Admins can request the Super Admin to create new
-                        scenario types by raising it on the portal
-                      </p>
-                    </div>
-                    <div>
-                      <img src="" alt="" />
-                    </div>
-                  </li>
-                  <li>
-                    <div className="que-ans">
-                      <h4>How do I create an account?</h4>
-                      <p>Please contact the super admin at &quot;&ldquo;</p>
-                    </div>
-                    <div>
-                      <img src="" alt="" />
-                    </div>
-                  </li>
-                  <li>
-                    <div className="que-ans">
-                      <h4>How do I reset my password?</h4>
-                      <p>Please contact the super admin at &quot;&ldquo;</p>
-                    </div>
-                    <div>
-                      <img src="" alt="" />
-                    </div>
-                  </li>
+                  {faqs.map((faq, index) => (
+                    <li key={index}>
+                      <div className="que-ans">
+                        <div className="que">
+                          <h4>{faq.question}</h4>
+                          <img
+                            src={
+                              expandedItems[index]
+                                ? "imgs/hide.svg"
+                                : "imgs/show.svg"
+                            }
+                            alt=""
+                            onClick={() => toggleColumn(index)}
+                          />
+                        </div>
+                        <p
+                          className={
+                            expandedItems[index] ? "ans expand" : "ans compress"
+                          }
+                          dangerouslySetInnerHTML={{ __html: faq.answer }}
+                        ></p>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="contact-details">
-                <h1>Get In Touch!</h1>
+                <h1>GET IN TOUCH</h1>
                 <div className="contact">
                   <label htmlFor="">Email Us</label>
-                  <span>Support@Isdb.Org</span>
+                  <Link href="mailto:KSolutions@isdb.org">
+                    KSolutions@isdb.org
+                  </Link>
                 </div>
-                <div className="mail">
-                  <label htmlFor="">Email Address*</label>
-                  <input type="text" />
+                <div className="url">
+                  <label htmlFor="">Visit for more information</label>
+                  <Link href=""> https://isdbinstitute.org/</Link>
                 </div>
-                <div className="msg">
-                  <label htmlFor="">Message*</label>
-                  <input type="text" />
-                </div>
-                <button>Send Message</button>
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
-      <footer>© 2024 IsDB. All rights reserved.</footer>
+      <footer>
+        © 2024 <strong>IsDBI</strong> . All rights reserved.
+      </footer>
     </MainLayout>
   );
 }
