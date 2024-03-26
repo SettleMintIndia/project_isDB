@@ -68,8 +68,8 @@ const MainLayout = ({ children }: LayoutProps) => {
       {loginKey == false ? (
         <>
           <div
-            className="nav-container"
-            style={{ position: "fixed", width: "96%", margin: "32px" }}
+            className="nav-container landing"
+            // style={{ position: "fixed", width: "96%", margin: "32px" }}
           >
             <div className="nav-logo">
               <Link href="/">
@@ -79,22 +79,42 @@ const MainLayout = ({ children }: LayoutProps) => {
             <div className="navhead-links">
               <ul>
                 <li>
-                  <a href="homepage">How it works</a>
+                  <a href="#">How it works</a>
                 </li>
                 <li>
-                  <a href="faqs">FAQs</a>
+                  <a href="#">FAQs</a>
                 </li>
                 <li>
-                  <a href="works">Contact us</a>
+                  <a href="#">Contact us</a>
                 </li>
               </ul>
             </div>
-            <div className="nav-user landing" onClick={() => handleLogin()}>
-              <div className="user">
-                <div className="username">
-                  <h4 style={{ textAlign: "center" }}>Sign In</h4>
+            <div className="rightnav">
+              <div className="nav-user landing" onClick={() => handleLogin()}>
+                <div className="user">
+                  <div className="username">
+                    <h4 style={{ textAlign: "center" }}>Sign In</h4>
+                  </div>
                 </div>
               </div>
+              <div
+                className="menu landing"
+                onMouseEnter={() => setTooltipVisible(true)}
+                onMouseLeave={() => setTooltipVisible(false)}
+              >
+                <img src="/imgs/menu.svg" alt="" />
+              </div>
+              <ul className="menu-list">
+                <li>
+                  <Link href="#">How It Works </Link>
+                </li>
+                <li>
+                  <Link href="#">FAQs</Link>
+                </li>
+                <li>
+                  <Link href="#">Contact Us</Link>
+                </li>
+              </ul>
             </div>
           </div>
         </>

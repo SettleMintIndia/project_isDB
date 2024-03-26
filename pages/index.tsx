@@ -218,7 +218,7 @@ export default function Home() {
                     </div>
 
                     <div className="row">
-                      <div className="col-md-3 mb-3">
+                      <div className="col-md-3">
                         <div className="panel-options">
                           <div className="optionsIcon">
                             <img src="imgs/admin1.svg" alt="" />
@@ -234,7 +234,7 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-3 mb-3">
+                      <div className="col-md-3">
                         <div className="panel-options">
                           <div className="optionsIcon">
                             <img src="imgs/management.svg" alt="" />
@@ -250,7 +250,7 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-3 mb-3">
+                      <div className="col-md-3">
                         <div className="panel-options">
                           <div className="optionsIcon">
                             <img src="imgs/addition.svg" alt="" />
@@ -377,6 +377,7 @@ export default function Home() {
               </div>
               <div className="contact-details">
                 <h1>GET IN TOUCH</h1>
+                {/* <div className="contact-sources"> */}
                 <div className="contact">
                   <label htmlFor="">Email Us</label>
                   <Link href="mailto:KSolutions@isdb.org">
@@ -387,6 +388,7 @@ export default function Home() {
                   <label htmlFor="">Visit for more information</label>
                   <Link href=""> https://isdbinstitute.org/</Link>
                 </div>
+                {/* </div> */}
               </div>
             </div>
           </div>
