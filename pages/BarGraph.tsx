@@ -49,9 +49,21 @@ export default function BarGraph(props: any) {
         xaxis: {
             categories: barVolumeData.map((dataPoint) => dataPoint.x),
         },
+        yaxis: {
+            title: {
+              text: '',
+            },
+            labels: {
+              formatter: function (value) {
+                return value.toFixed(2); // Round to 2 decimals
+              },
+            },
+        },      
         tooltip: {
             enabled: true,
         },
+        
+        
         colors:['#27A2ED']
 
     };
@@ -74,6 +86,16 @@ export default function BarGraph(props: any) {
         xaxis: {
             categories: barQunatityData.map((dataPoint) => dataPoint.x),
         },
+        yaxis: {
+            title: {
+              text: '',
+            },
+            labels: {
+              formatter: function (value) {
+                return value.toFixed(2); // Round to 2 decimals
+              },
+            },
+        }, 
         colors: ["#42C572"]
 
     };

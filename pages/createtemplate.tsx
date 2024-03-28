@@ -12,6 +12,7 @@ import Loader from "@/components/layout/Loader";
 export default function Home() {
   const router = useRouter();
   const [scenarioType, setScenarioType] = useState("");
+  const [tempErr, setTempErr] = useState("")
   const [scenarioTypeErr, setScenarioTypeErr] = useState("");
   const [inititalmarketprice, setinititalmarketprice] = useState("");
   const [inititalmarketpriceErr, setinititalmarketpriceErr] = useState("");
@@ -55,8 +56,6 @@ export default function Home() {
   const [meanqtyErr, setMeanqtyErr] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [finalDistributions, setFinalDistributions] = useState([{ name: "" }]);
-  const [userId, setUserId] = useState("");
-  const { loginuseremail, setloginuseremail } = useContext(UserContext);
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -67,16 +66,26 @@ export default function Home() {
     console.log("email");
 
     const s_type: any = localStorage.getItem("scenariotype");
-    setScenarioType(s_type);
+    console.log("s_type", s_type)
+    const scenario_type = (s_type == null || s_type == undefined || s_type == "") ? "":s_type
+    setScenarioType(scenario_type);
 
-    getEmailInfo(email);
+    const superadminkey = localStorage.getItem("superadmin");
+    console.log("superadmin", superadminkey);
+    if (superadminkey == "superadmin") {
+      setPublicKey(1)
+    } else {
+      setPublicKey(0)
+    }
+
+  //  getEmailInfo(email);
   }, []);
 
-  const getEmailInfo = async (email: any) => {
+ /*  const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
     setUserId(result.id);
-  };
+  }; */
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -298,6 +307,9 @@ export default function Home() {
 
     console.log(error);
     if (error == 0) {
+      let user_id = localStorage.getItem("userid");
+      console.log("user_id",user_id)
+  
       let body = {
         temp_name: templatename,
         scenario_name: scenarioType,
@@ -327,40 +339,65 @@ export default function Home() {
           distribution == "poisson" || distribution == "normal"
             ? Number(meanqty)
             : 0,
-        admin_id: userId,
+        admin_id: user_id,
         limit_order_upper_bound: upperbound,
         limit_order_lower_bound: lowerbound,
       };
       console.log(body);
 
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        toast.error("price or quant variance should be less than 1");
+        setTempErr("price or quant variance should be less than 1")
       } else if (Number(upperbound) > 1) {
-        toast.error("upper lmt order price variance should be less than 1");
+        setTempErr("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1");
+        setTempErr("lower lmt order price variance should be greater than 1");
       } else if (Number(alpha0) > 1) {
-        toast.error("alpha0 value should be less than 1");
+        setTempErr("alpha0 value should be less than 1");
       } else if (Number(alpha0) > Number(alpha1)) {
-        toast.error("alpha1 value should be greater than alpha0");
+        setTempErr("alpha1 value should be greater than alpha0");
       } else if (Number(theta0) > 1) {
-        toast.error("theta0 value should be less than 1");
+        setTempErr("theta0 value should be less than 1");
       } else if (Number(theta0) > Number(theta1)) {
-        toast.error("theta1 value should be greater than theta0");
+        setTempErr("theta1 value should be greater than theta0");
       } else {
+        setTempErr("")
         const template_exist = await API_Auth.getTemplateExists(templatename);
         console.log("template_exist", template_exist);
 
         if (template_exist.name_available == false) {
-          toast.error("Template Name Already Exists");
+          setTempErr("Template Name Already Exists");
         } else {
+          setTempErr("")
           setLoading(true);
           setDisableSubmit(true);
           const data = await API_Auth.createTemplate(body);
           console.log(data);
           setLoading(false);
+          setTempErr("")
 
-          if ((data.error! = "" || data.error == undefined)) {
+          if(data.result.status=="duplicate found"){
+            setDisableSubmit(false);
+            setTempErr(data.result.status);
+          }else if(data.result.status=="success"){
+            setTempErr("")
+            toast.success("Template Created Successfully");
+            const superadminkey = localStorage.getItem("superadmin");
+            console.log("superadmin", superadminkey);
+            if (superadminkey == "superadmin") {
+              setTimeout(() => {
+                router.push("/templateDetails");
+              }, 2000);
+            } else {
+              setTimeout(() => {
+                router.push("/runSimulation");
+              }, 2000);
+            }
+          }else{
+  
+          }
+
+
+       /*    if ((data.error! = "" || data.error == undefined)) {
             console.log("hello");
             toast.success("Template Created Successfully");
 
@@ -377,9 +414,9 @@ export default function Home() {
             }
           } else {
             console.log("Hi", data.error.error);
-            toast.error("Duplicate Entries ");
+            setTempErr("Duplicate Entries ");
             setDisableSubmit(false);
-          }
+          } */
         }
       }
     }
@@ -834,6 +871,10 @@ export default function Home() {
                 )}
               </div>
             </div>
+            {tempErr != "" && (
+              <p className="alert-messageerror">{tempErr}</p>
+            )}
+
             {loading == true && <Loader />}
             <div className="buttoncenter">
               <button

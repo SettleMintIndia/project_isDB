@@ -120,7 +120,7 @@ export default function Home() {
     },
   ]);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [activeButton, setActiveButton] = useState("Static");
+  const [activeButton, setActiveButton] = useState("Stabilization");
 
   const [graphDataWsIteration, setgraphDataWsIteration] = useState([]);
   const [graphDataWsRound, setgraphDataWsRound] = useState([]);
@@ -135,10 +135,10 @@ export default function Home() {
   const [nsimulationVolumeData, setNSimulationVolumeData] = useState([]);
 
   const [meanPriceSimulation, setMeanPriceSimulation] = useState({
-    inter_10_price_ns: 0,
-    inter_10_price_ws: 0,
-    inter_90_price_ns: 0,
-    inter_90_price_ws: 0,
+    inter_10_price_ns: '',
+    inter_10_price_ws: '',
+    inter_90_price_ns: '',
+    inter_90_price_ws: '',
     max_price_ns: 0,
     max_price_ws: 0,
     mean_price_ns: 0,
@@ -151,10 +151,10 @@ export default function Home() {
     std_price_ws: 0,
   });
   const [meanVolumeSimulation, setMeanVolumeSimulation] = useState({
-    inter_10_amt_ns: 0,
-    inter_10_amt_ws: 0,
-    inter_90_amt_ns: 0,
-    inter_90_amt_ws: 0,
+    inter_10_amt_ns: '',
+    inter_10_amt_ws: '',
+    inter_90_amt_ns: '',
+    inter_90_amt_ws: '',
     max_amt_ns: 0,
     max_amt_ws: 0,
     mean_amt_ns: 0,
@@ -168,10 +168,10 @@ export default function Home() {
   });
 
   const [meanQuantitySimulation, setMeanQuantitySimulation] = useState({
-    inter_10_quant_ns: 0,
-    inter_10_quant_ws: 0,
-    inter_90_quant_ns: 0,
-    inter_90_quant_ws: 0,
+    inter_10_quant_ns: '',
+    inter_10_quant_ws: '',
+    inter_90_quant_ns: '',
+    inter_90_quant_ws: '',
     max_quant_ns: 0,
     max_quant_ws: 0,
     mean_quant_ns: 0,
@@ -185,14 +185,14 @@ export default function Home() {
   });
 
   const [StablizationFundData, setStablizationFundData] = useState({
-    inter_10_asset_stab: 0,
-    inter_10_cash_stab: 0,
-    inter_10_total_stab: 0,
-    inter_10_total_v_stab: 0,
-    inter_90_asset_stab: 0,
-    inter_90_cash_stab: 0,
-    inter_90_total_stab: 0,
-    inter_90_total_v_stab: 0,
+    inter_10_asset_stab: '',
+    inter_10_cash_stab: '',
+    inter_10_total_stab: '',
+    inter_10_total_v_stab: '',
+    inter_90_asset_stab: '',
+    inter_90_cash_stab: '',
+    inter_90_total_stab: '',
+    inter_90_total_v_stab: '',
     max_asset_stab: 0,
     max_cash_stab: 0,
     max_total_stab: 0,
@@ -216,6 +216,11 @@ export default function Home() {
   });
 
   const [StablizationTotal, setStablizationTotal] = useState({
+    round_assets: 0,
+    round_cash: 0,
+    round_tk: 0,
+  });
+  const [TradeStablizationTotal, setTradeStablizationTotal] = useState({
     round_assets: 0,
     round_cash: 0,
     round_tk: 0,
@@ -313,8 +318,8 @@ export default function Home() {
     if (result.status == 400) {
       setSimulationQuantityData([]);
     } else {
-      setSimulationQuantityData(result.graphDataWS[0]);
-      setNSimulationQuantityData(result.graphDataNS[0]);
+      setSimulationQuantityData(result.graphDataWS);
+      setNSimulationQuantityData(result.graphDataNS);
       setMeanQuantitySimulation(
         result.sim == undefined ? meanQuantitySimulation : result.sim
       );
@@ -332,8 +337,8 @@ export default function Home() {
     if (result.status == 400) {
       setSimulationVolumeData([]);
     } else {
-      setSimulationVolumeData(result.graphDataWS[0]);
-      setNSimulationVolumeData(result.graphDataNS[0]);
+      setSimulationVolumeData(result.graphDataWS);
+      setNSimulationVolumeData(result.graphDataNS);
       setMeanVolumeSimulation(
         result.sim == undefined ? meanVolumeSimulation : result.sim
       );
@@ -359,9 +364,10 @@ export default function Home() {
       sround
     );
     console.log("tadingws", result.trades);
-    setLoading(false);
     setTradeHistoryWS(result.trades);
     setLoading(false);
+    setTradeStablizationTotal(result.stab_totals==undefined ? TradeStablizationTotal:result.stab_totals)
+
   };
   const getTradeHistoryNS = async (id: any, siteration: any, sround: any) => {
     setLoading(true);
@@ -384,8 +390,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       execution_id: id,
     };
     const result = await API_Auth.getSimulationHistory(body);
@@ -414,8 +420,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
 
@@ -452,7 +458,10 @@ export default function Home() {
   };
 
   const handleButtonClick = (buttonName: SetStateAction<string>) => {
+    console.log(buttonName);
+    const key = buttonName == "Stablization" ? 0 : 1
     setActiveButton(buttonName);
+    setStablization(key)
   };
 
   const toggleColumn = () => {
@@ -553,7 +562,7 @@ export default function Home() {
         getTradeHistoryNS(ex_id, siteration, sround);
       }
       if (tabIndex == 5) {
-        console.log("tab-------------------", tabName);
+        console.log("SimulationtabIndex-------------------", tabName);
         if (tabName === 0) {
           getSimulationResultDetails(ex_id);
         }
@@ -643,8 +652,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
 
@@ -1433,7 +1442,7 @@ export default function Home() {
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
-                              <span>{executionData.nb_orders}</span>
+                              <span>{orderWsbuy.length}</span>
                             </div>
                             <div className="table-responsive">
                               <div className="table-content">
@@ -1471,7 +1480,7 @@ export default function Home() {
                           <div className="col buy">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
-                              <span>{executionData.nb_orders}</span>
+                              <span>{orderWssell.length}</span>
                             </div>
                             <div className="table-responsive">
                               <div className="table-content">
@@ -1509,7 +1518,7 @@ export default function Home() {
                         {/* <div className="footer"> */}
                         <div
                           className="orderbook-header"
-                          // style={{ marginTop: "-100px" }}
+                        // style={{ marginTop: "-100px" }}
                         >
                           <div className="search-round">
                             <div className="controls">
@@ -1833,7 +1842,7 @@ export default function Home() {
                           <div className="col sell">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
-                              <span>{executionData.nb_orders}</span>
+                              <span>{orderNsbuy.length}</span>
                             </div>
                             <div className="table-responsive">
                               <div className="table-content">
@@ -1871,7 +1880,7 @@ export default function Home() {
                           <div className="col buy">
                             <div className="orderNo">
                               <label htmlFor="order">Total Orders:</label>
-                              <span>{executionData.nb_orders}</span>
+                              <span>{orderNssell.length}</span>
                             </div>
                             <div className="table-responsive">
                               <div className="table-content">
@@ -1909,7 +1918,7 @@ export default function Home() {
                         {/* <div className="footer"> */}
                         <div
                           className="orderbook-header"
-                          // style={{ marginTop: "-100px" }}
+                        // style={{ marginTop: "-100px" }}
                         >
                           <div className="search-round">
                             <div className="controls">
@@ -2076,15 +2085,15 @@ export default function Home() {
                             <ul className="stabilization-fund">
                               <li className="token-issued">
                                 <label htmlFor="token">Token Issued</label>
-                                <span>100</span>
+                                <span>{TradeStablizationTotal.round_tk}</span>
                               </li>
                               <li className="assets">
                                 <label htmlFor="asset">Assets (QTY)</label>
-                                <span>200</span>
+                                <span>{TradeStablizationTotal.round_assets}</span>
                               </li>
                               <li className="cash">
                                 <label htmlFor="cash">Cash</label>
-                                <span>200</span>
+                                <span>{TradeStablizationTotal.round_cash}</span>
                               </li>
                             </ul>
                           </div>
@@ -2818,694 +2827,415 @@ export default function Home() {
                           <div className="tabs">
                             <Tabs
                               selectedIndex={stablization}
-                              onSelect={(
-                                stablization: SetStateAction<number>
-                              ) => setStablization(stablization)}
+
                             >
-                              <TabList>
-                                <Tab>Stabilization</Tab>
-                                <Tab>Without Stablization</Tab>
-                              </TabList>{" "}
-                              <TabPanel>
-                                <div className="tabs">
-                                  {" "}
-                                  <Tabs
-                                    selectedIndex={tabName}
-                                    onSelect={(
-                                      tabName: SetStateAction<number>
-                                    ) => setTabName(tabName)}
+                              <div style={{
+                                margin: "auto", width: "70%",
+                                paddingBottom: "25px"
+                              }}>
+                                <div className="btn-group privacy">
+                                  <button
+                                    className={activeButton === "Stabilization" ? "btn active" : "btn"}
+                                    onClick={() => handleButtonClick("Stabilization")}
                                   >
-                                    <TabList>
-                                      <Tab>Price</Tab>
-                                      <Tab>Volume</Tab>
-                                      <Tab>Quantity</Tab>
-                                    </TabList>{" "}
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          MARKET PRICE UPDATES
+                                    Stabilization
+                                  </button>
+                                  <button
+                                    className={
+                                      activeButton === "Without Stablization" ? "btn active" : "btn"
+                                    }
+                                    onClick={() => handleButtonClick("Without Stablization")}
+                                  >
+                                    Without Stablization
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className="tabs">
+                                {" "}
+                                <Tabs
+                                  selectedIndex={tabName}
+                                  onSelect={(
+                                    tabName: SetStateAction<number>
+                                  ) => setTabName(tabName)}
+                                >
+                                  <TabList>
+                                    <Tab>Price</Tab>
+                                    <Tab>Volume</Tab>
+                                    <Tab>Quantity</Tab>
+                                  </TabList>{" "}
+                                  <TabPanel>
+                                    {" "}
+                                    <div className="simulation-graph">
+                                      <div className="simulationgraph-title">
+                                        MARKET PRICE UPDATES
+                                      </div>
+                                      {loading == true && <Loader />}
+                                      {activeButton == "Stabilization" &&
+                                        <div>
+
+                                          {graphDataWsIteration.length != 0 &&
+                                            graphDataWsRound.length != 0 && (
+                                              <CandleStickSimulation
+                                                iteration={graphDataWsIteration}
+                                                round={graphDataWsRound}
+                                                noofiterations={
+                                                  executionData.iterations
+                                                }
+                                                noofrounds={
+                                                  executionData.nb_rounds
+                                                }
+                                              />
+                                            )}
                                         </div>
-                                        {loading == true && <Loader />}
-                                        {graphDataWsIteration.length != 0 &&
-                                          graphDataWsRound.length != 0 && (
-                                            <CandleStickSimulation
-                                              iteration={graphDataWsIteration}
-                                              round={graphDataWsRound}
-                                              noofiterations={
-                                                executionData.iterations
-                                              }
-                                              noofrounds={
-                                                executionData.nb_rounds
-                                              }
+                                      }
+
+                                      {activeButton != "Stabilization" &&
+                                        <div>
+                                          {graphDataNsIteration.length != 0 &&
+                                            graphDataNsRound.length != 0 && (
+                                              <CandleStickSimulation
+                                                iteration={graphDataNsIteration}
+                                                round={graphDataNsRound}
+                                                noofiterations={
+                                                  executionData.iterations
+                                                }
+                                                noofrounds={
+                                                  executionData.nb_rounds
+                                                }
+                                              />
+                                            )}
+                                        </div>
+                                      }
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.mean_price_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.median_price_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanPriceSimulation.std_price_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanPriceSimulation.inter_10_price_ws).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanPriceSimulation.inter_90_price_ws).toFixed(3)
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanPriceSimulation.inter_10_price_ns).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanPriceSimulation.inter_90_price_ns).toFixed(3)
+                                                    }
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>{" "}
+                                        </div>
+                                      </div>
+
+
+                                    </div>
+
+                                  </TabPanel>
+
+                                  <TabPanel>
+                                    {" "}
+                                    <div className="simulation-graph">
+                                      <div className="simulationgraph-title">
+                                        VOLUME UPDATES
+                                      </div>
+                                      {loading == true && <Loader />}
+                                      {activeButton == "Stabilization" &&
+                                        <div>
+                                          {simulationVolumeData.length != 0 && (
+                                            <BarGraph
+                                              bardata={simulationVolumeData}
+                                              type={"volume"}
                                             />
-                                          )}
+                                          )}</div>}
 
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.mean_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.mean_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.median_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.median_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.std_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.std_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.inter_10_price_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanPriceSimulation.inter_90_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.inter_10_price_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanPriceSimulation.inter_90_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>{" "}
+                                      {activeButton != "Stabilization" &&
+                                        <div>
+                                          {nsimulationVolumeData.length != 0 && (
+                                            <BarGraph
+                                              bardata={nsimulationVolumeData}
+                                              type={"volume"}
+                                            />
+                                          )}</div>}
+
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.mean_amt_ws
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.median_amt_ws
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanVolumeSimulation.std_amt_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanVolumeSimulation.inter_10_amt_ws).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanVolumeSimulation.inter_90_amt_ws).toFixed(3)
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanVolumeSimulation.inter_10_amt_ns).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanVolumeSimulation.inter_90_amt_ns).toFixed(3)
+                                                    }
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
-                                    </TabPanel>
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          VOLUME UPDATES
-                                        </div>
-                                        {loading == true && <Loader />}
-                                        {simulationVolumeData.length != 0 && (
-                                          <BarGraph
-                                            bardata={simulationVolumeData}
-                                            type={"volume"}
-                                          />
-                                        )}
-
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.mean_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.mean_amt_ws
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.median_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.median_amt_ws
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.std_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.std_amt_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.inter_10_amt_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanVolumeSimulation.inter_90_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.inter_10_amt_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanVolumeSimulation.inter_90_amt_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
-                                          </div>
-                                        </div>
+                                    </div>
+                                  </TabPanel>
+                                  <TabPanel>
+                                    {" "}
+                                    <div className="simulation-graph">
+                                      <div className="simulationgraph-title">
+                                        QUANTITY UPDATES
                                       </div>
-                                    </TabPanel>
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          QUANTITY UPDATES
-                                        </div>
-                                        {loading == true && <Loader />}
+                                      {loading == true && <Loader />}
+                                      {activeButton == "Stabilization" && <div>
                                         {simulationQuantityData.length != 0 && (
                                           <BarGraph
                                             bardata={simulationQuantityData}
                                             type={"quantity"}
                                           />
                                         )}
-
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.mean_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.mean_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.median_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.median_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.std_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.std_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.inter_10_quant_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanQuantitySimulation.inter_90_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.inter_10_quant_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanQuantitySimulation.inter_90_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </TabPanel>
-                                  </Tabs>
-                                </div>
-                              </TabPanel>
-                              {/*  */}
-                              <TabPanel>
-                                <div className="tabs">
-                                  {" "}
-                                  <Tabs
-                                    selectedIndex={tabName}
-                                    onSelect={(
-                                      tabName: SetStateAction<number>
-                                    ) => setTabName(tabName)}
-                                  >
-                                    <TabList>
-                                      <Tab>Price</Tab>
-                                      <Tab>Volume</Tab>
-                                      <Tab>Quantity</Tab>
-                                    </TabList>{" "}
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          MARKET PRICE UPDATES
-                                        </div>
-                                        {loading == true && <Loader />}
-                                        {graphDataNsIteration.length != 0 &&
-                                          graphDataNsRound.length != 0 && (
-                                            <CandleStickSimulation
-                                              iteration={graphDataNsIteration}
-                                              round={graphDataNsRound}
-                                              noofiterations={
-                                                executionData.iterations
-                                              }
-                                              noofrounds={
-                                                executionData.nb_rounds
-                                              }
-                                            />
-                                          )}
-
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.mean_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.mean_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.median_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.median_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.std_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.std_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.inter_10_price_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanPriceSimulation.inter_90_price_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanPriceSimulation.inter_10_price_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanPriceSimulation.inter_90_price_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>{" "}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </TabPanel>
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          VOLUME UPDATES
-                                        </div>
-                                        {loading == true && <Loader />}
-                                        {nsimulationVolumeData.length != 0 && (
-                                          <BarGraph
-                                            bardata={nsimulationVolumeData}
-                                            type={"volume"}
-                                          />
-                                        )}
-
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.mean_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.mean_amt_ws
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.median_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.median_amt_ws
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.std_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.std_amt_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.inter_10_amt_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanVolumeSimulation.inter_90_amt_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanVolumeSimulation.inter_10_amt_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanVolumeSimulation.inter_90_amt_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </TabPanel>
-                                    <TabPanel>
-                                      {" "}
-                                      <div className="simulation-graph">
-                                        <div className="simulationgraph-title">
-                                          QUANTITY UPDATES
-                                        </div>
-                                        {loading == true && <Loader />}
-                                        {nsimulationQuantityData.length !=
-                                          0 && (
+                                      </div>}
+                                      {activeButton != "Stabilization" && <div>
+                                        {nsimulationQuantityData.length != 0 && (
                                           <BarGraph
                                             bardata={nsimulationQuantityData}
                                             type={"quantity"}
                                           />
                                         )}
+                                      </div>}
 
-                                        <div className="simulation-table">
-                                          <div className="table-responsive">
-                                            <div className="template-content">
-                                              <table className="table">
-                                                <thead>
-                                                  <tr>
-                                                    <th className="emptycell"></th>
-                                                    <th className="with">
-                                                      With Stabilization
-                                                    </th>
-                                                    <th className="without">
-                                                      Without Stabilization
-                                                    </th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Mean
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.mean_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.mean_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Median
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.median_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.median_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      Standard deviation
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.std_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.std_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <th className="emptycell">
-                                                      10% - 90% interval
-                                                    </th>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.inter_10_quant_ws
-                                                      }
-                                                      -
-                                                      {
-                                                        meanQuantitySimulation.inter_90_quant_ws
-                                                      }
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        meanQuantitySimulation.inter_10_quant_ns
-                                                      }
-                                                      -
-                                                      {
-                                                        meanQuantitySimulation.inter_90_quant_ns
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                      <div className="simulation-table">
+                                        <div className="table-responsive">
+                                          <div className="template-content">
+                                            <table className="table">
+                                              <thead>
+                                                <tr>
+                                                  <th className="emptycell"></th>
+                                                  <th className="with">
+                                                    With Stabilization
+                                                  </th>
+                                                  <th className="without">
+                                                    Without Stabilization
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Mean
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.mean_quant_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Median
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.median_quant_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    Standard deviation
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ws
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      meanQuantitySimulation.std_quant_ns
+                                                    }
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <th className="emptycell">
+                                                    10% - 90% interval
+                                                  </th>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanQuantitySimulation.inter_10_quant_ws).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanQuantitySimulation.inter_90_quant_ws).toFixed(3)
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      parseFloat(meanQuantitySimulation.inter_10_quant_ns).toFixed(3)
+                                                    }
+                                                    -
+                                                    {
+                                                      parseFloat(meanQuantitySimulation.inter_90_quant_ns).toFixed(3)
+                                                    }
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
-                                    </TabPanel>
-                                  </Tabs>
-                                </div>
-                              </TabPanel>
+                                    </div>
+                                  </TabPanel>
+                                </Tabs>
+                              </div>
+
                             </Tabs>
                           </div>
                         </div>
@@ -3598,38 +3328,38 @@ export default function Home() {
                                       </th>
                                       <td>
                                         {
-                                          StablizationFundData.inter_10_cash_stab
+                                          parseFloat(StablizationFundData.inter_10_cash_stab).toFixed(3)
                                         }
                                         -
                                         {
-                                          StablizationFundData.inter_90_cash_stab
+                                          parseFloat(StablizationFundData.inter_90_cash_stab).toFixed(3)
                                         }
                                       </td>
                                       <td>
                                         {
-                                          StablizationFundData.inter_10_asset_stab
+                                          parseFloat(StablizationFundData.inter_10_asset_stab).toFixed(3)
                                         }
                                         -
                                         {
-                                          StablizationFundData.inter_90_asset_stab
+                                          parseFloat(StablizationFundData.inter_90_asset_stab).toFixed(3)
                                         }
                                       </td>
                                       <td>
                                         {
-                                          StablizationFundData.inter_10_total_stab
+                                          parseFloat(StablizationFundData.inter_10_total_stab).toFixed(3)
                                         }
                                         -
                                         {
-                                          StablizationFundData.inter_90_total_stab
+                                          parseFloat(StablizationFundData.inter_90_total_stab).toFixed(3)
                                         }
                                       </td>
                                       <td>
                                         {
-                                          StablizationFundData.inter_10_total_v_stab
+                                          parseFloat(StablizationFundData.inter_10_total_v_stab).toFixed(3)
                                         }
                                         -
                                         {
-                                          StablizationFundData.inter_90_total_v_stab
+                                          parseFloat(StablizationFundData.inter_90_total_v_stab).toFixed(3)
                                         }
                                       </td>
                                     </tr>

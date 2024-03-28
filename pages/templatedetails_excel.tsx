@@ -24,7 +24,7 @@ export default function Home() {
   const [tempname3, setTempName3] = useState(router.query.temp_name3);
   const [executionId1, setexecutionId1] = useState(router.query.exe_id1);
   const [executionId2, setexecutionId2] = useState(router.query.exe_id2);
-  const [executionId3, setexecutionId3] = useState(router.query.exe_id13);
+  const [executionId3, setexecutionId3] = useState(router.query.exe_id3);
 
   const [tempData1, setTempData1] = useState({
     limit_order_lower_bound: "",
@@ -100,10 +100,10 @@ export default function Home() {
   });
 
   const [meanPriceSimulation1, setMeanPriceSimulation1] = useState({
-    inter_10_price_ns: 0,
-    inter_10_price_ws: 0,
-    inter_90_price_ns: 0,
-    inter_90_price_ws: 0,
+    inter_10_price_ns: '',
+    inter_10_price_ws: '',
+    inter_90_price_ns: '',
+    inter_90_price_ws: '',
     max_price_ns: 0,
     max_price_ws: 0,
     mean_price_ns: 0,
@@ -116,10 +116,10 @@ export default function Home() {
     std_price_ws: 0,
   });
   const [meanVolumeSimulation1, setMeanVolumeSimulation1] = useState({
-    inter_10_amt_ns: 0,
-    inter_10_amt_ws: 0,
-    inter_90_amt_ns: 0,
-    inter_90_amt_ws: 0,
+    inter_10_amt_ns: '',
+    inter_10_amt_ws: '',
+    inter_90_amt_ns: '',
+    inter_90_amt_ws: '',
     max_amt_ns: 0,
     max_amt_ws: 0,
     mean_amt_ns: 0,
@@ -133,10 +133,10 @@ export default function Home() {
   });
 
   const [meanQuantitySimulation1, setMeanQuantitySimulation1] = useState({
-    inter_10_quant_ns: 0,
-    inter_10_quant_ws: 0,
-    inter_90_quant_ns: 0,
-    inter_90_quant_ws: 0,
+    inter_10_quant_ns: '',
+    inter_10_quant_ws: '',
+    inter_90_quant_ns: '',
+    inter_90_quant_ws: '',
     max_quant_ns: 0,
     max_quant_ws: 0,
     mean_quant_ns: 0,
@@ -150,14 +150,14 @@ export default function Home() {
   });
 
   const [StablizationFundData1, setStablizationFundData1] = useState({
-    inter_10_asset_stab: 0,
-    inter_10_cash_stab: 0,
-    inter_10_total_stab: 0,
-    inter_10_total_v_stab: 0,
-    inter_90_asset_stab: 0,
-    inter_90_cash_stab: 0,
-    inter_90_total_stab: 0,
-    inter_90_total_v_stab: 0,
+    inter_10_asset_stab: '',
+    inter_10_cash_stab: '',
+    inter_10_total_stab: '',
+    inter_10_total_v_stab: '',
+    inter_90_asset_stab: '',
+    inter_90_cash_stab: '',
+    inter_90_total_stab: '',
+    inter_90_total_v_stab: '',
     max_asset_stab: 0,
     max_cash_stab: 0,
     max_total_stab: 0,
@@ -181,10 +181,10 @@ export default function Home() {
   });
 
   const [meanPriceSimulation2, setMeanPriceSimulation2] = useState({
-    inter_10_price_ns: 0,
-    inter_10_price_ws: 0,
-    inter_90_price_ns: 0,
-    inter_90_price_ws: 0,
+    inter_10_price_ns: '',
+    inter_10_price_ws: '',
+    inter_90_price_ns: '',
+    inter_90_price_ws: '',
     max_price_ns: 0,
     max_price_ws: 0,
     mean_price_ns: 0,
@@ -197,10 +197,10 @@ export default function Home() {
     std_price_ws: 0,
   });
   const [meanVolumeSimulation2, setMeanVolumeSimulation2] = useState({
-    inter_10_amt_ns: 0,
-    inter_10_amt_ws: 0,
-    inter_90_amt_ns: 0,
-    inter_90_amt_ws: 0,
+    inter_10_amt_ns: '',
+    inter_10_amt_ws: '',
+    inter_90_amt_ns: '',
+    inter_90_amt_ws: '',
     max_amt_ns: 0,
     max_amt_ws: 0,
     mean_amt_ns: 0,
@@ -214,10 +214,10 @@ export default function Home() {
   });
 
   const [meanQuantitySimulation2, setMeanQuantitySimulation2] = useState({
-    inter_10_quant_ns: 0,
-    inter_10_quant_ws: 0,
-    inter_90_quant_ns: 0,
-    inter_90_quant_ws: 0,
+    inter_10_quant_ns: '',
+    inter_10_quant_ws: '',
+    inter_90_quant_ns: '',
+    inter_90_quant_ws: '',
     max_quant_ns: 0,
     max_quant_ws: 0,
     mean_quant_ns: 0,
@@ -231,14 +231,14 @@ export default function Home() {
   });
 
   const [StablizationFundData2, setStablizationFundData2] = useState({
-    inter_10_asset_stab: 0,
-    inter_10_cash_stab: 0,
-    inter_10_total_stab: 0,
-    inter_10_total_v_stab: 0,
-    inter_90_asset_stab: 0,
-    inter_90_cash_stab: 0,
-    inter_90_total_stab: 0,
-    inter_90_total_v_stab: 0,
+    inter_10_asset_stab: '',
+    inter_10_cash_stab: '',
+    inter_10_total_stab: '',
+    inter_10_total_v_stab: '',
+    inter_90_asset_stab: '',
+    inter_90_cash_stab: '',
+    inter_90_total_stab: '',
+    inter_90_total_v_stab: '',
     max_asset_stab: 0,
     max_cash_stab: 0,
     max_total_stab: 0,
@@ -262,10 +262,10 @@ export default function Home() {
   });
 
   const [meanPriceSimulation3, setMeanPriceSimulation3] = useState({
-    inter_10_price_ns: 0,
-    inter_10_price_ws: 0,
-    inter_90_price_ns: 0,
-    inter_90_price_ws: 0,
+    inter_10_price_ns: '',
+    inter_10_price_ws: '',
+    inter_90_price_ns: '',
+    inter_90_price_ws: '',
     max_price_ns: 0,
     max_price_ws: 0,
     mean_price_ns: 0,
@@ -278,10 +278,10 @@ export default function Home() {
     std_price_ws: 0,
   });
   const [meanVolumeSimulation3, setMeanVolumeSimulation3] = useState({
-    inter_10_amt_ns: 0,
-    inter_10_amt_ws: 0,
-    inter_90_amt_ns: 0,
-    inter_90_amt_ws: 0,
+    inter_10_amt_ns: '',
+    inter_10_amt_ws: '',
+    inter_90_amt_ns: '',
+    inter_90_amt_ws: '',
     max_amt_ns: 0,
     max_amt_ws: 0,
     mean_amt_ns: 0,
@@ -295,10 +295,10 @@ export default function Home() {
   });
 
   const [meanQuantitySimulation3, setMeanQuantitySimulation3] = useState({
-    inter_10_quant_ns: 0,
-    inter_10_quant_ws: 0,
-    inter_90_quant_ns: 0,
-    inter_90_quant_ws: 0,
+    inter_10_quant_ns: '',
+    inter_10_quant_ws: '',
+    inter_90_quant_ns: '',
+    inter_90_quant_ws: '',
     max_quant_ns: 0,
     max_quant_ws: 0,
     mean_quant_ns: 0,
@@ -312,14 +312,14 @@ export default function Home() {
   });
 
   const [StablizationFundData3, setStablizationFundData3] = useState({
-    inter_10_asset_stab: 0,
-    inter_10_cash_stab: 0,
-    inter_10_total_stab: 0,
-    inter_10_total_v_stab: 0,
-    inter_90_asset_stab: 0,
-    inter_90_cash_stab: 0,
-    inter_90_total_stab: 0,
-    inter_90_total_v_stab: 0,
+    inter_10_asset_stab: '',
+    inter_10_cash_stab: '',
+    inter_10_total_stab: '',
+    inter_10_total_v_stab: '',
+    inter_90_asset_stab: '',
+    inter_90_cash_stab: '',
+    inter_90_total_stab: '',
+    inter_90_total_v_stab: '',
     max_asset_stab: 0,
     max_cash_stab: 0,
     max_total_stab: 0,
@@ -473,8 +473,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
     const result = await API_Auth.getAllTemplates(body);
@@ -490,8 +490,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
     const result = await API_Auth.getAllTemplates(body);
@@ -507,8 +507,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
     const result = await API_Auth.getAllTemplates(body);
@@ -522,7 +522,19 @@ export default function Home() {
     if (pdfExportComponent.current) {
       pdfExportComponent.current.save();
     }
-  };
+
+  /*   router.push({
+      pathname: "/comparepdf",
+      query: {
+        temp_name1: tempname1,
+        exe_id1: executionId1,
+        temp_name2: tempname2,
+        exe_id2: executionId2,
+        temp_name3: tempname3,
+        exe_id3: executionId3
+      },
+    });
+  */ };
 
   const handleDownloadExcel = () => {
     let totalResult: any[] = [];
@@ -542,7 +554,7 @@ export default function Home() {
     const ws = XLSX.utils.json_to_sheet(totalResult);
 
     // Convert the worksheet to an array of arrays
-    const aoa:any = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    const aoa: any = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
     // Extract unique keys (column names)
     const keys = Array.from(new Set(aoa[0]));
@@ -552,7 +564,7 @@ export default function Home() {
     // Create a new worksheet with the desired format
     const newWs = keys.map((key, index) => [
       key,
-      ...aoa.slice(1).map((row:any) => row[index]),
+      ...aoa.slice(1).map((row: any) => row[index]),
     ]);
     console.log("newWs", newWs);
 
@@ -1477,29 +1489,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanPriceSimulation1.inter_10_price_ws
+                                              parseFloat(meanPriceSimulation1.inter_10_price_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation1.inter_90_price_ws
+                                              parseFloat(meanPriceSimulation1.inter_90_price_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanPriceSimulation2.inter_10_price_ws
+                                              parseFloat(meanPriceSimulation2.inter_10_price_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation2.inter_90_price_ws
+                                              parseFloat(meanPriceSimulation2.inter_90_price_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanPriceSimulation3.inter_10_price_ws
+                                              parseFloat(meanPriceSimulation3.inter_10_price_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation3.inter_90_price_ws
+                                              parseFloat(meanPriceSimulation3.inter_90_price_ws).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -1574,29 +1586,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanPriceSimulation1.inter_10_price_ns
+                                              parseFloat(meanPriceSimulation1.inter_10_price_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation1.inter_90_price_ns
+                                              parseFloat(meanPriceSimulation1.inter_90_price_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanPriceSimulation2.inter_10_price_ns
+                                              parseFloat(meanPriceSimulation2.inter_10_price_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation2.inter_90_price_ns
+                                              parseFloat(meanPriceSimulation2.inter_90_price_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanPriceSimulation3.inter_10_price_ns
+                                              parseFloat(meanPriceSimulation3.inter_10_price_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanPriceSimulation3.inter_90_price_ns
+                                              parseFloat(meanPriceSimulation3.inter_90_price_ns).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -1678,29 +1690,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanVolumeSimulation1.inter_10_amt_ws
+                                              parseFloat(meanVolumeSimulation1.inter_10_amt_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation1.inter_90_amt_ws
+                                              parseFloat(meanVolumeSimulation1.inter_90_amt_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanVolumeSimulation2.inter_10_amt_ws
+                                              parseFloat(meanVolumeSimulation2.inter_10_amt_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation2.inter_90_amt_ws
+                                              parseFloat(meanVolumeSimulation2.inter_90_amt_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanVolumeSimulation3.inter_10_amt_ws
+                                              parseFloat(meanVolumeSimulation3.inter_10_amt_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation3.inter_90_amt_ws
+                                              parseFloat(meanVolumeSimulation3.inter_90_amt_ws).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -1775,29 +1787,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanVolumeSimulation1.inter_10_amt_ns
+                                              parseFloat(meanVolumeSimulation1.inter_10_amt_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation1.inter_90_amt_ns
+                                              parseFloat(meanVolumeSimulation1.inter_90_amt_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanVolumeSimulation2.inter_10_amt_ns
+                                              parseFloat(meanVolumeSimulation2.inter_10_amt_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation2.inter_90_amt_ns
+                                              parseFloat(meanVolumeSimulation2.inter_90_amt_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanVolumeSimulation3.inter_10_amt_ns
+                                              parseFloat(meanVolumeSimulation3.inter_10_amt_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanVolumeSimulation3.inter_90_amt_ns
+                                              parseFloat(meanVolumeSimulation3.inter_90_amt_ns).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -1891,29 +1903,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanQuantitySimulation1.inter_10_quant_ws
+                                              parseFloat(meanQuantitySimulation1.inter_10_quant_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation1.inter_90_quant_ws
+                                              parseFloat(meanQuantitySimulation1.inter_90_quant_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanQuantitySimulation2.inter_10_quant_ws
+                                              parseFloat(meanQuantitySimulation2.inter_10_quant_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation2.inter_90_quant_ws
+                                              parseFloat(meanQuantitySimulation2.inter_90_quant_ws).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanQuantitySimulation3.inter_10_quant_ws
+                                              parseFloat(meanQuantitySimulation3.inter_10_quant_ws).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation3.inter_90_quant_ws
+                                              parseFloat(meanQuantitySimulation3.inter_90_quant_ws).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -2000,29 +2012,29 @@ export default function Home() {
                                           </th>
                                           <td>
                                             {
-                                              meanQuantitySimulation1.inter_10_quant_ns
+                                              parseFloat(meanQuantitySimulation1.inter_10_quant_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation1.inter_90_quant_ns
+                                              parseFloat(meanQuantitySimulation1.inter_90_quant_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanQuantitySimulation2.inter_10_quant_ns
+                                              parseFloat(meanQuantitySimulation2.inter_10_quant_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation2.inter_90_quant_ns
+                                              parseFloat(meanQuantitySimulation2.inter_90_quant_ns).toFixed(3)
                                             }
                                           </td>
                                           <td>
                                             {
-                                              meanQuantitySimulation3.inter_10_quant_ns
+                                              parseFloat(meanQuantitySimulation3.inter_10_quant_ns).toFixed(3)
                                             }
                                             -
                                             {
-                                              meanQuantitySimulation3.inter_90_quant_ns
+                                              parseFloat(meanQuantitySimulation3.inter_90_quant_ns).toFixed(3)
                                             }
                                           </td>
                                         </tr>
@@ -2107,29 +2119,29 @@ export default function Home() {
                                         </th>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_cash_stab
+                                            parseFloat(StablizationFundData1.inter_10_cash_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData1.inter_90_cash_stab
+                                            parseFloat(StablizationFundData1.inter_90_cash_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_cash_stab
+                                            parseFloat(StablizationFundData1.inter_10_cash_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData2.inter_90_cash_stab
+                                            parseFloat(StablizationFundData2.inter_90_cash_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData2.inter_10_cash_stab
+                                            parseFloat(StablizationFundData2.inter_10_cash_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData3.inter_90_cash_stab
+                                            parseFloat(StablizationFundData3.inter_90_cash_stab).toFixed(3)
                                           }
                                         </td>
                                       </tr>
@@ -2210,25 +2222,25 @@ export default function Home() {
                                         </th>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_asset_stab
+                                            parseFloat(StablizationFundData1.inter_10_asset_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData1.inter_90_asset_stab
+                                            parseFloat(StablizationFundData1.inter_90_asset_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_asset_stab
+                                            parseFloat(StablizationFundData1.inter_10_asset_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData2.inter_90_asset_stab
+                                            parseFloat(StablizationFundData2.inter_90_asset_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData2.inter_10_asset_stab
+                                            parseFloat(StablizationFundData2.inter_10_asset_stab).toFixed(3)
                                           }
                                           -
                                           {
@@ -2317,29 +2329,29 @@ export default function Home() {
                                         </th>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_total_stab
+                                           parseFloat( StablizationFundData1.inter_10_total_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData1.inter_90_total_stab
+                                            parseFloat(StablizationFundData1.inter_90_total_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_total_stab
+                                            parseFloat(StablizationFundData1.inter_10_total_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData2.inter_90_total_stab
+                                            parseFloat(StablizationFundData2.inter_90_total_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData2.inter_10_total_stab
+                                            parseFloat(StablizationFundData2.inter_10_total_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData3.inter_90_total_stab
+                                            parseFloat(StablizationFundData3.inter_90_total_stab).toFixed(3)
                                           }
                                         </td>
                                       </tr>
@@ -2426,29 +2438,29 @@ export default function Home() {
                                         </th>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_total_v_stab
+                                            parseFloat(StablizationFundData1.inter_10_total_v_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData1.inter_90_total_v_stab
+                                            parseFloat(StablizationFundData1.inter_90_total_v_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData1.inter_10_total_v_stab
+                                            parseFloat(StablizationFundData1.inter_10_total_v_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData2.inter_90_total_v_stab
+                                           parseFloat( StablizationFundData2.inter_90_total_v_stab).toFixed(3)
                                           }
                                         </td>
                                         <td>
                                           {
-                                            StablizationFundData2.inter_10_total_v_stab
+                                            parseFloat(StablizationFundData2.inter_10_total_v_stab).toFixed(3)
                                           }
                                           -
                                           {
-                                            StablizationFundData3.inter_90_total_v_stab
+                                            parseFloat(StablizationFundData3.inter_90_total_v_stab).toFixed(3)
                                           }
                                         </td>
                                       </tr>

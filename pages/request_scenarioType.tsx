@@ -19,17 +19,7 @@ export default function Home() {
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const email = localStorage.getItem("useremail");
-    console.log("email", email);
-    getAdminInfo(email);
-  }, []);
-
-  const getAdminInfo = async (email: any) => {
-    const result = await API_Auth.getAdminInformation(email);
-    console.log(result);
-    setUserId(result.id);
-  };
+ 
 
   const handleInput = (e: any) => {
     let error = 0;
@@ -59,10 +49,14 @@ export default function Home() {
        setcommentErr("");
      } */
     console.log(error);
+    let user_id = localStorage.getItem("userid");
+    console.log("user_id",user_id)
+
+
     if (error == 0) {
       let body = {
         scenario_name: scenariotype,
-        admin_id: userId,
+        admin_id: user_id,
         comment: comment,
       };
       const result_exist = await API_Auth.getScenarioExists(scenariotype);
@@ -78,7 +72,10 @@ export default function Home() {
         if (result.status == 400) {
           setFinalErr(result.msg);
         } else {
-          router.push("/runSimulation");
+          toast.success("Request successful")
+          setTimeout(() => {
+            router.push("/runSimulation");
+          }, 2000);
         }
       }
     }

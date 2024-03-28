@@ -29,26 +29,18 @@ export default function Home() {
   const pdfExportComponent = React.useRef<PDFExport>(null);
   const [mounted, setMounted] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const [key, setKey] = useState();
-  const [activeButton, setActiveButton] = useState("Public");
-
   const [tabIndex, setTabIndex] = useState(0);
-
-  const [templateData, setTemplateData] = useState([
-   
-  ]);
-  const [globalTemplates, setGlobalTemplates] = useState([
-   
-  ]);
+  const [templateData, setTemplateData] = useState([]);
+  const [globalTemplates, setGlobalTemplates] = useState([]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [s_type, setSType] = useState("");
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [tempname, setTempName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -79,24 +71,43 @@ export default function Home() {
     mean_price_sell: "",
     is_public: 1,
   });
+  const [previousOffset, setPreviousoffset] = useState(0);
+  const [previousPage, setPreviousPage] = useState(0);
+  
+  useEffect(()=>{
+    console.log("finalindex",localStorage.getItem("tabIndexback"))
+    let x=  localStorage.getItem("tabIndexback")
+    setTabIndex(Number(x));
 
-  const [userId, setUserId] = useState("");
+
+  },[])
 
   useEffect(() => {
-    console.log("tabIndex", tabIndex);
     setMounted(true);
     getScenarios();
-
+    console.log("useeffect2",tabIndex)
     if (tabIndex == 0) {
-      setCurrentPage(0);
 
-      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, offset);
     } else {
-      setCurrentPage(0);
 
-      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, offset);
     }
-  }, [tabIndex]);
+  }, [offset,tabIndex,tempname, s_type, fromDate, toDate,currentPage]);
+
+  const handleClickData = (index: any) => {
+    console.log("finalIndex", index);
+    setTabIndex(index)
+    if (index == 0) {
+      setCurrentPage(0);
+      setOffSet(0);
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 0);
+    } else {
+      setOffSet(0);
+      setCurrentPage(0);
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 0);
+    }
+  }
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
     console.log("scenarios", result);
@@ -108,17 +119,19 @@ export default function Home() {
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
-    let email = localStorage.getItem("useremail");
 
-    const userresult = await API_Auth.getAdminInformation(email);
-    console.log(userresult);
-    setUserId(userresult.id);
+    let user_id = localStorage.getItem("userid");
+    console.log("user_id", user_id)
+
+
+    console.log("offset", currentPage, offset)
+
     setLoading(true);
     let body = {
       temp_name: tempname,
-      admin_id: userresult.id,
+      admin_id: user_id,
       scenario: s_type == "all" ? "" : s_type,
       datefrom:
         fromDate == null || fromDate == ""
@@ -128,8 +141,8 @@ export default function Home() {
         toDate == null || toDate == ""
           ? ""
           : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
       showPrivate: true,
     };
     console.log("user", body);
@@ -148,7 +161,7 @@ export default function Home() {
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
     setLoading(true);
     let body = {
@@ -164,8 +177,8 @@ export default function Home() {
         toDate == null || toDate == ""
           ? ""
           : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
       showPrivate: false,
     };
 
@@ -198,7 +211,7 @@ export default function Home() {
       //setCurrentPage(0);
 
       setTimeout(() => {
-        getUserTemplates("", "", "", "", perPage, pageNo);
+        getUserTemplates("", "", "", "", perPage, 0);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -230,12 +243,14 @@ export default function Home() {
     setShowModal(false);
   };
 
-  const handleSimulation = (data: any) => {
+  const handleSimulation = (data: any, key: any) => {
     console.log(data.temp_name);
     router.push({
       pathname: "/runSimulation_infoPage",
       query: { temp_name: data.temp_name },
     });
+    console.log("tabIndexback", tabIndex);
+    localStorage.setItem("tabIndexback", tabIndex.toString())
   };
   const handleButtonClick = async (data: any) => {
     //setActiveButton(buttonName);
@@ -253,18 +268,19 @@ export default function Home() {
       toast.success(result.message);
 
       if (tabIndex == 0) {
-        setCurrentPage(0);
+        //setCurrentPage(0);
 
-        getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+        getUserTemplates(tempname, s_type, fromDate, toDate, perPage, offset);
       } else {
-        setCurrentPage(0);
+        // setCurrentPage(0);
 
-        getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, pageNo);
+
+        getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, offset);
       }
     }
   };
 
-  
+
 
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
@@ -273,57 +289,52 @@ export default function Home() {
       const x = value == "all" || value == "" ? "" : value;
       console.log(x);
       setSType(value);
-     // setCurrentPage(0);
-
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, x, fromDate, toDate, perPage, pageNo);
+      // setCurrentPage(0);
+      if (value == "all") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+        setTempName("");
+        setFromDate(null);
+        setToDate(null)
+      }else if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
       } else {
-        getglobalTemplates(tempname, x, fromDate, toDate, perPage, pageNo);
+
+        setCurrentPage(0);
+        setOffSet(0)
+      }
+      if (tabIndex == 0) {
+        getUserTemplates(tempname, x, fromDate, toDate, perPage, 0);
+      } else {
+        getglobalTemplates(tempname, x, fromDate, toDate, perPage, 0);
       }
     }
     if (name == "tempname") {
       console.log(tabIndex);
       //setCurrentPage(0);
-
-      if (tabIndex == 0) {
-        getUserTemplates(value, s_type, fromDate, toDate, perPage, pageNo);
+      if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
       } else {
-        getglobalTemplates(value, s_type, fromDate, toDate, perPage, pageNo);
+        setCurrentPage(0);
+        setOffSet(0)
       }
+
+      /* if (tabIndex == 0) {
+        getUserTemplates(value, s_type, fromDate, toDate, perPage, 0);
+      } else {
+        getglobalTemplates(value, s_type, fromDate, toDate, perPage, 0);
+      } */
       setTempName(value);
     }
-    if (name == "fromDate") {
-      setFromDate(value);
-     // setCurrentPage(0);
-
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, value, toDate, perPage, pageNo);
-      } else {
-        getglobalTemplates(tempname, s_type, value, toDate, perPage, pageNo);
-      }
-    }
-    if (name == "toDate") {
-      setToDate(value);
-     // setCurrentPage(0);
-
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, value, perPage, pageNo);
-      } else {
-        getglobalTemplates(tempname, s_type, fromDate, value, perPage, pageNo);
-      }
-    }
-
    
-    if (name == "keyname") {
-     /*  setKeyName(value);
-      setCurrentPage(0);
 
-      setPageNo(1);
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, toDate, value, 1);
-      } else {
-        getglobalTemplates(value, s_type, fromDate, toDate, value, 1);
-      } */
+    if (name == "keyname") {
+       setKeyName(value);
+      //setCurrentPage(0);
+ 
+     
     }
   };
 
@@ -371,26 +382,32 @@ export default function Home() {
     console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
-    if (tabIndex == 0) {
-      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, data);
+    setPreviousPage(e.selected);
+    setPreviousoffset(page)
+    /* if (tabIndex == 0) {
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, page);
     } else {
-      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, data);
-    }
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, page);
+    } */
   };
 
   const handleFirstRecord = () => {
     setCurrentPage(0);
-    if (tabIndex == 0) {
-      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
+    setOffSet(0)
+    /* if (tabIndex == 0) {
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, 0);
     } else {
-      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 1);
-    }
+      getglobalTemplates(tempname, s_type, fromDate, toDate, perPage, 0);
+    } */
   };
   const handlelastRecord = () => {
-    setCurrentPage(pageCount - 1);
 
-    if (tabIndex == 0) {
-      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, pageCount);
+    let page = (pageCount - 1) * perPage;
+    console.log("page", page)
+    setCurrentPage(pageCount - 1);
+    setOffSet(page)
+   /*  if (tabIndex == 0) {
+      getUserTemplates(tempname, s_type, fromDate, toDate, perPage, page);
     } else {
       getglobalTemplates(
         tempname,
@@ -398,9 +415,9 @@ export default function Home() {
         fromDate,
         toDate,
         perPage,
-        pageCount
+        page
       );
-    }
+    } */
   };
   const handleDownloadPDF = () => {
     if (pdfExportComponent.current) {
@@ -411,38 +428,46 @@ export default function Home() {
     console.log(date, key);
     if (key == "startdate") {
       setFromDate(date);
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, date, toDate, perPage, 1);
+      setOffSet(0);
+      setCurrentPage(0)
+    /*   if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, date, toDate, perPage, 0);
       } else {
-        getglobalTemplates(tempname, s_type, date, toDate, perPage, 1);
-      }
+        getglobalTemplates(tempname, s_type, date, toDate, perPage, 0);
+      } */
     } else {
       console.log("enddate");
       setToDate(date);
-
+      setOffSet(0);
+      setCurrentPage(0);
+/* 
       if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, date, perPage, 1);
+        getUserTemplates(tempname, s_type, fromDate, date, perPage, 0);
       } else {
-        getglobalTemplates(tempname, s_type, fromDate, date, perPage, 1);
-      }
+        getglobalTemplates(tempname, s_type, fromDate, date, perPage, 0);
+      } */
     }
   };
   const handleClear = (key: any) => {
     if (key == "startdate") {
       setFromDate(null);
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, "", toDate, perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage) 
+    /*   if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, "", toDate, perPage, 0);
       } else {
-        getglobalTemplates(tempname, s_type, "", toDate, perPage, 1);
-      }
+        getglobalTemplates(tempname, s_type, "", toDate, perPage, 0);
+      } */
     } else {
       console.log("enddate");
       setToDate(null);
-      if (tabIndex == 0) {
-        getUserTemplates(tempname, s_type, fromDate, "", perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage) 
+      /* if (tabIndex == 0) {
+        getUserTemplates(tempname, s_type, fromDate, "", perPage, 0);
       } else {
-        getglobalTemplates(tempname, s_type, fromDate, "", perPage, 1);
-      }
+        getglobalTemplates(tempname, s_type, fromDate, "", perPage, 0);
+      } */
     }
   };
   if (mounted)
@@ -463,7 +488,7 @@ export default function Home() {
                 <Tabs
                   selectedIndex={tabIndex}
                   onSelect={(tabIndex: SetStateAction<number>) =>
-                    setTabIndex(tabIndex)
+                    handleClickData(tabIndex)
                   }
                 >
                   <TabList>
@@ -644,7 +669,7 @@ export default function Home() {
                           )}
 
                           <tbody>
-                            {templateData.map((data:any) => (
+                            {templateData.map((data: any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -739,7 +764,7 @@ export default function Home() {
                                   </button>
                                   <button
                                     className="btn simulation-btn"
-                                    onClick={() => handleSimulation(data)}
+                                    onClick={() => handleSimulation(data, "user")}
                                   >
                                     Run Simulation
                                   </button>
@@ -1038,7 +1063,7 @@ export default function Home() {
                             </tbody>
                           )}
                           <tbody>
-                            {globalTemplates.map((data:any) => (
+                            {globalTemplates.map((data: any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -1073,7 +1098,7 @@ export default function Home() {
 
                                   <button
                                     className="btn btn-dark simulation-btn"
-                                    onClick={() => handleSimulation(data)}
+                                    onClick={() => handleSimulation(data, "global")}
                                   >
                                     Run Simulation
                                   </button>

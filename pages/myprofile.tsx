@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AppLayout from "@/components/layout/AppLayout";
 import Loader from "@/components/layout/Loader";
 import Image from "next/image";
+import axios from 'axios';
 
 export default function Home() {
   const router = useRouter();
@@ -36,15 +37,15 @@ export default function Home() {
   };
 
   const handleFileUpload = async (e: any) => {
-    const selectedFile = e.target.files[0];
+     const selectedFile = e.target.files[0];
     const fieldname = e.target.name;
     console.log(selectedFile, fieldname);
     const email = localStorage.getItem("useremail");
     console.log("email", email);
-    let dummyemail = /* "demo@isdb.com" */ email;
+    
 
     let body = {
-      email: dummyemail,
+      email: email,
       new_image_link: selectedFile.name,
     };
     console.log(body);
@@ -56,8 +57,23 @@ export default function Home() {
 
     if (result.status == 200) {
       toast.success("Image Upload Successfully");
-      getAdminInfo(dummyemail);
-    }
+      getAdminInfo(email);
+    } 
+
+   /*  const selectedFile = e.target.files[0];
+    const fieldname = e.target.name;
+    console.log(selectedFile, fieldname);
+    const email = localStorage.getItem("useremail");
+    console.log("email", email);
+    const formData = new FormData();  //create new form object
+    formData.append("myImage", selectedFile.name);//add image to form object
+    formData.append("email", email);
+    axios({
+      method: "post",
+      url: "http://localhost:5000/upload-image",
+      data: formData,  //send image to server
+    }) */
+
   };
   return (
     <AppLayout>

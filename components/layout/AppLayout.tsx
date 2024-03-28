@@ -21,33 +21,16 @@ const AppLayout = ({ children }: LayoutProps) => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setusername] = useState("");
-  const [userId, setUserId] = useState("");
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [sticky, setSticky] = useState("");
 
-  useEffect(() => {
-    console.log("hello");
-    /*  window.addEventListener("scroll", isSticky);
-    return () => {
-      window.removeEventListener("scroll", isSticky);
-    }; */
-  }, []);
 
-  const isSticky = () => {
-    /* Method that will fix header after a specific scrollable */
-    const scrollTop = window.scrollY;
-    const stickyClass = scrollTop >= 100 ? true : false;
-    setIsNavFixed(stickyClass);
-    console.log(stickyClass, scrollTop);
-  };
 
   useEffect(() => {
     const data = localStorage.getItem("useremail");
     console.log("email", data);
-    if (data != undefined) {
-      let email = localStorage.getItem("useremail");
-      console.log("email");
-      getEmailInfo(email);
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+      getNotifications(id);
     }
 
     const superadminkey = localStorage.getItem("superadmin");
@@ -62,18 +45,42 @@ const AppLayout = ({ children }: LayoutProps) => {
     setusername(name);
   }, [email]);
 
-  const getEmailInfo = async (email: any) => {
-    const result = await API_Auth.getAdminInformation(email);
-    console.log(result);
-    getNotifications(result.id);
-  };
+
 
   const getNotifications = async (id: any) => {
     const admin_notifications = await API_Auth.getNotifications(id);
     console.log("admin_notifications", admin_notifications);
-
     setTotalNotifications(admin_notifications.notifications);
   };
+
+  const handleDismissNotications = () => {
+    setTooltipVisible(true)
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+      
+      getNotifications(id);
+    }else{
+      setTotalNotifications([])
+    }
+  }
+  const handleDismissNotications1 = () => {
+    setTooltipVisible(false)
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+      getDismissNotifications(id);
+    }else{
+      setTotalNotifications([])
+    }
+  }
+  const getDismissNotifications=async(id:any)=>{
+    const admin_notifications = await API_Auth.getDismissNotifications(id);
+    console.log("admin_notifications", admin_notifications);
+
+    setTotalNotifications([]);
+  };
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -104,16 +111,16 @@ const AppLayout = ({ children }: LayoutProps) => {
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin" ||
                 router.route === "/runSimulation") && (
-                <div
-                  className="nav-user  us-1"
-                  onMouseEnter={() => setTooltipVisible1(true)}
-                  onMouseLeave={() => setTooltipVisible1(false)}
-                >
-                  <div className="use">
-                    <img src="/imgs/add.png" alt="" width={30} height={30} />
+                  <div
+                    className="nav-user  us-1"
+                    onMouseEnter={() => setTooltipVisible1(true)}
+                    onMouseLeave={() => setTooltipVisible1(false)}
+                  >
+                    <div className="use">
+                      <img src="/imgs/add.png" alt="" width={30} height={30} />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/*  <ul className="menu-dropdown dp">
                 <li
@@ -154,7 +161,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
-              key == "superadmin" ? (
+                key == "superadmin" ? (
                 <>
                   <ul className="menu-dropdown dp">
                     <li
@@ -185,7 +192,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/runSimulation") &&
-              key == "admin" ? (
+                key == "admin" ? (
                 <>
                   <ul className="menu-dropdown dp">
                     <li
@@ -217,7 +224,7 @@ const AppLayout = ({ children }: LayoutProps) => {
               {/* web */}
               {(router.route === "/createtemplate" ||
                 router.route === "/createadmin") &&
-              key == "superadmin" ? (
+                key == "superadmin" ? (
                 <>
                   <div className="nav-links">
                     <ul>
@@ -250,7 +257,7 @@ const AppLayout = ({ children }: LayoutProps) => {
 
               {(router.route === "/createtemplate" ||
                 router.route === "/runSimulation") &&
-              key == "admin" ? (
+                key == "admin" ? (
                 <>
                   <div className="nav-links">
                     <ul>
@@ -307,8 +314,8 @@ const AppLayout = ({ children }: LayoutProps) => {
                 </ul>
                 <div
                   className="notification"
-                  onMouseEnter={() => setTooltipVisible(true)}
-                  onMouseLeave={() => setTooltipVisible(false)}
+                  onMouseEnter={() => handleDismissNotications()}
+                  onMouseLeave={() => handleDismissNotications1()}
                 >
                   <div className="countInfo">{totalNotifications.length}</div>
                   <img src="/imgs/notification.svg" alt="" />

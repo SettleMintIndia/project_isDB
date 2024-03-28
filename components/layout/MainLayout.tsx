@@ -21,14 +21,31 @@ const MainLayout = ({ children }: LayoutProps) => {
   const [email, setEmail] = useState("");
   const { loginuseremail, setloginuseremail } = useContext(UserContext);
   const [loginKey, setLoginKey] = useState(false);
+  const [username, setusername] = useState("");
 
   useEffect(() => {
     const data = localStorage.getItem("useremail");
-    if (data != undefined) {
-      let email = localStorage.getItem("useremail");
-      console.log("email");
-      getEmailInfo(email);
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+
+      getNotifications(id);
+
+      setLoginKey(true)
+
     }
+
+    const superadminkey = localStorage.getItem("superadmin");
+    console.log("superadmin", superadminkey);
+    if (superadminkey == "superadmin") {
+      setKey("superadmin");
+    } else {
+      setKey("admin");
+    }
+    const name: any = localStorage.getItem("displayname");
+    console.log("username", name);
+    setusername(name);
+
     const handleScroll = () => {
       console.log(window.scrollY);
       if (window.scrollY >= 10) {
@@ -55,9 +72,41 @@ const MainLayout = ({ children }: LayoutProps) => {
     setTotalNotifications(admin_notifications.notifications);
   };
 
+  const handleDismissNotications = () => {
+    setTooltipVisible(true)
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+
+      getNotifications(id);
+    } else {
+      setTotalNotifications([])
+    }
+  }
+  const handleDismissNotications1 = () => {
+    setTooltipVisible(false)
+    const id = localStorage.getItem("userid")
+    console.log("user_id", id)
+    if (id != undefined) {
+      getDismissNotifications(id);
+    } else {
+      setTotalNotifications([])
+    }
+  }
+  const getDismissNotifications = async (id: any) => {
+    const admin_notifications = await API_Auth.getDismissNotifications(id);
+    console.log("admin_notifications", admin_notifications);
+
+    setTotalNotifications([]);
+  };
+
+
+
+
   const handleLogout = () => {
     localStorage.clear();
     router.push("/");
+    window.location.reload();
   };
 
   const handleLogin = () => {
@@ -69,7 +118,7 @@ const MainLayout = ({ children }: LayoutProps) => {
         <>
           <div
             className="nav-container landing"
-            // style={{ position: "fixed", width: "96%", margin: "32px" }}
+          // style={{ position: "fixed", width: "96%", margin: "32px" }}
           >
             <div className="nav-logo">
               <Link href="/">
@@ -127,7 +176,7 @@ const MainLayout = ({ children }: LayoutProps) => {
               </Link>
             </div>
             <div className="nav-right">
-              <div
+              {/*  <div
                 className="menu"
                 onMouseEnter={() => setTooltipVisible(true)}
                 onMouseLeave={() => setTooltipVisible(false)}
@@ -150,12 +199,14 @@ const MainLayout = ({ children }: LayoutProps) => {
                 <li>
                   <Link href="#">Contact Us</Link>
                 </li>
-              </ul>
+              </ul> */}
               <div
                 className="notification"
-                onMouseEnter={() => setTooltipVisible(true)}
-                onMouseLeave={() => setTooltipVisible(false)}
+                onMouseEnter={() => handleDismissNotications()}
+                onMouseLeave={() => handleDismissNotications1()}
               >
+                <div className="countInfo">{totalNotifications.length}</div>
+
                 <img src="/imgs/notification.svg" alt="" />
               </div>
 
@@ -187,7 +238,7 @@ const MainLayout = ({ children }: LayoutProps) => {
                 <div className="user">
                   <img src="/imgs/user.svg" alt="" />
                   <div className="username">
-                    <h4>Name1</h4>
+                    <h4>{username}</h4>
                     <p>{key == "superadmin" ? "Super Admin" : "Admin"} </p>
                   </div>
                 </div>

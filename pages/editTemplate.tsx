@@ -69,21 +69,21 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const[temperr,setTempErr]=useState("")
   useEffect(() => {
     getTemplateDetails(totalTempName);
     let email = localStorage.getItem("useremail");
     console.log("email");
-    getEmailInfo(email);
+   // getEmailInfo(email);
     getScenarios();
     getDistributions();
   }, [totalTempName]);
 
-  const getEmailInfo = async (email: any) => {
+ /*  const getEmailInfo = async (email: any) => {
     const result = await API_Auth.getAdminInformation(email);
     console.log(result);
     setUserId(result.id);
-  };
+  }; */
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -102,8 +102,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
 
@@ -384,20 +384,21 @@ export default function Home() {
     console.log(error);
     if (error == 0) {
       if (Number(pricelimit) > 1 || Number(quantitylimit) > 1) {
-        toast.error("price or quant variance should be less than 1");
+        setTempErr("price or quant variance should be less than 1");
       } else if (Number(upperbound) > 1) {
-        toast.error("upper lmt order price variance should be less than 1");
+        setTempErr("upper lmt order price variance should be less than 1");
       } else if (Number(lowerbound) < 1) {
-        toast.error("lower lmt order price variance should be greater than 1");
+        setTempErr("lower lmt order price variance should be greater than 1");
       } else if (Number(alpha0) > 1) {
-        toast.error("alpha0 value should be less than 1");
+        setTempErr("alpha0 value should be less than 1");
       } else if (Number(alpha0) > Number(alpha1)) {
-        toast.error("alpha1 value should be greater than alpha0");
+        setTempErr("alpha1 value should be greater than alpha0");
       } else if (Number(theta0) > 1) {
-        toast.error("theta0 value should be less than 1");
+        setTempErr("theta0 value should be less than 1");
       } else if (Number(theta0) > Number(theta1)) {
-        toast.error("theta1 value should be greater than theta0");
+        setTempErr("theta1 value should be greater than theta0");
       } else {
+        setTempErr("")
         setShowModal(true);
       }
     }
@@ -418,6 +419,9 @@ export default function Home() {
       setfinalCommentsErr("");
     } */
     if (error == 0) {
+      let user_id = localStorage.getItem("userid");
+      console.log("user_id",user_id)
+  
       let finalbody = {
         temp_name: newtemplateName,
         scenario_name: scenarioType,
@@ -447,7 +451,7 @@ export default function Home() {
           distribution == "poisson" || distribution == "normal"
             ? Number(meanqty)
             : 0,
-        admin_id: userId,
+        admin_id: user_id,
         limit_order_upper_bound: Number(upperbound),
         limit_order_lower_bound: Number(lowerbound),
       };
@@ -467,7 +471,28 @@ export default function Home() {
         const data = await API_Auth.createTemplate(finalbody);
         console.log("result", data);
         setLoading(false);
-        if ((data.error! = "" || data.error == undefined)) {
+        console.log("error",data.result.status,data.error)
+        if(data.result.status=="duplicate found"){
+          setDisableSubmit(false);
+          setFinalErr(data.result.status);
+        }else if(data.result.status=="success"){
+          setFinalErr("")
+          toast.success("Template Created Successfully");
+          const superadminkey = localStorage.getItem("superadmin");
+          console.log("superadmin", superadminkey);
+          if (superadminkey == "superadmin") {
+            setTimeout(() => {
+              router.push("/templateDetails");
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              router.push("/runSimulation");
+            }, 2000);
+          }
+        }else{
+
+        }
+       /*  if ((data.error! = "" || data.error == undefined)) {
           toast.success("Template Created Successfully");
           const superadminkey = localStorage.getItem("superadmin");
           console.log("superadmin", superadminkey);
@@ -483,7 +508,7 @@ export default function Home() {
         } else {
           setDisableSubmit(false);
           setFinalErr("Duplicate Entries Exists");
-        }
+        } */
       }
     }
   };
@@ -913,6 +938,9 @@ export default function Home() {
                 )}
               </div>
             </div>
+            {temperr != "" && (
+              <p className="alert-messageerror">{temperr}</p>
+            )}
 
             <div className="buttoncenter">
               <button

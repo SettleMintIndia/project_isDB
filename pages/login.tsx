@@ -57,6 +57,7 @@ export default function Home() {
         localStorage.setItem("useremail", result.email)
         localStorage.setItem("superadmin", key);
         localStorage.setItem("displayname", result.display_name)
+        localStorage.setItem("userid",result.admin_id)
         if (result.isSuper == 1) {
           router.push('/templateDetails')
         } else {

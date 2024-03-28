@@ -57,8 +57,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
 

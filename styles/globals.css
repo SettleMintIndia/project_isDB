@@ -240,6 +240,13 @@ button {
   margin: 0;
   font-size: 13px;
 }
+.alert-messageerror {
+  color: red;
+  margin: 0;
+  font-size: 15px;
+  text-align: center;
+  margin: 4px;
+}
 
 .password1 p,
 .confirm p {
@@ -2712,6 +2719,26 @@ label {
   color: white;
   border-radius: inherit;
 }
+
+.tabs .btn-group.privacy {
+  border: 1px solid #707070;
+  border-radius: 25px;
+  color: #6f6d6d;
+}
+
+.tabs .btn-group.privacy .btn {
+  height: 34px !important;
+}
+
+.tabs .btn-group.privacy .btn.active {
+  border: none;
+  background: black;
+  color: white;
+  border-radius: inherit;
+}
+
+
+
 
 #checkbox {
   vertical-align: middle;

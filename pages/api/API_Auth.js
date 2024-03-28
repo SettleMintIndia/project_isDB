@@ -21,7 +21,8 @@ import {
     GET_SIMULATIONRESULT,
     GET_NOTIFICATIONS,
     GET_SIMULATION_HISTORY,
-    GET_CHANGE_VISIBILITY_TEMPLATE
+    GET_CHANGE_VISIBILITY_TEMPLATE,
+    GET_DISMISS_NOTICATIONS
 } from './config'
 
 const apiSettings = {
@@ -33,7 +34,8 @@ const apiSettings = {
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json', // Adjust the content-type if needed
+                        'Accept': 'application/json', // Add any other required headers
                     },
                     body: JSON.stringify(body),
                 }
@@ -404,6 +406,26 @@ const apiSettings = {
             )
         ).json();
         return result;
+    },
+    getDismissNotifications:async(id)=>{
+        let body={
+            "admin_id": id
+
+        }
+        const result = await (
+            await fetch(
+                GET_DISMISS_NOTICATIONS,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                }
+            )
+        ).json();
+        return result;
+
     },
     getSimulationHistory: async (body) => {
 

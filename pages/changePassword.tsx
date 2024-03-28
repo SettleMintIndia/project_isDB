@@ -138,7 +138,7 @@ export default function Home() {
         toast.error(result.error);
         setDisableSubmit(false);
       } else {
-        toast.success(result.msg);
+        toast.success("Password Updated Successfully");
         setTimeout(() => {
           router.push("/myprofile");
         }, 2000);

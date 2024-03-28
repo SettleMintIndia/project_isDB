@@ -1,9 +1,6 @@
 "use client";
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { Button, Modal } from "react-bootstrap";
@@ -25,32 +22,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Form from "react-bootstrap/Form";
 
-interface MyObject {
-  [key: string]: String | Number,
-
-  temp_name: String,
-  created_timestamp: string | number;
-  scenario_name: String,
-  initial_mkt_price: String,
-  price_var: String,
-  base_quant: String,
-  quant_var: String,
-  alpha0: String,
-  alpha1: String,
-  theta0: String,
-  theta1: String,
-  std_dev_price_buy: String,
-  std_dev_price_sell: String,
-  std_dev_quant: String,
-  mean_quant: String,
-  distribution: String,
-  comments: String,
-  mean_price_buy: String,
-  mean_price_sell: String,
-  is_public: Number,
-  limit_order_upper_bound: String,
-  limit_order_lower_bound: String
-}
 
 export default function TemplateDetails() {
   const router = useRouter();
@@ -59,19 +30,20 @@ export default function TemplateDetails() {
   const pdfExportComponent = React.useRef<PDFExport>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-   const [tabIndex, setTabIndex] = useState(0);
-   const [activeButton, setActiveButton] = useState("Static");
+  const [tabIndex, setTabIndex] = useState(0);
+  const [activeButton, setActiveButton] = useState("Static");
 
   const [templateData, setTemplateData] = useState([
-   
+
   ]);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
   const [mounted, setMounted] = useState(false);
-
+  const [previousOffset, setPreviousoffset] = useState(0);
+  const [previousPage, setPreviousPage] = useState(0);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [s_type, setSType] = useState("");
@@ -105,15 +77,10 @@ export default function TemplateDetails() {
 
   const [tempname, setTempName] = useState("");
   useEffect(() => {
-    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, 1);
+    handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, perPage, offset);
     getScenarios();
     setMounted(true);
-  }, []);
-
-
-  const toggleDatePicker = () => {
-    setIsOpen(true);
-  };
+  }, [offset, currentPage, s_type, fromDate, toDate, tempname]);
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -126,23 +93,24 @@ export default function TemplateDetails() {
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
     setLoading(true);
+    let user_id = localStorage.getItem("userid");
+    console.log("user_id", user_id)
 
-    let email = localStorage.getItem("useremail");
 
-    const userresult = await API_Auth.getAdminInformation(email);
-    console.log(userresult);
+    console.log("offset", currentPage, offset)
+
     let body = {
       temp_name: tempname,
-      admin_id: userresult.id,
-      scenario: s_type=="all"? "":s_type,
+      admin_id: user_id,
+      scenario: s_type == "all" ? "" : s_type,
       datefrom:
         (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
       showPrivate: true,
     };
 
@@ -172,15 +140,17 @@ export default function TemplateDetails() {
     console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
+    setPreviousPage(e.selected);
+    setPreviousoffset(page)
 
-    handlegetAllTemplateDetails(
-      tempname,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      data
-    );
+    /*   handlegetAllTemplateDetails(
+        tempname,
+        s_type,
+        fromDate,
+        toDate,
+        perPage,
+        data
+      ); */
   };
 
   const handleInput = async (e: any) => {
@@ -190,51 +160,42 @@ export default function TemplateDetails() {
       const x = (value == "all" || value == "") ? "" : value
       console.log(x)
       setSType(value);
-      //setCurrentPage(0);
-      handlegetAllTemplateDetails(
-        tempname,
-        x,
-        fromDate,
-        toDate,
-        perPage,
-        pageNo
-      );
+      if (value == "all") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+        setTempName("");
+        setFromDate(null);
+        setToDate(null)
+      } else if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+
+        setCurrentPage(0);
+        setOffSet(0)
+      }      //setCurrentPage(0);
+      /*  handlegetAllTemplateDetails(
+         tempname,
+         x,
+         fromDate,
+         toDate,
+         perPage,
+         pageNo
+       ); */
     }
     if (name == "tempname") {
       setTempName(value);
       //setCurrentPage(0);
+      if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+        setCurrentPage(0);
+        setOffSet(0)
+      }
+      // handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, pageNo);
 
-      handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, pageNo);
-
-      //handlegetAllTemplateDetails();
     }
-    if (name == "fromDate") {
-      setFromDate(value);
-     // setCurrentPage(0);
-
-      handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, pageNo);
-    }
-    if (name == "toDate") {
-      setToDate(value);
-      //setCurrentPage(0);
-
-      handlegetAllTemplateDetails(
-        tempname,
-        s_type,
-        fromDate,
-        value,
-        perPage,
-        pageNo
-      );
-    }
-
-   /*  if (name == "perPage") {
-      setPerPage(Number(value));
-      setPageNo(1);
-      setCurrentPage(0);
-
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, Number(value), 1);
-    } */
   };
 
   const handleDeleteClick = (data: any) => {
@@ -255,10 +216,11 @@ export default function TemplateDetails() {
 
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
-     // setCurrentPage(0);
+      // setCurrentPage(0);
+      setOffSet(0);
 
       setTimeout(() => {
-        handlegetAllTemplateDetails("", "", "", "", perPage, pageNo);
+        handlegetAllTemplateDetails("", "", "", "", perPage, offset);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -267,9 +229,7 @@ export default function TemplateDetails() {
   const handleCancelClick = () => {
     setTooltipVisible(false);
   };
-  const handleEdit = () => {
-    router.push("/mytemplates");
-  };
+
   const viewDetails = (data: any) => {
     console.log(data);
     setShowModal(true);
@@ -282,7 +242,7 @@ export default function TemplateDetails() {
   const handleClose = () => {
     setShowModal(false);
   };
-  
+
 
   const handleEditTemplate = (data: any) => {
     console.log(data.temp_name);
@@ -363,7 +323,7 @@ export default function TemplateDetails() {
   const handleSimulation = (data: any) => {
     console.log(data.temp_name);
     router.push({
-      pathname: "/runSimulation",
+      pathname: "/runSimulation_infoPage",
       query: { temp_name: data.temp_name },
     });
   };
@@ -380,39 +340,56 @@ export default function TemplateDetails() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
-      handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+      handlegetAllTemplateDetails("", "", "", "", perPage, offset);
     }
 
     //setActiveButton(buttonName);
   };
- 
+
   const handleFirstRecord = () => {
-    handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+    /*  handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+     setCurrentPage(0); */
     setCurrentPage(0);
+    setOffSet(0);
   };
   const handlelastRecord = () => {
-    handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
+    /* handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
+    setCurrentPage(pageCount - 1); */
+    let page = (pageCount - 1) * perPage;
+    console.log("page", page)
+
+
+    // handlegetAllTemplateDetails("", "", "", "", perPage, page);
     setCurrentPage(pageCount - 1);
+    setOffSet(page)
   };
   const handleDates = (date: any, key: any) => {
     console.log(date, key)
     if (key == "startdate") {
       setFromDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, 1);
+      setOffSet(0)
+
+      //handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, 1);
     } else {
       console.log("enddate")
-      setToDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, 1);
+      setToDate(date);
+      setOffSet(0)
+
+      //  handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, 1);
     }
   }
   const handleClear = (key: any) => {
     if (key == "startdate") {
       setFromDate(null)
-      handlegetAllTemplateDetails(tempname, s_type, "", toDate, perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      //handlegetAllTemplateDetails(tempname, s_type, "", toDate, perPage, 1);
     } else {
       console.log("enddate")
       setToDate(null)
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, "", perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      //handlegetAllTemplateDetails(tempname, s_type, fromDate, "", perPage, 1);
     }
   }
 
@@ -595,7 +572,7 @@ export default function TemplateDetails() {
                             </tbody>
                           )}
                           <tbody>
-                            {templateData.map((data:any) => (
+                            {templateData.map((data: any) => (
                               <tr key={data.temp_name}>
                                 <td>{data.scenario_name}</td>
                                 <td>{data.temp_name}</td>
@@ -894,7 +871,7 @@ export default function TemplateDetails() {
             {templateData.length != 0 && (
               <div className="pagging-area mt-2">
                 <div className="toolbar">
-                {/*   <label htmlFor="">Results per page :</label>
+                  {/*   <label htmlFor="">Results per page :</label>
                   <div className="tooldrop">
                     <select
                       value={perPage}
@@ -911,10 +888,10 @@ export default function TemplateDetails() {
                   <span>of {totalCount}</span> */}
                 </div>
                 <div className="paging-list">
-                <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
-                            <span>{totalCount}</span>}
-                            {totalCount > offset + perPage &&
-                              <span>{offset + perPage}</span>} of {totalCount} items</p>
+                  <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                    <span>{totalCount}</span>}
+                    {totalCount > offset + perPage &&
+                      <span>{offset + perPage}</span>} of {totalCount} items</p>
                   {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
             <span>{totalCount}</span>}
             {totalCount > offset + perPage &&

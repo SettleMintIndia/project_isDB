@@ -29,6 +29,7 @@ const GET_STABLIZATION_FUND = base_url + "getStabilizationFund";
 const GET_SIMULATIONRESULT = base_url + "getSimulationResult";
 
 const GET_NOTIFICATIONS = base_url + "getNotifications";
+const GET_DISMISS_NOTICATIONS=base_url+"dismissNotifications"
 
 const GET_SIMULATION_HISTORY = base_url + "getSimulations";
 const GET_CHANGE_VISIBILITY_TEMPLATE = base_url + "changeTemplateVisibility";
@@ -62,4 +63,5 @@ export {
   GET_NOTIFICATIONS,
   GET_SIMULATION_HISTORY,
   GET_CHANGE_VISIBILITY_TEMPLATE,
+  GET_DISMISS_NOTICATIONS
 };

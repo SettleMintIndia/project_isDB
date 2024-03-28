@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, SetStateAction } from "react";
-
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -19,7 +18,6 @@ import Loader from "@/components/layout/Loader";
 import AppLayout from "@/components/layout/AppLayout";
 import * as React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import TemplatePDF from "./templatepdf";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -30,9 +28,10 @@ export default function TemplateDetails() {
   const pdfExportComponent = React.useRef<PDFExport>(null);
   const [mounted, setMounted] = useState(false);
   const [templateData, setTemplateData] = useState<any>([]);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(2);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [forcePage, setForcePage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [offset, setOffSet] = useState(0);
 
@@ -42,8 +41,9 @@ export default function TemplateDetails() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [activeButton, setActiveButton] = useState("Static");
-
+  const [searchKey, setSearchKey] = useState('n')
+  const [previousOffset, setPreviousoffset] = useState(0);
+  const [previousPage, setPreviousPage] = useState(0);
   const [viewData, setViewData] = useState<any>({
     limit_order_upper_bound: "",
     limit_order_lower_bound: "",
@@ -72,17 +72,17 @@ export default function TemplateDetails() {
   const [tempname, setTempName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+
   useEffect(() => {
     setMounted(true);
-
     handlegetAllTemplateDetails(tempname,
       s_type,
       fromDate,
       toDate,
       perPage,
-      1);
+      offset);
     getScenarios();
-  }, []);
+  }, [offset, currentPage, searchKey, s_type, fromDate, toDate, tempname]);
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -95,29 +95,27 @@ export default function TemplateDetails() {
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
     setLoading(true);
+    let user_id = localStorage.getItem("userid");
+    console.log("user_id", user_id);
+    console.log("offset", currentPage, offset);
 
-    let email = localStorage.getItem("useremail");
-
-    const userresult = await API_Auth.getAdminInformation(email);
-    console.log(userresult);
-    setLoading(true);
     let body = {
       temp_name: tempname,
-      admin_id: userresult.id,
-      scenario: s_type=="all"? "":s_type,
+      admin_id: user_id,
+      scenario: s_type == "all" ? "" : s_type,
       datefrom:
         (fromDate == null || fromDate == "") ? "" : moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
       dateto: (toDate == null || toDate == "") ? "" : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
+
       showPrivate: true,
     };
 
     console.log(body);
-
     const result = await API_Auth.getAllTemplates(body);
     console.log(result);
     setLoading(false);
@@ -126,84 +124,76 @@ export default function TemplateDetails() {
       setTemplateData(result.templates);
       setTotalCount(result.count);
       setPageCount(Math.ceil(result.count / perPage));
-      console.log(Math.ceil(result.count / perPage));
+      console.log("count", Math.ceil(result.count / perPage));
     }
   };
 
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
     let page = selectedPage * perPage;
+    setSearchKey('n');
     setOffSet(page);
-    console.log("selectedPage", selectedPage);
-    //let pageData = selectedPage == 0 ? 1 : selectedPage + 1;
-    //setPageNo(pageData);
+    console.log("selectedPage", selectedPage, page);
     let data = e.selected + 1;
-    console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
-
-    handlegetAllTemplateDetails(
-      tempname,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      data
-    );
+    setForcePage(e.selected)
+    setPreviousPage(e.selected);
+    setPreviousoffset(page)
+    /*  handlegetAllTemplateDetails(
+       tempname,
+       s_type,
+       fromDate,
+       toDate,
+       perPage,
+       page)
+       ; */
   };
 
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
     if (name === "scenarioType") {
-
+      setSearchKey('y');
       const x = (value == "all" || value == "") ? "" : value
       console.log(x)
       setSType(value);
-      // setCurrentPage(0);
-      handlegetAllTemplateDetails(
-        tempname,
-        x,
-        fromDate,
-        toDate,
-        perPage,
-        pageNo
-      );
+
+      if (value == "all") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+        setTempName("");
+        setFromDate(null);
+        setToDate(null)
+      } else if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+
+        setCurrentPage(0);
+        setOffSet(0)
+      }
+      /*   handlegetAllTemplateDetails(
+          tempname,
+          x,
+          fromDate,
+          toDate,
+          perPage,
+          offset
+        ); */
     }
     if (name == "tempname") {
       setTempName(value);
-      //setCurrentPage(0);
+      if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+        setCurrentPage(0);
+        setOffSet(0)
+      }
 
-      handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, pageNo);
+      //handlegetAllTemplateDetails(value, s_type, fromDate, toDate, perPage, offset);
 
-      //handlegetAllTemplateDetails();
-    }
-    if (name == "fromDate") {
-      setFromDate(value);
-      //setCurrentPage(0);
-
-      handlegetAllTemplateDetails(tempname, s_type, value, toDate, perPage, pageNo);
-    }
-    if (name == "toDate") {
-      setToDate(value);
-      //setCurrentPage(0);
-
-      handlegetAllTemplateDetails(
-        tempname,
-        s_type,
-        fromDate,
-        value,
-        perPage,
-        pageNo
-      );
-    }
-
-    if (name == "perPage") {
-      setPerPage(Number(value));
-      //  setPageNo(1);
-      //setCurrentPage(0);
-
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, toDate, Number(value), pageNo);
     }
   };
 
@@ -211,7 +201,6 @@ export default function TemplateDetails() {
     setTooltipVisible(!tooltipVisible);
     setKey(data.temp_name);
     setViewData(data);
-    console.log("re", tooltipVisible && key == data.temp_name);
   };
 
   const handleDeleteConfirm = async () => {
@@ -223,9 +212,11 @@ export default function TemplateDetails() {
     if (result.status == 200) {
       toast.success("Template Deleted Successfully");
       // setCurrentPage(0);
+      setSearchKey('y');
+      setOffSet(0);
 
       setTimeout(() => {
-        handlegetAllTemplateDetails("", "", "", "", perPage, pageNo);
+        handlegetAllTemplateDetails("", "", "", "", perPage, offset);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -234,9 +225,7 @@ export default function TemplateDetails() {
   const handleCancelClick = () => {
     setTooltipVisible(false);
   };
-  const handleEdit = () => {
-    router.push("/mytemplates");
-  };
+
   const viewDetails = (data: any) => {
     console.log(data);
     setShowModal(true);
@@ -304,38 +293,49 @@ export default function TemplateDetails() {
       toast.error(result.error);
     } else {
       toast.success(result.message);
-      handlegetAllTemplateDetails("", "", "", "", perPage, pageNo);
-      //setCurrentPage(0);
+      handlegetAllTemplateDetails("", "", "", "", perPage, offset);
     }
   };
 
   const handleFirstRecord = () => {
-    handlegetAllTemplateDetails("", "", "", "", perPage, 1);
+    // handlegetAllTemplateDetails("", "", "", "", perPage, 0);
     setCurrentPage(0);
+    setOffSet(0);
+
   };
   const handlelastRecord = () => {
-    handlegetAllTemplateDetails("", "", "", "", perPage, pageCount);
+    let page = (pageCount - 1) * perPage;
+    console.log("page", page);
+    // handlegetAllTemplateDetails("", "", "", "", perPage, page);
     setCurrentPage(pageCount - 1);
+    setOffSet(page)
   };
   const handleDates = (date: any, key: any) => {
     console.log(date, key)
     if (key == "startdate") {
-      setFromDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, pageNo);
+      setFromDate(date);
+      setOffSet(0);
+      setCurrentPage(0)
+      // handlegetAllTemplateDetails(tempname, s_type, date, toDate, perPage, offset);
     } else {
       console.log("enddate")
-      setToDate(date)
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, pageNo);
+      setToDate(date);
+      setOffSet(0);
+      setCurrentPage(0);
+      // handlegetAllTemplateDetails(tempname, s_type, fromDate, date, perPage, pageNo);
     }
   }
   const handleClear = (key: any) => {
     if (key == "startdate") {
-      setFromDate(null)
-      handlegetAllTemplateDetails(tempname, s_type, "", toDate, perPage, 1);
+      setFromDate(null);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)      //handlegetAllTemplateDetails(tempname, s_type, "", toDate, perPage, 1);
     } else {
       console.log("enddate")
       setToDate(null)
-      handlegetAllTemplateDetails(tempname, s_type, fromDate, "", perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      // handlegetAllTemplateDetails(tempname, s_type, fromDate, "", perPage, 1);
     }
   }
 
@@ -344,7 +344,6 @@ export default function TemplateDetails() {
       <AppLayout>
         <div className="container-fluid">
           <div className="template details">
-            {/* <div className="head"> */}
             <div className="template-header">
               <div className="back-option"></div>
               <div className="main-header">
@@ -374,9 +373,6 @@ export default function TemplateDetails() {
                           {" "}
                           <Tabs>
                             <TabList>
-                              {/* <Tab>
-                              <div onClick={() => handleAllData()}>All</div>
-                            </Tab> */}
                               <div className="filter">
                                 <label htmlFor="filterBy">Filter by:</label>
                                 <div className="searchScenario">
@@ -463,24 +459,6 @@ export default function TemplateDetails() {
                             )}
                           </div>
                         </div>
-
-                        {/*    <div className="dateFilter">
-                          <input
-                            type="date"
-                            name="fromDate"
-                            value={fromDate}
-                            onChange={handleInput}
-                            placeholder="Start Date"
-                          />
-
-                          <input
-                            type="date"
-                            name="toDate"
-                            value={toDate}
-                            onChange={handleInput}
-                            placeholder="End Date"
-                          />
-                        </div> */}
                       </div>
                     </div>
 
@@ -554,7 +532,6 @@ export default function TemplateDetails() {
                                     className="edit-icon"
                                     onClick={() => handleEditTemplate(data)}
                                   >
-                                    {/*  <Link href="editTemplate"> */}
                                     <img
                                       src="imgs/pencil.svg"
                                       alt=""
@@ -617,40 +594,6 @@ export default function TemplateDetails() {
                 </Tabs>
               </div>
             </div>
-            {/*   <div className="pagging-area">
-          <div className="toolbar">
-            <label htmlFor="">Results per page :</label>
-            <div className="tooldrop">
-              <select name="" id="">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-            <span>of 40</span>
-          </div>
-          <div className="paging-list">
-            <div className="leftaction disable-pointer">
-              <img src="imgs/left-doublearrow.svg" alt="" />
-            </div>
-            <div className="leftaction-single">
-              <img src="imgs/left-paging.svg" alt="" />
-            </div>
-            <ul className="paging-count">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-            </ul>
-            <div className="rightaction-single">
-              <img src="imgs/right-paging.svg" alt="" />
-            </div>
-            <div className="rightaction">
-              <img src="imgs/right-doublearrow.svg" alt="" />
-            </div>
-          </div>
-        </div> */}
-
             <Modal
               show={showModal}
               onHide={handleCloseModal}
@@ -805,47 +748,12 @@ export default function TemplateDetails() {
             {templateData.length != 0 && (
               <div className="pagging-area mt-2">
                 <div className="toolbar">
-                  {/*  <label htmlFor="">Results per page :</label>
-                  <div className="tooldrop">
-                    <select
-                      value={perPage}
-                      name="perPage"
-                      onChange={handleInput}
-                    >
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-
-                      <option value="15">15</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                    </select>
-                  </div>
-                  <span>of {totalCount}</span> */}
                 </div>
                 <div className="paging-list">
                   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
                     <span>{totalCount}</span>}
                     {totalCount > offset + perPage &&
                       <span>{offset + perPage}</span>} of {totalCount} items</p>
-
-                  {/*   <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
-            <span>{totalCount}</span>}
-            {totalCount > offset + perPage &&
-              <span>{offset + pageNo}</span>} of {totalCount} items</p> */}
-                  {/* <ReactPaginate
-              previousLabel={"<"}
-              nextLabel={">"}
-              breakLabel={"..."}
-              breakClassName={"break-me"}
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              forcePage={currentPage}
-            /> */}
-
                   {currentPage == 0 && (
                     <div className="leftaction disable-pointer">
                       <img src="imgs/left-doublearrowg.svg" alt="" />
@@ -887,19 +795,6 @@ export default function TemplateDetails() {
                     disabledClassName="disabled"
                     disableInitialCallback
                   />
-                  {/*   <div className="leftaction-single">
-              <img src="imgs/left-paging.svg" alt="" />
-            </div>
-            <ul className="paging-count">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-            </ul>
-            <div className="rightaction-single">
-              <img src="imgs/right-paging.svg" alt="" />
-            </div> */}
-
                   {currentPage != pageCount - 1 && (
                     <div
                       className="rightaction"

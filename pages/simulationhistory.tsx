@@ -30,7 +30,7 @@ export default function Home() {
   const [finalScenarios, setFinalScenarios] = useState([{ scenario_name: "" }]);
 
   const [templateData, setTemplateData] = useState<any[]>([
-  
+
   ]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
@@ -163,6 +163,9 @@ export default function Home() {
     round_cash: 0,
     round_tk: 0,
   });
+  const [previousOffset, setPreviousoffset] = useState(0);
+  const [previousPage, setPreviousPage] = useState(0);
+
 
   useEffect(() => {
     setMounted(true);
@@ -173,10 +176,10 @@ export default function Home() {
       fromDate,
       toDate,
       perPage,
-      pageNo
+      offset
     );
     getScenarios();
-  }, [viewData]);
+  }, [viewData, offset, tempname, fromDate, toDate, s_type]);
 
   const getScenarios = async () => {
     const result = await API_Auth.getAllScenarios();
@@ -190,7 +193,7 @@ export default function Home() {
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
     let body = {
       temp_name: tempname,
@@ -205,8 +208,8 @@ export default function Home() {
           ? ""
           : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
 
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
       execution_id: "",
     };
     setLoading(true);
@@ -258,8 +261,21 @@ export default function Home() {
       const x = (value == "all" || value == "") ? "" : value
       console.log(x)
       setSType(value);
-     // setCurrentPage(0);
-      getSimulations(
+      // setCurrentPage(0);
+      if (value == "all") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+        setTempName("");
+        setFromDate(null);
+        setToDate(null)
+      } else if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+
+        setCurrentPage(0);
+        setOffSet(0)
+      }     /*  getSimulations(
         tempname,
         creatorName,
         x,
@@ -267,37 +283,20 @@ export default function Home() {
         toDate,
         perPage,
         pageNo
-      );
+      ); */
     }
     if (name == "tempname") {
       setTempName(value);
-    //  setCurrentPage(0);
-
-      getSimulations(value, creatorName, s_type, fromDate, toDate, perPage, pageNo);
-      //handlegetAllTemplateDetails();
-    }
-    if (name == "fromDate") {
-      setFromDate(value);
-      //setCurrentPage(0);
-
-      getSimulations(tempname, creatorName, s_type, value, toDate, perPage, pageNo);
-    }
-    if (name == "toDate") {
-      setToDate(value);
-     // setCurrentPage(0);
-
-      getSimulations(
-        tempname,
-        creatorName,
-        s_type,
-        fromDate,
-        value,
-        perPage,
-        pageNo
-      );
+      if (value == "") {
+        setCurrentPage(previousPage);
+        setOffSet(previousOffset);
+      } else {
+        setCurrentPage(0);
+        setOffSet(0)
+      }
     }
 
-   
+
   };
 
   const handleAllData = () => {
@@ -321,16 +320,19 @@ export default function Home() {
     console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
+    setPreviousPage(e.selected);
+    setPreviousoffset(page)
 
-    getSimulations(
-      tempname,
-      creatorName,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      data
-    );
+
+    /*    getSimulations(
+         tempname,
+         creatorName,
+         s_type,
+         fromDate,
+         toDate,
+         perPage,
+         data
+       ); */
   };
 
   const handleCheckboxChange = async (id: any) => {
@@ -404,19 +406,25 @@ export default function Home() {
 
   const handleFirstRecord = () => {
     setCurrentPage(0);
-    getSimulations(tempname, creatorName, s_type, fromDate, toDate, perPage, 1);
+    setOffSet(0);
+    // getSimulations(tempname, creatorName, s_type, fromDate, toDate, perPage, 1);
   };
   const handlelastRecord = () => {
-    getSimulations(
-      tempname,
-      creatorName,
-      s_type,
-      fromDate,
-      toDate,
-      perPage,
-      pageCount
-    );
+    /*   getSimulations(
+        tempname,
+        creatorName,
+        s_type,
+        fromDate,
+        toDate,
+        perPage,
+        pageCount
+      ); */
+    let page = (pageCount - 1) * perPage;
+    console.log("page", page)
+
     setCurrentPage(pageCount - 1);
+    setOffSet(page)
+
   };
 
   const handleDownloadExcel = async (data: any) => {
@@ -429,8 +437,8 @@ export default function Home() {
       scenario: "",
       datefrom: "",
       dateto: "",
-      resultPerPage: 1,
-      pgNo: 1,
+      limit: 1,
+      offset: 0,
       showPrivate: true,
     };
 
@@ -688,21 +696,32 @@ export default function Home() {
     console.log(date, key);
     if (key == "startdate") {
       setFromDate(date);
-      getSimulations(tempname, creatorName, s_type, date, toDate, perPage, 1);
+      setOffSet(0);
+      setCurrentPage(0)
+
+      // getSimulations(tempname, creatorName, s_type, date, toDate, perPage, 1);
     } else {
       console.log("enddate");
       setToDate(date);
-      getSimulations(tempname, creatorName, s_type, fromDate, date, perPage, 1);
+      setOffSet(0);
+      setCurrentPage(0)
+
+      // getSimulations(tempname, creatorName, s_type, fromDate, date, perPage, 1);
     }
   };
   const handleDelete = (key: any) => {
     if (key == "startdate") {
       setFromDate(null);
-      getSimulations(tempname, creatorName, s_type, "", toDate, perPage, 1);
+      setOffSet(0);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      // getSimulations(tempname, creatorName, s_type, "", toDate, perPage, 1);
     } else {
       console.log("enddate");
       setToDate(null);
-      getSimulations(tempname, creatorName, s_type, fromDate, "", perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      //getSimulations(tempname, creatorName, s_type, fromDate, "", perPage, 1);
     }
   };
   if (mounted)
@@ -1010,10 +1029,10 @@ export default function Home() {
                   <span>of {totalCount}</span> */}
                 </div>
                 <div className="paging-list">
-                <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
-                            <span>{totalCount}</span>}
-                            {totalCount > offset + perPage &&
-                              <span>{offset + perPage}</span>} of {totalCount} items</p>
+                  <p className="pagination_total">Showing {offset + 1} to {totalCount < offset + perPage &&
+                    <span>{totalCount}</span>}
+                    {totalCount > offset + perPage &&
+                      <span>{offset + perPage}</span>} of {totalCount} items</p>
                   {currentPage == 0 && (
                     <div className="leftaction disable-pointer">
                       <img src="imgs/left-doublearrowg.svg" alt="" />

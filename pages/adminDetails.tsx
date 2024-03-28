@@ -20,7 +20,7 @@ export default function Home() {
   const [adminData, setAdminData] = useState<any>([]);
   const [key, setKey] = useState();
   const [searchKey, setSearchKey] = useState("");
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -33,6 +33,8 @@ export default function Home() {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [keyname, setKeyName] = useState("name");
+  const [previousOffset, setPreviousoffset] = useState(0);
+  const [previousPage, setPreviousPage] = useState(0);
 
   const handleDeleteClick = (data: any) => {
     console.log(data);
@@ -42,15 +44,15 @@ export default function Home() {
   };
 
   useEffect(() => {
-    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, 1);
-  }, [searchKey, fromDate, toDate, perPage]);
+    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, offset);
+  }, [searchKey, fromDate, toDate, offset]);
 
   const handlegetAllAdmins = async (
     searchKey: any,
     fromDate: any,
     toDate: any,
     perPage: any,
-    pageNo: any
+    offset: any
   ) => {
     let body = {
       name: keyname == "name" ? searchKey : "",
@@ -63,10 +65,11 @@ export default function Home() {
         toDate == null || toDate == ""
           ? ""
           : moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
-      resultPerPage: perPage,
-      pgNo: pageNo,
+      limit: perPage,
+      offset: offset,
     };
 
+    console.log(body)
     setLoading(true);
     const result = await API_Auth.getAdmins(body);
     console.log(result);
@@ -89,7 +92,7 @@ export default function Home() {
       toast.success("Admin Deleted Successfully");
       // setCurrentPage(0);
       setTimeout(() => {
-        handlegetAllAdmins("", "", "", perPage, pageNo);
+        handlegetAllAdmins("", "", "", perPage, offset);
       }, 2000);
     }
     setTooltipVisible(false);
@@ -101,10 +104,15 @@ export default function Home() {
 
   const handleSearchChange = (event: any) => {
     setSearchKey(event.target.value);
+    if (event.target.value == "") {
+      setCurrentPage(previousPage);
+      setOffSet(previousOffset);
+    } else {
+      setOffSet(0);
+      setCurrentPage(0);
+    }
 
-    // setCurrentPage(0);
-
-    handlegetAllAdmins(event.target.value, fromDate, toDate, perPage, pageNo);
+    //handlegetAllAdmins(event.target.value, fromDate, toDate, perPage, pageNo);
   };
   const handlePageClick = async (e: any) => {
     const selectedPage = e.selected;
@@ -115,7 +123,10 @@ export default function Home() {
     console.log("asdakl", data, page);
     setPageNo(data);
     setCurrentPage(e.selected);
-    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, data);
+    setPreviousPage(e.selected);
+    setPreviousoffset(page)
+
+    //handlegetAllAdmins(searchKey, fromDate, toDate, perPage, page);
   };
   const handleInput = async (e: any) => {
     const name = e.currentTarget.name;
@@ -125,55 +136,60 @@ export default function Home() {
       setKeyName(value);
     }
 
-    if (name == "perPage") {
-      setPerPage(Number(value));
-      // setPageNo(1);
-      //setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, fromDate, toDate, Number(value), pageNo);
-    }
-    if (name == "fromDate") {
-      setFromDate(value);
-      //  setCurrentPage(0);
 
-      handlegetAllAdmins(searchKey, value, toDate, perPage, pageNo);
-    }
-    if (name == "toDate") {
-      setToDate(value);
-      //setCurrentPage(0);
-
-      handlegetAllAdmins(searchKey, fromDate, value, perPage, pageNo);
-    }
   };
 
   const handleFirstRecord = () => {
-    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, 1);
+    // handlegetAllAdmins(searchKey, fromDate, toDate, perPage, 1);
     setCurrentPage(0);
+    setOffSet(0);
+
   };
   const handlelastRecord = () => {
-    handlegetAllAdmins(searchKey, fromDate, toDate, perPage, pageCount);
+    // handlegetAllAdmins(searchKey, fromDate, toDate, perPage, pageCount);
     setCurrentPage(pageCount - 1);
+    let page = (pageCount - 1) * perPage;
+    console.log("page", page)
+
+
+    // handlegetAllTemplateDetails("", "", "", "", perPage, page);
+    setCurrentPage(pageCount - 1);
+    setOffSet(page)
   };
 
   const handleDates = (date: any, key: any) => {
     console.log(date, key);
     if (key == "startdate") {
       setFromDate(date)
-      handlegetAllAdmins(searchKey, date, toDate, perPage, pageNo);
+      setOffSet(0);
+      setCurrentPage(0);
+
+      //handlegetAllAdmins(searchKey, date, toDate, perPage, pageNo);
     } else {
       console.log("enddate")
-      setToDate(date)
-      handlegetAllAdmins(searchKey, fromDate, date, perPage, pageNo);
+      setToDate(date);
+      setOffSet(0);
+      setCurrentPage(0);
+
+
+      // handlegetAllAdmins(searchKey, fromDate, date, perPage, pageNo);
     }
   };
   const handleClear = (key: any) => {
     if (key == "startdate") {
       setFromDate(null);
-      handlegetAllAdmins(searchKey, "", toDate, perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+
+
+      //handlegetAllAdmins(searchKey, "", toDate, perPage, 1);
     } else {
       console.log("enddate");
       setToDate(null);
-      handlegetAllAdmins(searchKey, fromDate, "", perPage, 1);
+      setOffSet(previousOffset)
+      setCurrentPage(previousPage)
+      //handlegetAllAdmins(searchKey, fromDate, "", perPage, 1);
     }
   };
 
@@ -420,7 +436,7 @@ export default function Home() {
                     className="leftaction disable-pointer"
                     onClick={() => handleFirstRecord()}
                   >
-                    <Image src="imgs/left-doublearrow.svg" alt="" />
+                    <img src="imgs/left-doublearrow.svg" alt="" />
                   </div>
                 )}
 
