@@ -297,19 +297,19 @@ const AppLayout = ({ children }: LayoutProps) => {
                 </div>
                 <ul className="menu-list">
                   <li>
-                    <Link href="#">Home</Link>
+                    <Link href="/#home">Home</Link>
                   </li>
                   <li>
-                    <Link href="#">About Product</Link>
+                    <Link href="/#home">About Product</Link>
                   </li>
                   <li>
-                    <Link href="#">How It Works </Link>
+                    <Link href="/#worksection">How It Works </Link>
                   </li>
                   <li>
-                    <Link href="#">FAQs</Link>
+                    <Link href="/#faqsection">FAQs</Link>
                   </li>
                   <li>
-                    <Link href="#">Contact Us</Link>
+                    <Link href="/#contactsection">Contact Us</Link>
                   </li>
                 </ul>
                 <div

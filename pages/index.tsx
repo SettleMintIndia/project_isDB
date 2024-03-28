@@ -53,81 +53,14 @@ export default function Home() {
       answer: ` Please contact the super admin at <strong><a href='mailto:KSolutions@isdb.org'>"KSolutions@isdb.org"</a></strong>`,
     },
   ];
-  const [expandedItems, setExpandedItems] = useState({});
+  const [expandedItems, setExpandedItems] = useState<any>({});
   const toggleColumn = (index: number) => {
-    setExpandedItems((prevState) => ({
+    setExpandedItems((prevState:any) => ({
       ...prevState,
       [index]: !prevState[index],
     }));
   };
 
-  const handleLogin = async () => {
-    let error = 0;
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (userEmail === "") {
-      setUserErr("Please Enter  Email");
-      error = error + 1;
-    } else if (!emailRegex.test(userEmail)) {
-      setUserErr("Please Enter Valid Email");
-      error = error + 1;
-    } else {
-      setUserErr("");
-    }
-    if (password === "") {
-      setPasswordErr("Please Enter Password");
-      error = error + 1;
-    } else {
-      setPasswordErr("");
-    }
-    console.log(error);
-    /*  if (error == 0) {
-       router.push("/listemplates");
-     } */
-    if (error == 0) {
-      let body = {
-        email: userEmail,
-        password: password,
-      };
-      console.log(body);
-      localStorage.setItem("useremail", "superadmin@isdb.com");
-      setloginuseremail("superadmin@isdb.com");
-
-      router.push("/createtemplate");
-      /*
-      const result = await API_Auth.getLogin(body);
-      console.log("result", result);
-      if (result.status == 400) {
-        setErr(result.error)
-      } else {
-        localStorage.setItem("useremail", result.email)
-        localStorage.setItem("superadmin", result.isSuper);
-        localStorage.setItem("displayname", result.display_name)
-        router.push('/createtemplate')
-      } */
-    }
-  };
-
-  const handleInput = async (e: any) => {
-    const name = e.currentTarget.name;
-    const value = e.currentTarget.value;
-
-    if (name === "userEmail") {
-      setUserEmail(value);
-    }
-
-    if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  const handleButtonClick = (buttonName: SetStateAction<string>) => {
-    setActiveButton(buttonName);
-  };
 
   return (
     <MainLayout>
@@ -193,6 +126,7 @@ export default function Home() {
             </div>
           </div>
           <div className="landing-details">
+            <div id="worksection">
             <div className="works">
               <div className="works-header">
                 <h1>How It Works?</h1>
@@ -344,7 +278,11 @@ export default function Home() {
                 </Tabs>
               </div>
             </div>
+            </div>
+
             <div className="faqs-contact">
+            <div id="faqsection">
+
               <div className="faqs">
                 <h1>Frequently Asked Questions</h1>
 
@@ -375,7 +313,11 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
+              </div>
+              <div id="contactsection">
+
               <div className="contact-details">
+                
                 <h1>GET IN TOUCH</h1>
                 {/* <div className="contact-sources"> */}
                 <div className="contact">
@@ -391,7 +333,9 @@ export default function Home() {
                 {/* </div> */}
               </div>
             </div>
-          </div>
+            </div>
+            </div>
+         
         </div>
       </div>
       <footer>

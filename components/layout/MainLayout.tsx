@@ -128,13 +128,13 @@ const MainLayout = ({ children }: LayoutProps) => {
             <div className="navhead-links">
               <ul>
                 <li>
-                  <a href="#">How it works</a>
+                  <a href="#worksection">How it works</a>
                 </li>
                 <li>
-                  <a href="#">FAQs</a>
+                  <Link href="#faqsection">FAQs</Link>
                 </li>
                 <li>
-                  <a href="#">Contact us</a>
+                  <Link href="#contactsection">Contact Us</Link>
                 </li>
               </ul>
             </div>
@@ -155,13 +155,13 @@ const MainLayout = ({ children }: LayoutProps) => {
               </div>
               <ul className="menu-list">
                 <li>
-                  <Link href="#">How It Works </Link>
+                  <Link href="#worksection">How It Works </Link>
                 </li>
                 <li>
-                  <Link href="#">FAQs</Link>
+                  <Link href="#faqsection">FAQs</Link>
                 </li>
                 <li>
-                  <Link href="#">Contact Us</Link>
+                  <Link href="#contactsection">Contact Us</Link>
                 </li>
               </ul>
             </div>
